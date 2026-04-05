@@ -1,0 +1,199 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
+
+interface UserData {
+  tier: "GC" | "TRADE";
+  tradeType?: string;
+  enabledTrades: string[];
+  name?: string;
+}
+
+interface NavItem {
+  href: string;
+  label: string;
+  icon: string;
+}
+
+const TRADE_ICONS: { [key: string]: string } = {
+  electrical: "⚡",
+  plumbing: "🔧",
+  hvac: "❄️",
+  roofing: "🏠",
+  framing: "🪵",
+  drywall: "📋",
+  painting: "🎨",
+  flooring: "🪚",
+  masonry: "🧱",
+  concrete: "🪨",
+  landscaping: "🌳",
+  carpentry: "🔨",
+  general: "🏗️",
+  steel: "⚙️",
+  demolition: "💥",
+};
+
+export default function AppLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [user, setUser] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await fetch("/api/user/settings");
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const baseNavItems: NavItem[] = [
+    { href: "/app", label: "Dashboard", icon: "📊" },
+    { href: "/app/bids", label: "Bids", icon: "📋" },
+    { href: "/app/jobs", label: "Jobs", icon: "🔨" },
+    { href: "/app/clients", label: "Clients", icon: "👥" },
+    { href: "/app/email", label: "Email", icon: "✉️" },
+  ];
+
+  const navItems = user?.tier === "GC" ? [...baseNavItems, { href: "/app/subs", label: "Subs", icon: "👷" }] : baseNavItems;
+
+  const isActive = (href: string) => {
+    if (href === "/app") {
+      return pathname === "/app";
+    }
+    return pathname.startsWith(href);
+  };
+
+  const handleLogout = async () => {
+    await signOut({ redirect: true, callbackUrl: "/" });
+  };
+
+  if (loading) {
+    return (
+      <div className="flex h-screen bg-slate-50">
+        <div className="fixed left-0 top-0 h-screen bg-slate-900 w-16 z-40"></div>
+        <div className="flex-1 ml-16 flex items-center justify-center">
+          <div className="text-slate-500">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex h-screen bg-slate-50">
+      {/* Sidebar */}
+      <div
+        className={`fixed left-0 top-0 h-screen bg-slate-900 text-white transition-all duration-300 z-40 flex flex-col ${
+          sidebarExpanded ? "w-60" : "w-16"
+        }`}
+      >
+        {/* Logo/Brand */}
+        <div className="h-16 flex items-center justify-center border-b border-slate-800">
+          {sidebarExpanded ? (
+            <span className="text-lg font-bold">Prospect IT</span>
+          ) : (
+            <span className="text-2xl">🏗️</span>
+          )}
+        </div>
+
+        {/* User Tier Badge */}
+        {sidebarExpanded && user && (
+          <div className="px-4 py-3 border-b border-slate-800">
+            <div className="flex items-center gap-2">
+              {user.tier === "GC" ? (
+                <span className="inline-block px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-full">
+                  GC
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 px-3 py-1 bg-orange-500 text-white text-xs font-bold rounded-full">
+                  {TRADE_ICONS[user.tradeType || "general"]}
+                  {user.tradeType ? user.tradeType.charAt(0).toUpperCase() + user.tradeType.slice(1) : "Trade"}
+                </span>
+              )}
+            </div>
+            {user.enabledTrades && user.enabledTrades.length > 0 && (
+              <div className="mt-2 flex flex-wrap gap-1">
+                {user.enabledTrades.slice(0, 4).map((trade) => (
+                  <span key={trade} title={trade} className="text-lg">
+                    {TRADE_ICONS[trade] || "🔧"}
+                  </span>
+                ))}
+                {user.enabledTrades.length > 4 && (
+                  <span className="text-xs text-slate-400">+{user.enabledTrades.length - 4}</span>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Navigation Items */}
+        <nav className="flex-1 overflow-y-auto py-4">
+          {navItems.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <button
+                key={item.href}
+                onClick={() => router.push(item.href)}
+                className={`w-full px-4 py-4 flex items-center gap-3 transition-colors ${
+                  active
+                    ? "bg-orange-500 text-white"
+                    : "text-slate-400 hover:text-white hover:bg-slate-800"
+                }`}
+                title={sidebarExpanded ? "" : item.label}
+              >
+                <span className="text-xl flex-shrink-0">{item.icon}</span>
+                {sidebarExpanded && <span className="text-sm font-medium">{item.label}</span>}
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* User Section */}
+        <div className="border-t border-slate-800 p-4 space-y-2">
+          <button
+            onClick={() => router.push("/app/settings")}
+            className="w-full px-3 py-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded text-sm flex items-center justify-center"
+            title={sidebarExpanded ? "Settings" : "Settings"}
+          >
+            {sidebarExpanded ? "⚙️ Settings" : "⚙️"}
+          </button>
+          <button
+            onClick={() => setSidebarExpanded(!sidebarExpanded)}
+            className="w-full px-3 py-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded text-sm flex items-center justify-center"
+            title={sidebarExpanded ? "Collapse" : "Expand"}
+          >
+            {sidebarExpanded ? "←" : "→"}
+          </button>
+          <button
+            onClick={handleLogout}
+            className="w-full px-3 py-2 bg-slate-800 hover:bg-red-600 text-slate-300 hover:text-white rounded text-sm transition-colors"
+          >
+            {sidebarExpanded ? "Logout" : "🚪"}
+          </button>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className={`flex-1 transition-all duration-300 ${sidebarExpanded ? "ml-60" : "ml-16"}`}>
+        <main className="h-screen overflow-auto">{children}</main>
+      </div>
+    </div>
+  );
+}
