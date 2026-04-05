@@ -6,9 +6,6 @@ const nextConfig: NextConfig = {
     // Run `npm run setup` before first build
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
 };
 
 export default nextConfig;
