@@ -5,6 +5,14 @@ export const metadata: Metadata = {
   title: "Pro Spec IQ — Bid Smarter. Build Bigger.",
   description:
     "The all-in-one bidding, estimating, and CRM platform for construction companies, general contractors, and trade professionals.",
+  manifest: "/manifest.json",
+  openGraph: {
+    title: "Pro Spec IQ — Bid Smarter. Build Bigger.",
+    description:
+      "The all-in-one bidding, estimating, and CRM platform for construction companies, general contractors, and trade professionals.",
+    siteName: "Pro Spec IQ",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
