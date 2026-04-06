@@ -4,13 +4,18 @@ export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-white">
       <nav className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto border-b border-slate-100">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-lg">P</span>
+        <Link href="/" className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center shadow-md shadow-orange-500/20">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 21L12 3L21 21H3Z" stroke="white" strokeWidth="2.5" strokeLinejoin="round" fill="none"/>
+              <line x1="7.5" y1="14" x2="16.5" y2="14" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
           </div>
-          <span className="text-xl font-bold text-slate-900">
-            Prospect <span className="text-orange-500">IT</span>
-          </span>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-xl font-black tracking-tight text-slate-900">PRO</span>
+            <span className="text-xl font-black tracking-tight text-orange-500">SPEC</span>
+            <span className="text-sm font-bold text-slate-400 tracking-wider ml-0.5">IQ</span>
+          </div>
         </Link>
       </nav>
 
@@ -21,7 +26,7 @@ export default function PrivacyPolicy() {
         <div className="prose prose-slate max-w-none space-y-8 text-slate-700 leading-relaxed">
           <section>
             <h2 className="text-xl font-semibold text-slate-900">1. Introduction</h2>
-            <p>Prospect IT LLC (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) operates the Prospect IT platform. This Privacy Policy explains how we collect, use, disclose, and protect your personal information when you use our Service.</p>
+            <p>Pro Spec IQ LLC (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) operates the Pro Spec IQ platform. This Privacy Policy explains how we collect, use, disclose, and protect your personal information when you use our Service.</p>
           </section>
 
           <section>
@@ -81,7 +86,7 @@ export default function PrivacyPolicy() {
 
           <section>
             <h2 className="text-xl font-semibold text-slate-900">13. Contact Us</h2>
-            <p>If you have questions about this Privacy Policy or our data practices, please contact us at <a href="mailto:nathan@prospectit.com" className="text-orange-500 hover:text-orange-600">nathan@prospectit.com</a>.</p>
+            <p>If you have questions about this Privacy Policy or our data practices, please contact us at <a href="mailto:nathan@prospeciq.com" className="text-orange-500 hover:text-orange-600 font-medium">nathan@prospeciq.com</a>.</p>
           </section>
         </div>
       </main>

@@ -90,7 +90,7 @@ export default function AppLayout({
       <div className="flex h-screen bg-slate-50">
         <div className="fixed left-0 top-0 h-screen bg-slate-900 w-16 z-40"></div>
         <div className="flex-1 ml-16 flex items-center justify-center">
-          <div className="text-slate-500">Loading...</div>
+          <div className="text-slate-400 font-medium">Loading...</div>
         </div>
       </div>
     );
@@ -105,17 +105,26 @@ export default function AppLayout({
         }`}
       >
         {/* Logo/Brand */}
-        <div className="h-16 flex items-center justify-center border-b border-slate-800">
+        <div className="h-16 flex items-center justify-center border-b border-slate-800/80">
           {sidebarExpanded ? (
-            <span className="text-lg font-bold">Prospect IT</span>
+            <div className="flex items-baseline gap-1">
+              <span className="text-base font-black text-white">PRO</span>
+              <span className="text-base font-black text-orange-500">SPEC</span>
+              <span className="text-xs font-bold text-slate-500 ml-0.5">IQ</span>
+            </div>
           ) : (
-            <span className="text-2xl">🏗️</span>
+            <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 21L12 3L21 21H3Z" stroke="white" strokeWidth="2.5" strokeLinejoin="round" fill="none"/>
+                <line x1="7.5" y1="14" x2="16.5" y2="14" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </div>
           )}
         </div>
 
         {/* User Tier Badge */}
         {sidebarExpanded && user && (
-          <div className="px-4 py-3 border-b border-slate-800">
+          <div className="px-4 py-3 border-b border-slate-800/80">
             <div className="flex items-center gap-2">
               {user.tier === "GC" ? (
                 <span className="inline-block px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-full">
@@ -159,31 +168,31 @@ export default function AppLayout({
                 title={sidebarExpanded ? "" : item.label}
               >
                 <span className="text-xl flex-shrink-0">{item.icon}</span>
-                {sidebarExpanded && <span className="text-sm font-medium">{item.label}</span>}
+                {sidebarExpanded && <span className="text-sm font-semibold">{item.label}</span>}
               </button>
             );
           })}
         </nav>
 
         {/* User Section */}
-        <div className="border-t border-slate-800 p-4 space-y-2">
+        <div className="border-t border-slate-800/80 p-3 space-y-1">
           <button
             onClick={() => router.push("/app/settings")}
-            className="w-full px-3 py-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded text-sm flex items-center justify-center"
-            title={sidebarExpanded ? "Settings" : "Settings"}
+            className="w-full px-3 py-2.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg text-sm flex items-center justify-center transition-colors"
+            title="Settings"
           >
             {sidebarExpanded ? "⚙️ Settings" : "⚙️"}
           </button>
           <button
             onClick={() => setSidebarExpanded(!sidebarExpanded)}
-            className="w-full px-3 py-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded text-sm flex items-center justify-center"
+            className="w-full px-3 py-2.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg text-sm flex items-center justify-center transition-colors"
             title={sidebarExpanded ? "Collapse" : "Expand"}
           >
             {sidebarExpanded ? "←" : "→"}
           </button>
           <button
             onClick={handleLogout}
-            className="w-full px-3 py-2 bg-slate-800 hover:bg-red-600 text-slate-300 hover:text-white rounded text-sm transition-colors"
+            className="w-full px-3 py-2.5 bg-slate-800 hover:bg-red-600 text-slate-300 hover:text-white rounded-lg text-sm transition-colors font-medium"
           >
             {sidebarExpanded ? "Logout" : "🚪"}
           </button>

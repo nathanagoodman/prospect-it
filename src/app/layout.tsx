@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Prospect IT — Bid Smarter. Build Bigger.",
+  title: "Pro Spec IQ — Bid Smarter. Build Bigger.",
   description:
     "The all-in-one bidding, estimating, and CRM platform for construction companies, general contractors, and trade professionals.",
 };

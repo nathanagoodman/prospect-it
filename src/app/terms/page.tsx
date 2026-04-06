@@ -4,13 +4,18 @@ export default function TermsOfService() {
   return (
     <div className="min-h-screen bg-white">
       <nav className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto border-b border-slate-100">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-lg">P</span>
+        <Link href="/" className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center shadow-md shadow-orange-500/20">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 21L12 3L21 21H3Z" stroke="white" strokeWidth="2.5" strokeLinejoin="round" fill="none"/>
+              <line x1="7.5" y1="14" x2="16.5" y2="14" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
           </div>
-          <span className="text-xl font-bold text-slate-900">
-            Prospect <span className="text-orange-500">IT</span>
-          </span>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-xl font-black tracking-tight text-slate-900">PRO</span>
+            <span className="text-xl font-black tracking-tight text-orange-500">SPEC</span>
+            <span className="text-sm font-bold text-slate-400 tracking-wider ml-0.5">IQ</span>
+          </div>
         </Link>
       </nav>
 
@@ -21,12 +26,12 @@ export default function TermsOfService() {
         <div className="prose prose-slate max-w-none space-y-8 text-slate-700 leading-relaxed">
           <section>
             <h2 className="text-xl font-semibold text-slate-900">1. Acceptance of Terms</h2>
-            <p>By accessing or using Prospect IT (&quot;the Service&quot;), operated by Prospect IT LLC (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;), you agree to be bound by these Terms of Service. If you do not agree to these terms, do not use the Service.</p>
+            <p>By accessing or using Pro Spec IQ (&quot;the Service&quot;), operated by Pro Spec IQ LLC (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;), you agree to be bound by these Terms of Service. If you do not agree to these terms, do not use the Service.</p>
           </section>
 
           <section>
             <h2 className="text-xl font-semibold text-slate-900">2. Description of Service</h2>
-            <p>Prospect IT is a software-as-a-service (SaaS) platform that provides bid estimation, profit margin calculation, job tracking, client relationship management, and email outreach tools for construction companies, general contractors, and trade professionals.</p>
+            <p>Pro Spec IQ is a software-as-a-service (SaaS) platform that provides bid estimation, profit margin calculation, job tracking, client relationship management, and email outreach tools for construction companies, general contractors, and trade professionals.</p>
           </section>
 
           <section>
@@ -56,22 +61,22 @@ export default function TermsOfService() {
 
           <section>
             <h2 className="text-xl font-semibold text-slate-900">8. Intellectual Property</h2>
-            <p>The Service, including its original content, features, and functionality, is owned by Prospect IT LLC and is protected by copyright, trademark, and other intellectual property laws. You may not copy, modify, or reverse-engineer any part of the Service.</p>
+            <p>The Service, including its original content, features, and functionality, is owned by Pro Spec IQ LLC and is protected by copyright, trademark, and other intellectual property laws. You may not copy, modify, or reverse-engineer any part of the Service.</p>
           </section>
 
           <section>
             <h2 className="text-xl font-semibold text-slate-900">9. Disclaimer</h2>
-            <p>The Service provides tools for estimation and calculation purposes only. Prospect IT does not provide financial, legal, or professional construction advice. Bid estimates, profit calculations, and other outputs are tools to assist your decision-making and should not be relied upon as the sole basis for business decisions. You are solely responsible for verifying the accuracy of all calculations and estimates.</p>
+            <p>The Service provides tools for estimation and calculation purposes only. Pro Spec IQ does not provide financial, legal, or professional construction advice. Bid estimates, profit calculations, and other outputs are tools to assist your decision-making and should not be relied upon as the sole basis for business decisions. You are solely responsible for verifying the accuracy of all calculations and estimates.</p>
           </section>
 
           <section>
             <h2 className="text-xl font-semibold text-slate-900">10. Limitation of Liability</h2>
-            <p>To the maximum extent permitted by law, Prospect IT LLC shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, or business opportunities, arising from your use of or inability to use the Service.</p>
+            <p>To the maximum extent permitted by law, Pro Spec IQ LLC shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, or business opportunities, arising from your use of or inability to use the Service.</p>
           </section>
 
           <section>
             <h2 className="text-xl font-semibold text-slate-900">11. Indemnification</h2>
-            <p>You agree to indemnify and hold harmless Prospect IT LLC, its officers, directors, employees, and agents from any claims, damages, or expenses arising from your use of the Service or violation of these Terms.</p>
+            <p>You agree to indemnify and hold harmless Pro Spec IQ LLC, its officers, directors, employees, and agents from any claims, damages, or expenses arising from your use of the Service or violation of these Terms.</p>
           </section>
 
           <section>
@@ -91,7 +96,7 @@ export default function TermsOfService() {
 
           <section>
             <h2 className="text-xl font-semibold text-slate-900">15. Contact</h2>
-            <p>If you have questions about these Terms, please contact us at <a href="mailto:nathan@prospectit.com" className="text-orange-500 hover:text-orange-600">nathan@prospectit.com</a>.</p>
+            <p>If you have questions about these Terms, please contact us at <a href="mailto:nathan@prospeciq.com" className="text-orange-500 hover:text-orange-600 font-medium">nathan@prospeciq.com</a>.</p>
           </section>
         </div>
       </main>
