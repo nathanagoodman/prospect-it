@@ -13,7 +13,7 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const callbackUrl = searchParams.get("callbackUrl") || "/app/dashboard";
+  const callbackUrl = searchParams.get("callbackUrl") || "/app";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

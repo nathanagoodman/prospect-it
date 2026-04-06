@@ -129,7 +129,7 @@ export default function RegisterPage() {
       });
 
       if (signInResult?.ok) {
-        router.push("/app/dashboard");
+        router.push("/app");
       } else {
         router.push("/login");
       }
@@ -141,7 +141,7 @@ export default function RegisterPage() {
   };
 
   const handleGoogleSignUp = () => {
-    signIn("google", { callbackUrl: "/app/dashboard" });
+    signIn("google", { callbackUrl: "/app" });
   };
 
   return (
