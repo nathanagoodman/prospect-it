@@ -117,6 +117,7 @@ export default function BidsPage() {
                 <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wide">Status</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wide">Due Date</th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wide">Created</th>
+                <th className="px-6 py-4 text-right text-xs font-semibold text-slate-600 uppercase tracking-wide">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -146,6 +147,24 @@ export default function BidsPage() {
                   </td>
                   <td className="px-6 py-4 text-sm text-slate-500">
                     {new Date(bid.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <Link
+                        href={`/app/invoices/new?bidId=${bid.id}&type=ESTIMATE`}
+                        className="px-3 py-1.5 text-xs font-semibold text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        Estimate
+                      </Link>
+                      <Link
+                        href={`/app/invoices/new?bidId=${bid.id}&type=INVOICE`}
+                        className="px-3 py-1.5 text-xs font-semibold text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        Invoice
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               ))}

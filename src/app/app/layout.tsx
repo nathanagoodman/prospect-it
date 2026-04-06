@@ -67,6 +67,7 @@ export default function AppLayout({
   const baseNavItems: NavItem[] = [
     { href: "/app", label: "Dashboard", icon: "📊" },
     { href: "/app/bids", label: "Bids", icon: "📋" },
+    { href: "/app/invoices", label: "Invoices", icon: "📄" },
     { href: "/app/jobs", label: "Jobs", icon: "🔨" },
     { href: "/app/clients", label: "Clients", icon: "👥" },
     { href: "/app/email", label: "Email", icon: "✉️" },
