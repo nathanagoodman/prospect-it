@@ -107,32 +107,36 @@ export default function ClientsPage() {
 
   if (loading) {
     return (
-      <div className="p-8">
-        <div className="text-center text-slate-500">Loading clients...</div>
+      <div className="p-8 bg-slate-50 min-h-screen">
+        <div className="text-center text-slate-400">
+          <div className="inline-block">
+            <div className="w-8 h-8 border-2 border-slate-300 border-t-slate-900 rounded-full animate-spin"></div>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="p-8 bg-white min-h-screen">
+    <div className="p-8 bg-slate-50 min-h-screen">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Clients</h1>
-          <p className="text-slate-500 mt-1">Manage your sales pipeline and client relationships</p>
+          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Clients</h1>
+          <p className="text-slate-500 font-medium mt-2">Manage your sales pipeline and client relationships</p>
         </div>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+          className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-xl font-semibold transition-colors duration-200"
         >
-          + New Client
+          New Client
         </button>
       </div>
 
       {/* Quick Add Form */}
       {showForm && (
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 mb-8">
-          <h3 className="text-lg font-bold text-slate-900 mb-4">Add New Client</h3>
+        <div className="bg-white border border-slate-200 rounded-2xl p-8 mb-8 shadow-sm">
+          <h3 className="text-lg font-bold text-slate-900 mb-6">Add New Client</h3>
           <form onSubmit={handleSubmitClient} className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <input
               type="text"
@@ -140,33 +144,33 @@ export default function ClientsPage() {
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               required
-              className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-slate-900 placeholder-slate-400 transition-all duration-200"
             />
             <input
               type="text"
               placeholder="Company"
               value={formData.company}
               onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-              className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-slate-900 placeholder-slate-400 transition-all duration-200"
             />
             <input
               type="email"
               placeholder="Email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-slate-900 placeholder-slate-400 transition-all duration-200"
             />
             <input
               type="tel"
               placeholder="Phone"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-slate-900 placeholder-slate-400 transition-all duration-200"
             />
             <select
               value={formData.status}
               onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-              className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-slate-900 transition-all duration-200"
             >
               {CLIENT_STATUSES.map((status) => (
                 <option key={status} value={status}>
@@ -176,7 +180,7 @@ export default function ClientsPage() {
             </select>
             <button
               type="submit"
-              className="bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg transition-colors md:col-span-1"
+              className="bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition-colors duration-200 md:col-span-1"
             >
               Add
             </button>
@@ -191,14 +195,14 @@ export default function ClientsPage() {
           placeholder="Search clients..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="flex-1 px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+          className="flex-1 px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-slate-900 placeholder-slate-400 transition-all duration-200"
         />
-        <div className="flex items-center gap-2 bg-slate-100 rounded-lg p-1">
+        <div className="flex items-center gap-2 bg-slate-100 rounded-xl p-1">
           <button
             onClick={() => setViewMode("pipeline")}
-            className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
               viewMode === "pipeline"
-                ? "bg-white text-slate-900 shadow"
+                ? "bg-white text-slate-900 shadow-sm"
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
@@ -206,9 +210,9 @@ export default function ClientsPage() {
           </button>
           <button
             onClick={() => setViewMode("list")}
-            className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
               viewMode === "list"
-                ? "bg-white text-slate-900 shadow"
+                ? "bg-white text-slate-900 shadow-sm"
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
@@ -218,14 +222,22 @@ export default function ClientsPage() {
       </div>
 
       {filteredClients.length === 0 ? (
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-12 text-center">
-          <p className="text-slate-500 mb-4">
-            {searchQuery ? "No clients match your search." : "No clients yet. Add your first client!"}
+        <div className="bg-white border border-slate-200 rounded-2xl p-16 text-center shadow-sm">
+          <div className="mb-6 flex justify-center">
+            <svg className="w-16 h-16 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.856-1.487M15 10a3 3 0 11-6 0 3 3 0 016 0zM6 20h12a6 6 0 00-6-6 6 6 0 00-6 6z" />
+            </svg>
+          </div>
+          <h3 className="text-lg font-bold text-slate-900 mb-2">
+            {searchQuery ? "No clients match your search" : "No clients yet"}
+          </h3>
+          <p className="text-slate-500 font-medium mb-6">
+            {searchQuery ? "Try adjusting your search" : "Get started by adding your first client"}
           </p>
           {!searchQuery && (
             <button
               onClick={() => setShowForm(!showForm)}
-              className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+              className="inline-block bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-xl font-semibold transition-colors duration-200"
             >
               Add Your First Client
             </button>
@@ -236,20 +248,20 @@ export default function ClientsPage() {
         <div className="grid grid-cols-7 gap-4 overflow-x-auto pb-4">
           {CLIENT_STATUSES.map((status) => (
             <div key={status} className="flex-shrink-0">
-              <div className="bg-slate-50 rounded-lg p-4 min-h-96">
-                <div className="mb-4 pb-3 border-b border-slate-200">
-                  <h3 className="font-bold text-slate-900">{STATUS_DISPLAY[status]}</h3>
-                  <p className="text-xs text-slate-500 mt-1">{clientsByStatus[status].length} clients</p>
+              <div className="bg-white rounded-2xl border border-slate-200 p-6 min-h-96 shadow-sm">
+                <div className="mb-6 pb-4 border-b border-slate-200">
+                  <h3 className="font-bold text-slate-900 text-base">{STATUS_DISPLAY[status]}</h3>
+                  <p className="text-xs text-slate-500 font-medium mt-2">{clientsByStatus[status].length} clients</p>
                 </div>
                 <div className="space-y-2">
                   {clientsByStatus[status].map((client) => (
                     <div
                       key={client.id}
-                      className="bg-white p-3 rounded border border-slate-200 hover:shadow-md transition-shadow text-sm"
+                      className="bg-slate-50 p-4 rounded-xl border border-slate-200 hover:shadow-md hover:border-slate-300 transition-all duration-200 text-sm"
                     >
-                      <h4 className="font-medium text-slate-900 truncate">{client.name}</h4>
+                      <h4 className="font-semibold text-slate-900 truncate">{client.name}</h4>
                       {client.company && (
-                        <p className="text-xs text-slate-500 truncate">{client.company}</p>
+                        <p className="text-xs text-slate-500 truncate mt-1">{client.company}</p>
                       )}
                       {client.email && (
                         <p className="text-xs text-slate-500 truncate mt-1">{client.email}</p>
@@ -266,37 +278,37 @@ export default function ClientsPage() {
         </div>
       ) : (
         /* List View */
-        <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
+        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
           <table className="w-full">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase">
+                <th className="px-8 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
                   Name
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase">
+                <th className="px-8 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
                   Company
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase">
+                <th className="px-8 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
                   Email
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase">
+                <th className="px-8 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
                   Phone
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase">
+                <th className="px-8 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
                   Status
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
               {filteredClients.map((client) => (
-                <tr key={client.id} className="hover:bg-slate-50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-slate-900">{client.name}</td>
-                  <td className="px-6 py-4 text-slate-600">{client.company || "—"}</td>
-                  <td className="px-6 py-4 text-slate-600">{client.email || "—"}</td>
-                  <td className="px-6 py-4 text-slate-600">{client.phone || "—"}</td>
-                  <td className="px-6 py-4">
+                <tr key={client.id} className="hover:bg-slate-50/50 transition-colors duration-150">
+                  <td className="px-8 py-4 font-medium text-slate-900">{client.name}</td>
+                  <td className="px-8 py-4 text-slate-600">{client.company || "—"}</td>
+                  <td className="px-8 py-4 text-slate-600">{client.email || "—"}</td>
+                  <td className="px-8 py-4 text-slate-600">{client.phone || "—"}</td>
+                  <td className="px-8 py-4">
                     <span
-                      className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
+                      className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
                         STATUS_COLORS[client.status] || "bg-slate-100 text-slate-800"
                       }`}
                     >

@@ -115,26 +115,26 @@ export default function EmailPage() {
 
   if (loading) {
     return (
-      <div className="p-8">
+      <div className="p-8 bg-slate-50 min-h-screen">
         <div className="text-center text-slate-500">Loading sequences...</div>
       </div>
     );
   }
 
   return (
-    <div className="p-8 bg-white min-h-screen">
+    <div className="p-8 bg-slate-50 min-h-screen">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Email Sequences</h1>
-          <p className="text-slate-500 mt-1">Create and manage outreach email templates</p>
+          <h1 className="text-4xl font-black tracking-tight text-slate-900">Email Sequences</h1>
+          <p className="text-slate-500 font-medium mt-2">Create and manage outreach email templates</p>
         </div>
         <button
           onClick={() => {
             resetForm();
             setShowForm(!showForm);
           }}
-          className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+          className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-medium transition-colors"
         >
           + New Sequence
         </button>
@@ -142,14 +142,14 @@ export default function EmailPage() {
 
       {/* Form Section */}
       {showForm && (
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-8 mb-8">
-          <h2 className="text-2xl font-bold text-slate-900 mb-6">
+        <div className="bg-white border border-slate-200 rounded-2xl p-8 mb-8 shadow-sm">
+          <h2 className="text-2xl font-black tracking-tight text-slate-900 mb-6">
             {editingId ? "Edit Sequence" : "Create New Sequence"}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
                   Sequence Name *
                 </label>
                 <input
@@ -158,11 +158,11 @@ export default function EmailPage() {
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="e.g., Follow-up After Quote"
                   required
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
                   Delay (days)
                 </label>
                 <input
@@ -171,13 +171,13 @@ export default function EmailPage() {
                   onChange={(e) => setFormData({ ...formData, delayDays: parseInt(e.target.value) || 0 })}
                   min="0"
                   placeholder="Days before sending"
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
                 Email Subject *
               </label>
               <input
@@ -186,12 +186,12 @@ export default function EmailPage() {
                 onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                 placeholder="e.g., Following up on your project quote"
                 required
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
                 Email Body *
               </label>
               <textarea
@@ -200,24 +200,24 @@ export default function EmailPage() {
                 placeholder="Write your email template here..."
                 required
                 rows={8}
-                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent font-mono text-sm"
+                className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white font-mono text-sm"
               />
               <p className="text-xs text-slate-500 mt-2">
-                💡 Use &#123;&#123;clientName&#125;&#125;, &#123;&#123;jobName&#125;&#123;, and &#123;&#123;bidAmount&#125;&#125; for dynamic content
+                Use &#123;&#123;clientName&#125;&#125;, &#123;&#123;jobName&#125;&#125;, and &#123;&#123;bidAmount&#125;&#125; for dynamic content
               </p>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 pt-2">
               <button
                 type="submit"
-                className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-medium transition-colors"
               >
                 {editingId ? "Update Sequence" : "Create Sequence"}
               </button>
               <button
                 type="button"
                 onClick={resetForm}
-                className="bg-slate-200 hover:bg-slate-300 text-slate-900 px-6 py-3 rounded-lg font-medium transition-colors"
+                className="border border-slate-200 text-slate-700 px-6 py-3 rounded-xl font-medium hover:bg-slate-50 transition-colors"
               >
                 Cancel
               </button>
@@ -228,11 +228,15 @@ export default function EmailPage() {
 
       {/* Sequences List */}
       {sequences.length === 0 ? (
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-12 text-center">
-          <p className="text-slate-500 mb-4">No email sequences yet. Create your first one!</p>
+        <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center shadow-sm">
+          <svg className="w-16 h-16 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          <h3 className="text-lg font-black tracking-tight text-slate-900 mb-2">No email sequences yet</h3>
+          <p className="text-slate-500 font-medium mb-6">Create your first email sequence to start automating outreach</p>
           <button
             onClick={() => setShowForm(!showForm)}
-            className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+            className="inline-block bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl font-medium transition-colors"
           >
             Create Your First Sequence
           </button>
@@ -242,42 +246,42 @@ export default function EmailPage() {
           {sequences.map((sequence) => (
             <div
               key={sequence.id}
-              className="bg-white border border-slate-200 rounded-lg p-6 hover:shadow-lg transition-shadow"
+              className="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-sm transition-shadow shadow-sm"
             >
-              <div className="flex items-start justify-between mb-3">
-                <h3 className="text-lg font-bold text-slate-900 flex-1">{sequence.name}</h3>
+              <div className="flex items-start justify-between mb-4">
+                <h3 className="text-lg font-black tracking-tight text-slate-900 flex-1">{sequence.name}</h3>
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleEdit(sequence)}
-                    className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                    className="text-slate-600 hover:text-slate-900 font-medium text-sm"
                   >
-                    ✏️
+                    Edit
                   </button>
                   <button
                     onClick={() => handleDelete(sequence.id)}
-                    className="text-red-600 hover:text-red-700 text-sm font-medium"
+                    className="text-red-600 hover:text-red-700 font-medium text-sm"
                   >
-                    🗑️
+                    Delete
                   </button>
                 </div>
               </div>
 
               <div className="space-y-3">
                 <div>
-                  <p className="text-xs font-medium text-slate-600 uppercase mb-1">Subject</p>
+                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Subject</p>
                   <p className="text-sm text-slate-700">{sequence.subject}</p>
                 </div>
 
                 <div>
-                  <p className="text-xs font-medium text-slate-600 uppercase mb-1">Preview</p>
+                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Preview</p>
                   <p className="text-sm text-slate-600 line-clamp-3">{sequence.body}</p>
                 </div>
 
                 <div className="flex items-center justify-between pt-3 border-t border-slate-200">
-                  <div className="text-sm text-slate-500">
+                  <div className="text-sm text-slate-600">
                     {sequence.delayDays > 0 ? `Send after ${sequence.delayDays} days` : "Send immediately"}
                   </div>
-                  <span className="text-xs text-slate-400">
+                  <span className="text-xs text-slate-500">
                     Created {new Date(sequence.createdAt).toLocaleDateString()}
                   </span>
                 </div>

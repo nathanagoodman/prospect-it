@@ -171,18 +171,18 @@ export default function SettingsPage() {
     <div className="p-8 bg-slate-50 min-h-screen">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Settings</h1>
-        <p className="text-slate-500 mt-1">Manage your profile and preferences</p>
+        <h1 className="text-4xl font-black tracking-tight text-slate-900">Settings</h1>
+        <p className="text-slate-500 font-medium mt-2">Manage your profile and preferences</p>
       </div>
 
       {/* Error/Success Messages */}
       {error && (
-        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm font-medium">
           {error}
         </div>
       )}
       {success && (
-        <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
+        <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-2xl text-green-700 text-sm font-medium">
           {success}
         </div>
       )}
@@ -191,11 +191,11 @@ export default function SettingsPage() {
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-8">
           {/* Profile Section */}
-          <div className="bg-white rounded-lg border border-slate-200 p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-6">Profile</h2>
-            <div className="space-y-4">
+          <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
+            <h2 className="text-2xl font-black tracking-tight text-slate-900 mb-6">Profile</h2>
+            <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
                   Name
                 </label>
                 <input
@@ -203,13 +203,13 @@ export default function SettingsPage() {
                   name="name"
                   value={formData.name || ""}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
                   placeholder="Your name"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
                   Email
                 </label>
                 <input
@@ -217,13 +217,13 @@ export default function SettingsPage() {
                   name="email"
                   value={formData.email || ""}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
                   placeholder="your@email.com"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
                   Company
                 </label>
                 <input
@@ -231,13 +231,13 @@ export default function SettingsPage() {
                   name="company"
                   value={formData.company || ""}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
                   placeholder="Your company"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
                   Phone
                 </label>
                 <input
@@ -245,7 +245,7 @@ export default function SettingsPage() {
                   name="phone"
                   value={formData.phone || ""}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
                   placeholder="(555) 000-0000"
                 />
               </div>
@@ -253,56 +253,60 @@ export default function SettingsPage() {
           </div>
 
           {/* User Tier Section */}
-          <div className="bg-white rounded-lg border border-slate-200 p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-6">Account Type</h2>
-            <div className="space-y-4">
-              <p className="text-sm text-slate-600 mb-4">
+          <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
+            <h2 className="text-2xl font-black tracking-tight text-slate-900 mb-6">Account Type</h2>
+            <div className="space-y-6">
+              <p className="text-sm text-slate-600 font-medium">
                 Choose your account type. This determines your available features and dashboard.
               </p>
 
               <div className="grid grid-cols-2 gap-4">
                 <button
                   onClick={() => handleTierChange("GC")}
-                  className={`p-4 border-2 rounded-lg transition-all ${
+                  className={`p-6 border-2 rounded-xl transition-all flex flex-col items-center gap-3 ${
                     formData.tier === "GC"
                       ? "border-orange-500 bg-orange-50"
-                      : "border-slate-300 hover:border-orange-300"
+                      : "border-slate-200 hover:border-slate-300"
                   }`}
                 >
-                  <div className="text-2xl mb-2">🏗️</div>
-                  <div className="font-bold text-slate-900">GC</div>
-                  <div className="text-xs text-slate-600 mt-1">General Contractor</div>
+                  <svg className="w-8 h-8 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
+                  </svg>
+                  <div className="font-black tracking-tight text-slate-900">GC</div>
+                  <div className="text-xs text-slate-600 font-medium">General Contractor</div>
                 </button>
 
                 <button
                   onClick={() => handleTierChange("TRADE")}
-                  className={`p-4 border-2 rounded-lg transition-all ${
+                  className={`p-6 border-2 rounded-xl transition-all flex flex-col items-center gap-3 ${
                     formData.tier === "TRADE"
                       ? "border-orange-500 bg-orange-50"
-                      : "border-slate-300 hover:border-orange-300"
+                      : "border-slate-200 hover:border-slate-300"
                   }`}
                 >
-                  <div className="text-2xl mb-2">⚡</div>
-                  <div className="font-bold text-slate-900">Trade</div>
-                  <div className="text-xs text-slate-600 mt-1">Specialized Contractor</div>
+                  <svg className="w-8 h-8 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  </svg>
+                  <div className="font-black tracking-tight text-slate-900">Trade</div>
+                  <div className="text-xs text-slate-600 font-medium">Specialized Contractor</div>
                 </button>
               </div>
 
               {showTierWarning && (
-                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <p className="text-sm text-yellow-800 font-medium mb-3">
-                    ⚠️ Changing your account type will affect your dashboard and available features.
+                <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl">
+                  <p className="text-sm text-amber-900 font-semibold mb-4">
+                    Changing your account type will affect your dashboard and available features.
                   </p>
                   <div className="flex gap-3">
                     <button
                       onClick={confirmTierChange}
-                      className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded font-medium text-sm transition-colors"
+                      className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg font-medium text-sm transition-colors"
                     >
                       Confirm Change
                     </button>
                     <button
                       onClick={() => setShowTierWarning(false)}
-                      className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded font-medium text-sm transition-colors"
+                      className="px-4 py-2 border border-slate-200 text-slate-700 rounded-lg font-medium text-sm transition-colors hover:bg-slate-50"
                     >
                       Cancel
                     </button>
@@ -313,9 +317,9 @@ export default function SettingsPage() {
           </div>
 
           {/* Trade Toggles Section */}
-          <div className="bg-white rounded-lg border border-slate-200 p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-2">Trade Specialties</h2>
-            <p className="text-sm text-slate-600 mb-6">
+          <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
+            <h2 className="text-2xl font-black tracking-tight text-slate-900 mb-2">Trade Specialties</h2>
+            <p className="text-sm text-slate-600 font-medium mb-6">
               Select all trades you work in. These will appear on your dashboard.
             </p>
 
@@ -326,14 +330,14 @@ export default function SettingsPage() {
                   <button
                     key={trade}
                     onClick={() => toggleTrade(trade)}
-                    className={`p-4 rounded-lg border-2 transition-all flex flex-col items-center gap-2 ${
+                    className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
                       isEnabled
-                        ? "border-orange-500 bg-orange-50"
-                        : "border-slate-300 bg-slate-50 hover:border-slate-400"
+                        ? "border-orange-500 bg-orange-50 ring-2 ring-orange-500"
+                        : "border-slate-200 bg-white hover:border-slate-300"
                     }`}
                   >
                     <span className="text-2xl">{TRADE_ICONS[trade]}</span>
-                    <span className={`text-xs font-medium capitalize ${isEnabled ? "text-orange-700" : "text-slate-700"}`}>
+                    <span className={`text-xs font-semibold capitalize ${isEnabled ? "text-orange-700" : "text-slate-700"}`}>
                       {trade}
                     </span>
                   </button>
@@ -346,26 +350,26 @@ export default function SettingsPage() {
         {/* Sidebar */}
         <div className="lg:col-span-1">
           {/* Save Button */}
-          <div className="bg-white rounded-lg border border-slate-200 p-6 sticky top-8">
-            <h3 className="text-sm font-bold text-slate-900 mb-4">Actions</h3>
+          <div className="bg-white rounded-2xl border border-slate-200 p-8 sticky top-8 shadow-sm">
+            <h3 className="text-sm font-black tracking-tight text-slate-900 mb-4">Actions</h3>
             <button
               onClick={handleSave}
               disabled={saving}
-              className="w-full px-4 py-3 bg-orange-500 hover:bg-orange-600 disabled:bg-slate-400 text-white rounded-lg font-medium transition-colors"
+              className="w-full px-6 py-3 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-400 text-white rounded-xl font-medium transition-colors"
             >
               {saving ? "Saving..." : "Save Changes"}
             </button>
 
             <div className="mt-6 pt-6 border-t border-slate-200">
-              <h3 className="text-sm font-bold text-slate-900 mb-3">Summary</h3>
-              <div className="space-y-2 text-sm">
+              <h3 className="text-sm font-black tracking-tight text-slate-900 mb-4">Summary</h3>
+              <div className="space-y-3 text-sm">
                 <div>
-                  <p className="text-slate-600">Account Type</p>
-                  <p className="font-medium text-slate-900">{formData.tier || user.tier}</p>
+                  <p className="text-slate-600 font-medium">Account Type</p>
+                  <p className="font-semibold text-slate-900 mt-1">{formData.tier || user.tier}</p>
                 </div>
                 <div>
-                  <p className="text-slate-600">Active Trades</p>
-                  <p className="font-medium text-slate-900">{enabledTrades.length} selected</p>
+                  <p className="text-slate-600 font-medium">Active Trades</p>
+                  <p className="font-semibold text-slate-900 mt-1">{enabledTrades.length} selected</p>
                 </div>
               </div>
             </div>

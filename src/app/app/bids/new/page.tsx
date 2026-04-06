@@ -203,14 +203,14 @@ export default function NewBidPage() {
     <div className="p-8 bg-slate-50 min-h-screen">
       {/* Header */}
       <div className="mb-8">
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 mb-4 text-sm">
           <Link href="/app/bids" className="text-orange-600 hover:text-orange-700">
             Bids
           </Link>
           <span className="text-slate-400">/</span>
           <span className="text-slate-600">New Bid</span>
         </div>
-        <h1 className="text-3xl font-bold text-slate-900">Create New Bid</h1>
+        <h1 className="text-4xl font-black tracking-tight text-slate-900">Create New Bid</h1>
         <p className="text-slate-500 mt-1">Fill in the details below to create a new bid</p>
       </div>
 
@@ -218,11 +218,11 @@ export default function NewBidPage() {
         {/* Main Form */}
         <div className="lg:col-span-2 space-y-6">
           {/* Job Info Section */}
-          <div className="bg-white rounded-lg border border-slate-200 p-6">
-            <h2 className="text-lg font-bold text-slate-900 mb-4 pb-4 border-b border-slate-200">Job Information</h2>
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
+            <h2 className="text-lg font-bold text-slate-900 border-b border-slate-100 pb-4 mb-6">Job Information</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Job Name *</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Job Name *</label>
                 <input
                   type="text"
                   name="jobName"
@@ -230,29 +230,29 @@ export default function NewBidPage() {
                   onChange={handleInputChange}
                   required
                   placeholder="e.g., Kitchen Remodel - Main Street"
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full rounded-xl border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Description</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Description</label>
                 <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
                   rows={3}
                   placeholder="Add project details..."
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full rounded-xl border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Trade Type *</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Trade Type *</label>
                   <select
                     name="tradeType"
                     value={formData.tradeType}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full rounded-xl border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4"
                   >
                     <option value="">Select trade type...</option>
                     {Object.values(TRADE_CONFIGS).map((config) => (
@@ -263,12 +263,12 @@ export default function NewBidPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Client</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Client</label>
                   <select
                     name="clientId"
                     value={formData.clientId}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full rounded-xl border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4"
                   >
                     <option value="">Select client...</option>
                     {clients.map((client) => (
@@ -280,24 +280,24 @@ export default function NewBidPage() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Due Date</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Due Date</label>
                 <input
                   type="date"
                   name="dueDate"
                   value={formData.dueDate}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full rounded-xl border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4"
                 />
               </div>
             </div>
           </div>
 
           {/* Cost Breakdown Section */}
-          <div className="bg-white rounded-lg border border-slate-200 p-6">
-            <h2 className="text-lg font-bold text-slate-900 mb-4 pb-4 border-b border-slate-200">Cost Breakdown</h2>
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
+            <h2 className="text-lg font-bold text-slate-900 border-b border-slate-100 pb-4 mb-6">Cost Breakdown</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Material Cost ($)</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Material Cost ($)</label>
                 <input
                   type="number"
                   name="materialCost"
@@ -305,13 +305,13 @@ export default function NewBidPage() {
                   onChange={handleInputChange}
                   min="0"
                   step="0.01"
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full rounded-xl border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Labor Hours</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Labor Hours</label>
                   <input
                     type="number"
                     name="laborHours"
@@ -319,11 +319,11 @@ export default function NewBidPage() {
                     onChange={handleInputChange}
                     min="0"
                     step="0.5"
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full rounded-xl border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Labor Rate ($/hr)</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Labor Rate ($/hr)</label>
                   <input
                     type="number"
                     name="laborRate"
@@ -331,14 +331,14 @@ export default function NewBidPage() {
                     onChange={handleInputChange}
                     min="0"
                     step="0.01"
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full rounded-xl border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Equipment Cost ($)</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Equipment Cost ($)</label>
                   <input
                     type="number"
                     name="equipmentCost"
@@ -346,11 +346,11 @@ export default function NewBidPage() {
                     onChange={handleInputChange}
                     min="0"
                     step="0.01"
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full rounded-xl border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Subcontractor ($)</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Subcontractor ($)</label>
                   <input
                     type="number"
                     name="subcontractorCost"
@@ -358,11 +358,11 @@ export default function NewBidPage() {
                     onChange={handleInputChange}
                     min="0"
                     step="0.01"
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full rounded-xl border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">Permit Cost ($)</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">Permit Cost ($)</label>
                   <input
                     type="number"
                     name="permitCost"
@@ -370,7 +370,7 @@ export default function NewBidPage() {
                     onChange={handleInputChange}
                     min="0"
                     step="0.01"
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full rounded-xl border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4"
                   />
                 </div>
               </div>
@@ -378,11 +378,11 @@ export default function NewBidPage() {
           </div>
 
           {/* Markup & Margins Section */}
-          <div className="bg-white rounded-lg border border-slate-200 p-6">
-            <h2 className="text-lg font-bold text-slate-900 mb-4 pb-4 border-b border-slate-200">Markup & Margins</h2>
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
+            <h2 className="text-lg font-bold text-slate-900 border-b border-slate-100 pb-4 mb-6">Markup & Margins</h2>
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Overhead (%)</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Overhead (%)</label>
                 <input
                   type="number"
                   name="overheadPercent"
@@ -390,11 +390,11 @@ export default function NewBidPage() {
                   onChange={handleInputChange}
                   min="0"
                   step="0.1"
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full rounded-xl border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Profit (%)</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Profit (%)</label>
                 <input
                   type="number"
                   name="profitPercent"
@@ -402,11 +402,11 @@ export default function NewBidPage() {
                   onChange={handleInputChange}
                   min="0"
                   step="0.1"
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full rounded-xl border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Contingency (%)</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Contingency (%)</label>
                 <input
                   type="number"
                   name="contingencyPercent"
@@ -414,7 +414,7 @@ export default function NewBidPage() {
                   onChange={handleInputChange}
                   min="0"
                   step="0.1"
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full rounded-xl border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4"
                 />
               </div>
             </div>
@@ -422,8 +422,8 @@ export default function NewBidPage() {
 
           {/* Trade-Specific Metrics Section */}
           {formData.tradeType && (
-            <div className="bg-orange-50 rounded-lg border border-orange-200 p-6">
-              <div className="flex items-center gap-2 mb-4 pb-4 border-b border-orange-200">
+            <div className="bg-orange-50/50 rounded-2xl border border-orange-200 shadow-sm p-8">
+              <div className="flex items-center gap-2 mb-6 pb-4 border-b border-orange-200">
                 <span className="text-2xl">
                   {getTradeConfig(formData.tradeType).icon}
                 </span>
@@ -434,7 +434,7 @@ export default function NewBidPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {getTradeSpecificMetrics(formData.tradeType).map((metric) => (
                   <div key={metric.key}>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                    <label className="block text-sm font-semibold text-slate-700 mb-2">
                       {metric.label} ({metric.unit})
                     </label>
                     <input
@@ -447,7 +447,7 @@ export default function NewBidPage() {
                       step={metric.type === "number" ? "1" : "0.01"}
                       placeholder="0"
                       title={metric.description}
-                      className="w-full px-4 py-2 border border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4"
                     />
                     <p className="text-xs text-slate-500 mt-1">{metric.description}</p>
                   </div>
@@ -457,13 +457,13 @@ export default function NewBidPage() {
           )}
 
           {/* Line Items Section */}
-          <div className="bg-white rounded-lg border border-slate-200 p-6">
-            <div className="flex items-center justify-between mb-4 pb-4 border-b border-slate-200">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
               <h2 className="text-lg font-bold text-slate-900">Line Items</h2>
               <button
                 type="button"
                 onClick={addLineItem}
-                className="text-orange-600 hover:text-orange-700 text-sm font-medium"
+                className="text-orange-600 hover:text-orange-700 font-semibold text-sm"
               >
                 + Add Item
               </button>
@@ -475,7 +475,7 @@ export default function NewBidPage() {
                     <select
                       value={item.category}
                       onChange={(e) => updateLineItem(item.id, "category", e.target.value)}
-                      className="flex-1 px-3 py-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="flex-1 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4 text-sm"
                     >
                       <option value="">Select category...</option>
                       {getTradeConfig(formData.tradeType).costCategories.map((cat) => (
@@ -490,7 +490,7 @@ export default function NewBidPage() {
                       placeholder="Category"
                       value={item.category}
                       onChange={(e) => updateLineItem(item.id, "category", e.target.value)}
-                      className="flex-1 px-3 py-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="flex-1 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4 text-sm"
                     />
                   )}
                   <input
@@ -498,27 +498,27 @@ export default function NewBidPage() {
                     placeholder="Description"
                     value={item.description}
                     onChange={(e) => updateLineItem(item.id, "description", e.target.value)}
-                    className="flex-1 px-3 py-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="flex-1 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4 text-sm"
                   />
                   <input
                     type="number"
                     placeholder="Qty"
                     value={item.qty}
                     onChange={(e) => updateLineItem(item.id, "qty", parseFloat(e.target.value) || 1)}
-                    className="w-16 px-3 py-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-16 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4 text-sm"
                   />
                   <input
                     type="number"
                     placeholder="Price"
                     value={item.unitPrice}
                     onChange={(e) => updateLineItem(item.id, "unitPrice", parseFloat(e.target.value) || 0)}
-                    className="w-24 px-3 py-2 border border-slate-300 rounded text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-24 rounded-lg border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4 text-sm"
                   />
                   {lineItems.length > 1 && (
                     <button
                       type="button"
                       onClick={() => removeLineItem(item.id)}
-                      className="text-red-600 hover:text-red-700 text-sm px-2 py-2"
+                      className="text-slate-400 hover:text-red-500 text-sm px-2 py-2"
                     >
                       ✕
                     </button>
@@ -531,8 +531,8 @@ export default function NewBidPage() {
 
         {/* Calculation Panel */}
         <div className="lg:col-span-1">
-          <div className="sticky top-8 bg-white rounded-lg border border-slate-200 p-6 shadow-lg">
-            <h3 className="text-lg font-bold text-slate-900 mb-6 pb-4 border-b border-slate-200">Bid Summary</h3>
+          <div className="sticky top-8 bg-white rounded-2xl border border-slate-200 shadow-lg p-8">
+            <h3 className="text-lg font-bold text-slate-900 mb-6 pb-4 border-b border-slate-100">Bid Summary</h3>
 
             {/* Trade Metrics Summary */}
             {formData.tradeType && Object.keys(tradeMetrics).length > 0 && (
@@ -546,9 +546,9 @@ export default function NewBidPage() {
                         (m) => m.key === key
                       );
                       return metric ? (
-                        <div key={key} className="flex justify-between text-xs">
-                          <span className="text-slate-600">{metric.label}</span>
-                          <span className="font-medium text-slate-900">
+                        <div key={key} className="flex justify-between text-sm">
+                          <span className="text-slate-500">{metric.label}</span>
+                          <span className="font-semibold text-slate-900">
                             {value} {metric.unit}
                           </span>
                         </div>
@@ -560,30 +560,30 @@ export default function NewBidPage() {
 
             <div className="space-y-4 text-sm mb-6">
               <div className="flex justify-between">
-                <span className="text-slate-600">Subtotal</span>
-                <span className="font-medium text-slate-900">${calculations.subtotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span className="text-slate-500">Subtotal</span>
+                <span className="font-semibold text-slate-900">${calculations.subtotal.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-600">Overhead ({formData.overheadPercent}%)</span>
-                <span className="font-medium text-slate-900">${calculations.overhead.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span className="text-slate-500">Overhead ({formData.overheadPercent}%)</span>
+                <span className="font-semibold text-slate-900">${calculations.overhead.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-600">Profit ({formData.profitPercent}%)</span>
-                <span className="font-medium text-orange-600">${calculations.profit.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span className="text-slate-500">Profit ({formData.profitPercent}%)</span>
+                <span className="font-semibold text-orange-600">${calculations.profit.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-600">Contingency ({formData.contingencyPercent}%)</span>
-                <span className="font-medium text-slate-900">${calculations.contingency.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span className="text-slate-500">Contingency ({formData.contingencyPercent}%)</span>
+                <span className="font-semibold text-slate-900">${calculations.contingency.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
 
               <div className="pt-4 border-t border-slate-200 flex justify-between">
                 <span className="font-bold text-slate-900">Total Bid</span>
-                <span className="text-2xl font-bold text-orange-600">${calculations.totalBid.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                <span className="text-3xl font-black text-slate-900">${calculations.totalBid.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
 
-              <div className="bg-orange-50 border border-orange-200 rounded p-3">
-                <p className="text-xs text-slate-600">Profit Margin</p>
-                <p className="text-2xl font-bold text-orange-600">{calculations.profitMargin.toFixed(1)}%</p>
+              <div className="bg-orange-50 border border-orange-100 rounded-xl p-4">
+                <p className="text-xs text-slate-500">Profit Margin</p>
+                <p className="text-2xl font-bold text-slate-900">{calculations.profitMargin.toFixed(1)}%</p>
               </div>
             </div>
 
@@ -591,13 +591,13 @@ export default function NewBidPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-slate-400 text-white font-medium py-3 rounded-lg transition-colors"
+                className="w-full bg-slate-900 text-white hover:bg-slate-800 rounded-xl py-3.5 font-bold transition-colors disabled:bg-slate-400"
               >
                 {submitting ? "Creating..." : "Create Bid"}
               </button>
               <Link
                 href="/app/bids"
-                className="block text-center bg-slate-100 hover:bg-slate-200 text-slate-900 font-medium py-3 rounded-lg transition-colors"
+                className="block text-center border border-slate-200 text-slate-700 rounded-xl py-3.5 font-semibold transition-colors hover:bg-slate-50"
               >
                 Cancel
               </Link>

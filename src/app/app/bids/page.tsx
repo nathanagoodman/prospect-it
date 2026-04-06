@@ -52,94 +52,99 @@ export default function BidsPage() {
 
   if (loading) {
     return (
-      <div className="p-8">
-        <div className="text-center text-slate-500">Loading bids...</div>
+      <div className="p-8 bg-slate-50 min-h-screen">
+        <div className="flex justify-center items-center h-64">
+          <div className="text-center">
+            <div className="inline-block w-8 h-8 border-4 border-slate-200 border-t-slate-900 rounded-full animate-spin mb-4"></div>
+            <p className="text-slate-500 font-medium">Loading bids...</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="p-8 bg-white min-h-screen">
+    <div className="p-8 bg-slate-50 min-h-screen">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Bids</h1>
-          <p className="text-slate-500 mt-1">Manage and track all your bids</p>
+          <h1 className="text-4xl font-black tracking-tight text-slate-900">Bids</h1>
+          <p className="text-slate-500 font-medium mt-2">Manage and track all your bids</p>
         </div>
         <Link
           href="/app/bids/new"
-          className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+          className="inline-flex items-center px-6 py-3 bg-slate-900 text-white rounded-xl font-medium hover:bg-slate-800 transition-colors"
         >
           + New Bid
         </Link>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
-          <p className="text-xs font-medium text-slate-600 uppercase">Total Bids</p>
-          <p className="text-2xl font-bold text-slate-900 mt-1">{bids.length}</p>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 border-l-4 border-l-orange-500">
+          <p className="text-slate-600 text-sm font-medium">Total Bids</p>
+          <p className="text-4xl font-black text-slate-900 mt-2">{bids.length}</p>
         </div>
-        <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
-          <p className="text-xs font-medium text-slate-600 uppercase">Total Value</p>
-          <p className="text-2xl font-bold text-slate-900 mt-1">
-            ${bids.reduce((sum, b) => sum + b.totalBid, 0).toLocaleString()}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 border-l-4 border-l-blue-500">
+          <p className="text-slate-600 text-sm font-medium">Total Value</p>
+          <p className="text-4xl font-black text-slate-900 mt-2">
+            ${(bids.reduce((sum, b) => sum + b.totalBid, 0) / 1000).toFixed(0)}k
           </p>
         </div>
-        <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
-          <p className="text-xs font-medium text-slate-600 uppercase">Avg. Margin</p>
-          <p className="text-2xl font-bold text-slate-900 mt-1">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 border-l-4 border-l-purple-500">
+          <p className="text-slate-600 text-sm font-medium">Avg. Margin</p>
+          <p className="text-4xl font-black text-slate-900 mt-2">
             {(bids.reduce((sum, b) => sum + b.profitMargin, 0) / Math.max(bids.length, 1)).toFixed(1)}%
           </p>
         </div>
-        <div className="bg-slate-50 rounded-lg p-4 border border-slate-200">
-          <p className="text-xs font-medium text-slate-600 uppercase">Accepted</p>
-          <p className="text-2xl font-bold text-slate-900 mt-1">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 border-l-4 border-l-green-500">
+          <p className="text-slate-600 text-sm font-medium">Accepted</p>
+          <p className="text-4xl font-black text-slate-900 mt-2">
             {bids.filter((b) => b.status === "ACCEPTED").length}
           </p>
         </div>
       </div>
 
       {/* Bids Table */}
-      <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
         {bids.length > 0 ? (
           <table className="w-full">
-            <thead className="bg-slate-50 border-b border-slate-200">
+            <thead className="bg-slate-50 border-b border-slate-100">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase">Job Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase">Total Bid</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase">Profit Margin</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase">Due Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase">Created</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wide">Job Name</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wide">Total Bid</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wide">Profit Margin</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wide">Status</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wide">Due Date</th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wide">Created</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody className="divide-y divide-slate-100">
               {bids.map((bid) => (
                 <tr
                   key={bid.id}
-                  className={`hover:bg-slate-50 transition-colors ${statusBgColors[bid.status] || "bg-white"}`}
+                  className="hover:bg-slate-50/50 transition-colors"
                 >
                   <td className="px-6 py-4">
-                    <Link href={`/app/bids/${bid.id}`} className="font-medium text-orange-600 hover:text-orange-700">
+                    <Link href={`/app/bids/${bid.id}`} className="font-semibold text-orange-600 hover:text-orange-700 transition-colors">
                       {bid.jobName}
                     </Link>
                   </td>
-                  <td className="px-6 py-4 font-medium text-slate-900">${bid.totalBid.toLocaleString()}</td>
-                  <td className="px-6 py-4 text-slate-600">{bid.profitMargin.toFixed(1)}%</td>
+                  <td className="px-6 py-4 font-semibold text-slate-900">${bid.totalBid.toLocaleString()}</td>
+                  <td className="px-6 py-4 font-medium text-slate-900">{bid.profitMargin.toFixed(1)}%</td>
                   <td className="px-6 py-4">
                     <span
-                      className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
+                      className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
                         statusColors[bid.status] || "bg-slate-100 text-slate-800"
                       }`}
                     >
                       {bid.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-slate-600">
+                  <td className="px-6 py-4 text-sm text-slate-600">
                     {bid.dueDate ? new Date(bid.dueDate).toLocaleDateString() : "—"}
                   </td>
-                  <td className="px-6 py-4 text-slate-500 text-sm">
+                  <td className="px-6 py-4 text-sm text-slate-500">
                     {new Date(bid.createdAt).toLocaleDateString()}
                   </td>
                 </tr>
@@ -148,10 +153,14 @@ export default function BidsPage() {
           </table>
         ) : (
           <div className="p-12 text-center">
-            <p className="text-slate-500 mb-4">No bids yet. Let's create your first one!</p>
+            <svg className="w-16 h-16 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <h3 className="text-lg font-semibold text-slate-900 mb-1">No bids yet</h3>
+            <p className="text-slate-500 font-medium mb-4">Create your first bid to get started</p>
             <Link
               href="/app/bids/new"
-              className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+              className="inline-flex items-center px-6 py-3 bg-slate-900 text-white rounded-xl font-medium hover:bg-slate-800 transition-colors"
             >
               Create Your First Bid
             </Link>
