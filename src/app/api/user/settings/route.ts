@@ -27,6 +27,9 @@ export async function GET(request: NextRequest) {
         tier: true,
         tradeType: true,
         enabledTrades: true,
+        subscriptionPlan: true,
+        subscriptionStatus: true,
+        stripeCustomerId: true,
       },
     });
 
@@ -101,6 +104,9 @@ export async function PATCH(request: NextRequest) {
         tier: true,
         tradeType: true,
         enabledTrades: true,
+        subscriptionPlan: true,
+        subscriptionStatus: true,
+        stripeCustomerId: true,
       },
     });
 

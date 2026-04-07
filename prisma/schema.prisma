@@ -62,6 +62,11 @@ model User {
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
+  // Stripe
+  stripeCustomerId   String?   @unique
+  subscriptionPlan   SubscriptionPlan?
+  subscriptionStatus SubscriptionStatus?
+
   accounts         Account[]
   sessions         Session[]
   bids             Bid[]
@@ -70,6 +75,7 @@ model User {
   emailSequences   EmailSequence[]
   companyProfile   CompanyProfile?
   invoices         Invoice[]
+  subscription     Subscription?
 }
 
 enum UserRole {
@@ -80,6 +86,38 @@ enum UserRole {
 enum UserTier {
   GC
   TRADE
+}
+
+enum SubscriptionPlan {
+  PRO
+  GC_PRO
+  GC_ELITE
+}
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  UNPAID
+}
+
+// ─── Subscription ───────────────────────────────────────────
+model Subscription {
+  id                   String             @id @default(cuid())
+  userId               String             @unique
+  stripeSubscriptionId String             @unique
+  stripePriceId        String
+  plan                 SubscriptionPlan
+  status               SubscriptionStatus @default(TRIALING)
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  trialEnd             DateTime?
+  cancelAtPeriodEnd    Boolean            @default(false)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 // ─── Client / Lead Management (CRM) ────────────────────────

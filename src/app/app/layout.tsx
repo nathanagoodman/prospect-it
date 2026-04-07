@@ -3,12 +3,15 @@
 import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
+import SubscriptionBanner from "@/components/SubscriptionBanner";
 
 interface UserData {
   tier: "GC" | "TRADE";
   tradeType?: string;
   enabledTrades: string[];
   name?: string;
+  subscriptionPlan?: string | null;
+  subscriptionStatus?: string | null;
 }
 
 interface NavItem {
@@ -202,6 +205,10 @@ export default function AppLayout({
 
       {/* Main Content */}
       <div className={`flex-1 transition-all duration-300 ${sidebarExpanded ? "ml-60" : "ml-16"}`}>
+        <SubscriptionBanner
+          plan={user?.subscriptionPlan || null}
+          status={user?.subscriptionStatus || null}
+        />
         <main className="h-screen overflow-auto">{children}</main>
       </div>
     </div>

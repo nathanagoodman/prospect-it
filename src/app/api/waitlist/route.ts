@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { notifyWaitlistSignup } from "@/lib/notifications";
 
 export async function POST(request: NextRequest) {
   try {
@@ -33,6 +34,9 @@ export async function POST(request: NextRequest) {
         trade: trade || null,
       },
     });
+
+    // Notify admin about new signup
+    await notifyWaitlistSignup({ email, name, company, trade });
 
     return NextResponse.json(
       { message: "Successfully added to waitlist", entry },
