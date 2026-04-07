@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 const PLANS = [
@@ -60,11 +59,20 @@ const PLANS = [
 ];
 
 export default function PricingPage() {
-  const { data: session } = useSession();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState<string | null>(null);
 
+  useEffect(() => {
+    // Check if user is logged in without requiring SessionProvider
+    fetch("/api/user/settings")
+      .then((res) => {
+        if (res.ok) setIsLoggedIn(true);
+      })
+      .catch(() => {});
+  }, []);
+
   const handleSubscribe = async (planKey: string) => {
-    if (!session) {
+    if (!isLoggedIn) {
       window.location.href = `/login?callbackUrl=/pricing`;
       return;
     }
@@ -103,7 +111,7 @@ export default function PricingPage() {
             <span className="text-sm font-bold text-slate-500 ml-0.5">IQ</span>
           </Link>
           <div className="flex gap-3">
-            {session ? (
+            {isLoggedIn ? (
               <Link
                 href="/app"
                 className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-semibold transition-colors"
