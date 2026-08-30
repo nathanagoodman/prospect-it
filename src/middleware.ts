@@ -1,5 +1,6 @@
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
+import { adminAllowlist } from "@/lib/admin-emails";
 
 export async function middleware(request: NextRequest) {
   const token = await getToken({
@@ -9,27 +10,31 @@ export async function middleware(request: NextRequest) {
 
   const path = request.nextUrl.pathname;
 
-  // Protect /app/* and /admin/* routes
-  if (path.startsWith("/app") || path.startsWith("/admin")) {
-    if (!token) {
-      return NextResponse.redirect(
-        new URL(`/login?callbackUrl=${encodeURIComponent(path)}`, request.url)
-      );
+  if (!token) {
+    return NextResponse.redirect(
+      new URL(`/login?callbackUrl=${encodeURIComponent(path)}`, request.url)
+    );
+  }
+
+  // /admin additionally requires admin rights. Without this, any signed-in
+  // user could load the admin shell. The API routes re-check against the
+  // database, which is the authoritative gate.
+  if (path.startsWith("/admin")) {
+    const email = (token.email as string | undefined)?.trim().toLowerCase();
+    const isAdmin =
+      token.role === "ADMIN" ||
+      (!!email && adminAllowlist().includes(email));
+
+    if (!isAdmin) {
+      return NextResponse.redirect(new URL("/app", request.url));
     }
   }
 
-  // Allow all other routes publicly
   return NextResponse.next();
 }
 
+// Scoped to the gated sections only, so the JWT isn't decrypted on every
+// static asset and public API request.
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    "/((?!_next/static|_next/image|favicon.ico).*)",
-  ],
+  matcher: ["/app/:path*", "/admin/:path*"],
 };

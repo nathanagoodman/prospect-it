@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { stripe, PLANS, type PlanKey } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
 import { notifyNewSubscription, notifySubscriptionCanceled } from "@/lib/notifications";
+import { logActivity } from "@/lib/activity";
 import Stripe from "stripe";
 
 // Disable body parsing — Stripe needs the raw body for signature verification
@@ -83,6 +84,11 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
     select: { email: true, name: true },
+  });
+
+  await logActivity(userId, "subscription_started", {
+    plan: planConfig.name,
+    amount: planConfig.price,
   });
 
   // Send admin notification
@@ -196,6 +202,8 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
     let planName = "Pro";
     if (priceId === process.env.STRIPE_GC_PRICE_ID) planName = "GC Pro";
     if (priceId === process.env.STRIPE_ELITE_PRICE_ID) planName = "GC Elite";
+
+    await logActivity(user.id, "subscription_canceled", { plan: planName });
 
     await notifySubscriptionCanceled({
       email: user.email,

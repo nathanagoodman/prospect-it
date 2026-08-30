@@ -67,6 +67,10 @@ model User {
   subscriptionPlan   SubscriptionPlan?
   subscriptionStatus SubscriptionStatus?
 
+  // Usage tracking — powers the admin engagement view
+  lastActiveAt DateTime?
+  loginCount   Int       @default(0)
+
   accounts         Account[]
   sessions         Session[]
   bids             Bid[]
@@ -76,6 +80,12 @@ model User {
   companyProfile   CompanyProfile?
   invoices         Invoice[]
   subscription     Subscription?
+  activities       Activity[]
+  passwordResetTokens PasswordResetToken[]
+
+  @@index([createdAt])
+  @@index([lastActiveAt])
+  @@index([subscriptionStatus])
 }
 
 enum UserRole {
@@ -118,6 +128,8 @@ model Subscription {
   updatedAt            DateTime           @updatedAt
 
   user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status])
 }
 
 // ─── Client / Lead Management (CRM) ────────────────────────
@@ -143,6 +155,10 @@ model Client {
   jobs        Job[]
   emailLogs   EmailLog[]
   invoices    Invoice[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 enum LeadStatus {
@@ -197,6 +213,11 @@ model Bid {
   lineItems       BidLineItem[]
   job             Job?
   invoices        Invoice[]
+
+  @@index([userId])
+  @@index([clientId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 enum BidStatus {
@@ -219,6 +240,8 @@ model BidLineItem {
   createdAt   DateTime @default(now())
 
   bid         Bid      @relation(fields: [bidId], references: [id], onDelete: Cascade)
+
+  @@index([bidId])
 }
 
 // ─── Job Tracking ───────────────────────────────────────────
@@ -254,6 +277,11 @@ model Job {
   bid             Bid?      @relation(fields: [bidId], references: [id])
   changeOrders    ChangeOrder[]
   dailyLogs       DailyLog[]
+
+  @@index([userId])
+  @@index([clientId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 enum JobStatus {
@@ -275,6 +303,8 @@ model ChangeOrder {
   createdAt   DateTime @default(now())
 
   job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId])
 }
 
 model DailyLog {
@@ -288,6 +318,8 @@ model DailyLog {
   createdAt   DateTime @default(now())
 
   job         Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@index([jobId])
 }
 
 // ─── Email Sequences ────────────────────────────────────────
@@ -304,6 +336,8 @@ model EmailSequence {
   updatedAt   DateTime @updatedAt
 
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model EmailLog {
@@ -315,6 +349,8 @@ model EmailLog {
   sentAt      DateTime @default(now())
 
   client      Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
 }
 
 // ─── Waitlist ───────────────────────────────────────────────
@@ -324,7 +360,78 @@ model WaitlistEntry {
   name      String?
   company   String?
   trade     String?
+
+  // CRM pipeline fields
+  source          String    @default("waitlist") // waitlist | manual | referral
+  stage           LeadStage @default(NEW)
+  score           Int       @default(0) // 0-100, computed from engagement
+  lastContactedAt DateTime?
+  convertedAt     DateTime?
+  convertedUserId String? // set when this lead becomes a registered User
+
+  notes LeadNote[]
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([stage])
+  @@index([createdAt])
+  @@index([convertedUserId])
+}
+
+enum LeadStage {
+  NEW
+  CONTACTED
+  INTERESTED
+  TRIAL
+  CONVERTED
+  CHURNED
+}
+
+// ─── Lead Activity Notes (CRM) ──────────────────────────────
+model LeadNote {
+  id        String   @id @default(cuid())
+  leadId    String
+  content   String   @db.Text
+  type      String   @default("note") // note | email | call | status_change
+  createdAt DateTime @default(now())
+
+  lead WaitlistEntry @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId])
+  @@index([createdAt])
+}
+
+// ─── Product Usage Activity ─────────────────────────────────
+// Records what users actually DO in the product, so the admin
+// dashboard can show real engagement instead of guessing.
+model Activity {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String // login | bid_created | job_created | invoice_created | client_created | subscription_started | subscription_canceled
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([type])
+  @@index([createdAt])
+}
+
+// ─── Password Reset ─────────────────────────────────────────
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  token     String    @unique // sha256 hash of the emailed token
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
 }
 
 // ─── Company Branding Profile ───────────────────────────────
@@ -396,6 +503,11 @@ model Invoice {
   bid               Bid?          @relation(fields: [bidId], references: [id])
   client            Client?       @relation(fields: [clientId], references: [id])
   lineItems         InvoiceLineItem[]
+
+  @@index([userId])
+  @@index([clientId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model InvoiceLineItem {
@@ -408,6 +520,8 @@ model InvoiceLineItem {
   createdAt     DateTime @default(now())
 
   invoice       Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
 }
 
 enum InvoiceType {

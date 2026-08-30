@@ -4,6 +4,13 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
 import { prisma } from "./prisma";
+import { logActivity } from "./activity";
+
+/** Current terms version. Bump when terms change so acceptance is re-stamped. */
+export const TOS_VERSION = "2026-04-05";
+
+/** How long a cached role in the JWT is trusted before re-reading the DB. */
+const ROLE_REFRESH_MS = 5 * 60 * 1000;
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -21,8 +28,12 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
+        // Registration stores emails lowercased, and Postgres lookups are
+        // case-sensitive — normalize here or "Nathan@X.com" can never log in.
+        const email = credentials.email.trim().toLowerCase();
+
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
+          where: { email },
         });
 
         if (!user || !user.hashedPassword) return null;
@@ -47,15 +58,43 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = (user as any).role;
+        token.role = user.role;
         token.id = user.id;
       }
+
+      // Refresh the role from the database when it's missing (Google OAuth
+      // sign-ins carry no role) or when the cached copy is older than the
+      // TTL. Without the TTL, promoting or demoting an admin wouldn't take
+      // effect until their token expired.
+      //
+      // Any throw inside this callback makes NextAuth treat the session as
+      // invalid and silently signs the user out, so failures must never
+      // escape this try/catch.
+      const checkedAt = token.roleCheckedAt ?? 0;
+      const stale = Date.now() - checkedAt > ROLE_REFRESH_MS;
+
+      if (token.email && (!token.role || !token.id || stale)) {
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { email: (token.email as string).toLowerCase() },
+            select: { id: true, role: true },
+          });
+          if (dbUser) {
+            token.id = dbUser.id;
+            token.role = dbUser.role;
+            token.roleCheckedAt = Date.now();
+          }
+        } catch (error) {
+          console.error("[auth] jwt callback lookup failed:", error);
+        }
+      }
+
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).role = token.role;
-        (session.user as any).id = token.id;
+        session.user.role = token.role ?? "USER";
+        session.user.id = token.id ?? "";
       }
       return session;
     },
@@ -63,14 +102,37 @@ export const authOptions: NextAuthOptions = {
   events: {
     async createUser({ user }) {
       // Stamp TOS acceptance for OAuth signups
-      await prisma.user.update({
-        where: { id: user.id },
-        data: {
-          tosAcceptedAt: new Date(),
-          privacyAcceptedAt: new Date(),
-          tosVersion: "2026-04-05",
-        },
-      });
+      try {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            tosAcceptedAt: new Date(),
+            privacyAcceptedAt: new Date(),
+            tosVersion: TOS_VERSION,
+          },
+        });
+        await logActivity(user.id, "signup", { provider: "oauth" });
+
+        // If this email was on the waitlist, mark that lead converted.
+        if (user.email) {
+          await prisma.waitlistEntry.updateMany({
+            where: {
+              email: user.email.toLowerCase(),
+              stage: { not: "CONVERTED" },
+            },
+            data: {
+              stage: "CONVERTED",
+              convertedAt: new Date(),
+              convertedUserId: user.id,
+            },
+          });
+        }
+      } catch (error) {
+        console.error("[auth] createUser event failed:", error);
+      }
+    },
+    async signIn({ user }) {
+      if (user?.id) await logActivity(user.id, "login");
     },
   },
   pages: {

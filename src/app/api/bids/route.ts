@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { logActivity } from "@/lib/activity";
 
 function calculateBidTotals(bidData: {
   materialCost: number;
@@ -122,6 +123,8 @@ export async function POST(request: NextRequest) {
       },
       include: { lineItems: true },
     });
+
+    await logActivity(userId, "bid_created", { bidId: bid.id, jobName: bid.jobName, total: bid.totalBid });
 
     return NextResponse.json(bid, { status: 201 });
   } catch (error) {

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { logActivity } from "@/lib/activity";
 
 export async function GET(request: NextRequest) {
   try {
@@ -75,6 +76,8 @@ export async function POST(request: NextRequest) {
         status: data.status || "LEAD",
       },
     });
+
+    await logActivity(userId, "client_created", { clientId: client.id, name: client.name });
 
     return NextResponse.json(client, { status: 201 });
   } catch (error) {

@@ -134,3 +134,56 @@ export async function notifySubscriptionCanceled(data: {
     `,
   });
 }
+
+// ─── Transactional email to users ─────────────────────────
+
+/**
+ * Sends a password reset link to a user.
+ *
+ * Unlike the admin notifications above, this one throws when Resend isn't
+ * configured — a silently dropped reset email would leave the user stuck
+ * with no signal that anything went wrong.
+ */
+export async function sendPasswordResetEmail(data: {
+  to: string;
+  name?: string | null;
+  resetUrl: string;
+}) {
+  if (!resend) {
+    console.warn(
+      `[email] RESEND_API_KEY not set — reset link for ${data.to}: ${data.resetUrl}`
+    );
+    return;
+  }
+
+  const greeting = data.name ? `Hi ${data.name},` : "Hi,";
+
+  await resend.emails.send({
+    from: EMAIL_FROM,
+    to: data.to,
+    subject: "Reset your Pro Spec IQ password",
+    html: `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
+        <div style="background: #0f172a; border-radius: 16px; padding: 28px; margin-bottom: 20px;">
+          <span style="color: #ffffff; font-size: 20px; font-weight: 200; letter-spacing: -0.5px;">PRO SPEC</span>
+          <span style="color: #f97316; font-size: 20px; font-weight: 900; letter-spacing: -0.5px;">IQ</span>
+        </div>
+        <p style="font-size: 15px; color: #0f172a; margin: 0 0 12px;">${greeting}</p>
+        <p style="font-size: 15px; color: #334155; line-height: 1.6; margin: 0 0 24px;">
+          We received a request to reset your password. Click the button below to choose a new one.
+          This link expires in one hour.
+        </p>
+        <a href="${data.resetUrl}"
+           style="display: inline-block; background: #f97316; color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 10px; font-weight: 600; font-size: 15px;">
+          Reset password
+        </a>
+        <p style="font-size: 13px; color: #64748b; line-height: 1.6; margin: 24px 0 0;">
+          If you didn't request this, you can safely ignore this email — your password won't change.
+        </p>
+        <p style="font-size: 12px; color: #94a3b8; line-height: 1.6; margin: 16px 0 0; word-break: break-all;">
+          Or paste this link into your browser:<br />${data.resetUrl}
+        </p>
+      </div>
+    `,
+  });
+}
