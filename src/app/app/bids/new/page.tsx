@@ -103,6 +103,56 @@ export default function NewBidPage() {
 
   const [tradeMetrics, setTradeMetrics] = useState<TradeMetrics>({});
 
+  // Inline client creation. Without this, discovering mid-bid that the
+  // customer isn't saved yet means abandoning the bid, going to Clients,
+  // and starting over — painful on desktop, a dealbreaker on a phone at
+  // a job site.
+  const [showNewClient, setShowNewClient] = useState(false);
+  const [savingClient, setSavingClient] = useState(false);
+  const [clientError, setClientError] = useState<string | null>(null);
+  const [newClient, setNewClient] = useState({
+    name: "",
+    company: "",
+    email: "",
+    phone: "",
+  });
+
+  const createClient = async () => {
+    if (!newClient.name.trim()) {
+      setClientError("A name is required.");
+      return;
+    }
+    setSavingClient(true);
+    setClientError(null);
+    try {
+      const res = await fetch("/api/clients", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: newClient.name.trim(),
+          company: newClient.company.trim() || undefined,
+          email: newClient.email.trim() || undefined,
+          phone: newClient.phone.trim() || undefined,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Could not save that client.");
+      }
+      const created = await res.json();
+      // Add to the list and select it immediately — the whole point is
+      // not losing your place in the bid.
+      setClients((prev) => [created, ...prev]);
+      setFormData((prev) => ({ ...prev, clientId: created.id }));
+      setNewClient({ name: "", company: "", email: "", phone: "" });
+      setShowNewClient(false);
+    } catch (e) {
+      setClientError(e instanceof Error ? e.message : "Could not save that client.");
+    } finally {
+      setSavingClient(false);
+    }
+  };
+
   // Calculated values
   const [calculations, setCalculations] = useState({
     laborCost: 0,
@@ -500,6 +550,13 @@ export default function NewBidPage() {
                       </option>
                     ))}
                   </select>
+                  <button
+                    type="button"
+                    onClick={() => setShowNewClient(true)}
+                    className="mt-2 text-sm font-semibold text-orange-600 hover:text-orange-700"
+                  >
+                    + Add a new client
+                  </button>
                 </div>
               </div>
               <div>
@@ -1207,6 +1264,132 @@ export default function NewBidPage() {
             </div>
           </div>
         </div>
+
+        {/* ─── New client modal ───────────────────────────────────
+            Deliberately minimal: only the name is required. A contractor
+            standing in a driveway shouldn't have to fill an address form
+            to price the job. The rest can be added later from Clients. */}
+        {showNewClient && (
+          <div className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center">
+            <div
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+              onClick={() => !savingClient && setShowNewClient(false)}
+            />
+            <div
+              className="relative w-full max-w-md rounded-t-2xl bg-white p-6 shadow-2xl sm:rounded-2xl"
+              onKeyDown={(e) => {
+                // This modal lives inside the bid <form>. Without this,
+                // Enter in any field would submit the bid instead of
+                // saving the client.
+                if (e.key === "Enter") e.preventDefault();
+              }}
+            >
+              <div className="mb-5 flex items-start justify-between">
+                <div>
+                  <h3 className="text-lg font-bold text-slate-900">New client</h3>
+                  <p className="mt-0.5 text-sm text-slate-500">
+                    Only a name is required — you can fill in the rest later.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => !savingClient && setShowNewClient(false)}
+                  className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100"
+                  aria-label="Close"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M18 6L6 18M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {clientError && (
+                <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                  {clientError}
+                </div>
+              )}
+
+              <div className="space-y-3">
+                <div>
+                  <label className="mb-1.5 block text-sm font-semibold text-slate-700">
+                    Name <span className="text-orange-500">*</span>
+                  </label>
+                  <input
+                    autoFocus
+                    value={newClient.name}
+                    onChange={(e) => setNewClient({ ...newClient, name: e.target.value })}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        createClient();
+                      }
+                    }}
+                    placeholder="Dave Miller"
+                    className="w-full rounded-lg border border-slate-200 px-4 py-3 outline-none transition focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-sm font-semibold text-slate-700">
+                    Company
+                  </label>
+                  <input
+                    value={newClient.company}
+                    onChange={(e) => setNewClient({ ...newClient, company: e.target.value })}
+                    placeholder="Miller Construction"
+                    className="w-full rounded-lg border border-slate-200 px-4 py-3 outline-none transition focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                  />
+                </div>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-1.5 block text-sm font-semibold text-slate-700">
+                      Phone
+                    </label>
+                    <input
+                      type="tel"
+                      inputMode="tel"
+                      value={newClient.phone}
+                      onChange={(e) => setNewClient({ ...newClient, phone: e.target.value })}
+                      placeholder="(555) 123-4567"
+                      className="w-full rounded-lg border border-slate-200 px-4 py-3 outline-none transition focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1.5 block text-sm font-semibold text-slate-700">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      inputMode="email"
+                      value={newClient.email}
+                      onChange={(e) => setNewClient({ ...newClient, email: e.target.value })}
+                      placeholder="dave@example.com"
+                      className="w-full rounded-lg border border-slate-200 px-4 py-3 outline-none transition focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 flex gap-2">
+                <button
+                  type="button"
+                  onClick={createClient}
+                  disabled={savingClient || !newClient.name.trim()}
+                  className="flex-1 rounded-lg bg-orange-500 px-4 py-3 font-semibold text-white transition hover:bg-orange-600 disabled:opacity-50"
+                >
+                  {savingClient ? "Saving…" : "Save & use"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowNewClient(false)}
+                  disabled={savingClient}
+                  className="rounded-lg border border-slate-200 px-5 py-3 font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ─── Mobile running total ───────────────────────────────
             On desktop the summary card is sticky in the right column.
