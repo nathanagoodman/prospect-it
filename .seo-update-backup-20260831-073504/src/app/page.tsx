@@ -280,7 +280,7 @@ export default function LandingPage() {
           <div className="hidden md:flex items-center gap-8 text-sm text-slate-500 font-medium">
             <a href="#features" className="hover:text-slate-900 transition">Features</a>
             <a href="#pricing" className="hover:text-slate-900 transition">Pricing</a>
-            <Link href="/trades" className="hover:text-slate-900 transition">Trades</Link>
+            <a href="#trades" className="hover:text-slate-900 transition">Trades</a>
           </div>
           <div className="flex items-center gap-4">
             <Link href="/login" className="text-sm text-slate-500 hover:text-slate-900 transition font-medium">
@@ -348,52 +348,33 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ─── Trades covered ─── */}
+      {/* ─── Logos / Social Proof ─── */}
       <section className="border-y border-slate-100 py-12 bg-slate-50/50">
         <div className="max-w-7xl mx-auto px-6">
-          <p className="text-center text-xs font-semibold text-slate-400 uppercase tracking-widest mb-8">Purpose-built estimating for every trade</p>
-          <div className="flex items-center justify-center gap-8 md:gap-12 flex-wrap">
-            {[
-              { slug: "electrical", label: "ELECTRICAL" },
-              { slug: "plumbing", label: "PLUMBING" },
-              { slug: "hvac", label: "HVAC" },
-              { slug: "concrete", label: "CONCRETE" },
-              { slug: "roofing", label: "ROOFING" },
-              { slug: "framing", label: "FRAMING" },
-            ].map((t) => (
-              <Link
-                key={t.slug}
-                href={`/trades/${t.slug}`}
-                className="text-sm md:text-base font-black text-slate-400 hover:text-orange-500 tracking-tight whitespace-nowrap transition-colors"
-              >
-                {t.label}
-              </Link>
+          <p className="text-center text-xs font-semibold text-slate-400 uppercase tracking-widest mb-8">Trusted by contractors across the country</p>
+          <div className="flex items-center justify-center gap-12 md:gap-16 flex-wrap opacity-40">
+            {["HENDERSON ELECTRIC", "SUMMIT BUILDERS", "APEX CONCRETE", "IRONWORK PROS", "RIDGELINE GC"].map((name) => (
+              <span key={name} className="text-sm md:text-base font-black text-slate-900 tracking-tight whitespace-nowrap">{name}</span>
             ))}
-            <Link href="/trades" className="text-sm md:text-base font-black text-orange-500 hover:text-orange-600 tracking-tight whitespace-nowrap transition-colors">
-              + 9 MORE
-            </Link>
           </div>
         </div>
       </section>
 
-      {/* ─── What the estimator actually does ─── */}
+      {/* ─── Stats ─── */}
       <section className="bg-slate-900 py-20 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(249,115,22,0.08),transparent_70%)]"></div>
-        <div className="relative max-w-7xl mx-auto px-6">
-          <p className="text-center text-xs font-semibold text-orange-400/70 uppercase tracking-widest mb-12">Built around how contractors actually price work</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {[
-              { stat: "15", label: "Trades with their own cost inputs" },
-              { stat: "4", label: "Markups calculated on every bid" },
-              { stat: "0", label: "Per-seat fees, ever" },
-              { stat: "7", label: "Day free trial, no card charged" },
-            ].map((s) => (
-              <div key={s.label}>
-                <p className="text-4xl md:text-6xl font-black bg-gradient-to-b from-orange-400 to-orange-600 bg-clip-text text-transparent">{s.stat}</p>
-                <p className="text-sm text-slate-400 mt-3 font-medium">{s.label}</p>
-              </div>
-            ))}
-          </div>
+        <div className="relative max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+          {[
+            { stat: "15%", label: "Avg. margin improvement" },
+            { stat: "3hrs", label: "Saved per bid" },
+            { stat: "2x", label: "More bids submitted" },
+            { stat: "98%", label: "Bid accuracy rate" },
+          ].map((s) => (
+            <div key={s.label}>
+              <p className="text-4xl md:text-6xl font-black bg-gradient-to-b from-orange-400 to-orange-600 bg-clip-text text-transparent">{s.stat}</p>
+              <p className="text-sm text-slate-400 mt-3 font-medium">{s.label}</p>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -458,36 +439,15 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-wrap justify-center gap-3 max-w-3xl mx-auto">
             {[
-              { label: "General Contractors", slug: "general" },
-              { label: "Electricians", slug: "electrical" },
-              { label: "Plumbers", slug: "plumbing" },
-              { label: "HVAC Technicians", slug: "hvac" },
-              { label: "Roofers", slug: "roofing" },
-              { label: "Concrete Contractors", slug: "concrete" },
-              { label: "Framers", slug: "framing" },
-              { label: "Painters", slug: "painting" },
-              { label: "Landscapers", slug: "landscaping" },
-              { label: "Excavation", slug: "excavation" },
-              { label: "Drywall", slug: "drywall" },
-              { label: "Flooring", slug: "flooring" },
-              { label: "Masonry", slug: "masonry" },
-              { label: "Welding", slug: "welding" },
-              { label: "Demolition", slug: "demolition" },
-              { label: "Insulation", slug: "insulation" },
+              "General Contractors", "Electricians", "Plumbers", "HVAC Technicians",
+              "Roofers", "Concrete Contractors", "Framers", "Painters",
+              "Landscapers", "Excavation", "Drywall", "Flooring", "Masonry",
+              "Welding", "Demolition",
             ].map((t) => (
-              <Link
-                key={t.slug}
-                href={`/trades/${t.slug}`}
-                className="bg-white border border-slate-200 text-slate-700 px-5 py-2.5 rounded-full text-sm font-semibold shadow-sm hover:border-orange-400 hover:text-orange-600 transition-all"
-              >
-                {t.label}
-              </Link>
+              <span key={t} className="bg-white border border-slate-200 text-slate-700 px-5 py-2.5 rounded-full text-sm font-semibold shadow-sm hover:border-orange-400 hover:text-orange-600 transition-all cursor-default">
+                {t}
+              </span>
             ))}
-          </div>
-          <div className="mt-10">
-            <Link href="/trades" className="text-sm font-semibold text-orange-500 hover:text-orange-600 transition">
-              See how estimating works for each trade →
-            </Link>
           </div>
         </div>
       </section>
@@ -578,7 +538,7 @@ export default function LandingPage() {
         <div className="relative max-w-2xl mx-auto px-6 text-center">
           <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">Stop leaving money<br />on the table</h2>
           <p className="text-slate-500 mt-6 text-lg">
-            Get on the list for early access. We&apos;re onboarding founding contractors now, and early accounts help shape what gets built next.
+            Join hundreds of contractors who bid smarter, track margins, and grow with Pro Spec IQ.
           </p>
 
           <div className="mt-10 max-w-md mx-auto">
@@ -639,7 +599,7 @@ export default function LandingPage() {
                 <div className="flex flex-col gap-3">
                   <a href="#features" className="text-sm text-slate-500 hover:text-white transition">Features</a>
                   <a href="#pricing" className="text-sm text-slate-500 hover:text-white transition">Pricing</a>
-                  <Link href="/trades" className="text-sm text-slate-500 hover:text-white transition">Trades</Link>
+                  <a href="#trades" className="text-sm text-slate-500 hover:text-white transition">Trades</a>
                 </div>
               </div>
               <div>
