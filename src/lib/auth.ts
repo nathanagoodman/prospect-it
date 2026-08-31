@@ -15,10 +15,19 @@ const ROLE_REFRESH_MS = 5 * 60 * 1000;
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
+    // Only register Google when it's actually configured. The non-null
+    // assertions here previously registered a provider with empty
+    // credentials, so the button rendered and every click failed. With
+    // this, NextAuth simply doesn't advertise Google until the env vars
+    // exist — and the sign-in pages hide the button to match.
+    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+      ? [
+          GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+          }),
+        ]
+      : []),
     CredentialsProvider({
       name: "credentials",
       credentials: {
