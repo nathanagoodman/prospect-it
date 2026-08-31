@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getTradeConfig, getTradeSpecificMetrics } from "@/lib/trades";
 import { toClientLineItems } from "@/lib/bid-calc";
+import { TradeIcon } from "@/components/icons";
 
 interface LineItem {
   id: string;
@@ -298,7 +299,7 @@ export default function BidDetailPage({
         <div className="mt-4 flex flex-wrap items-start justify-between gap-4">
           <div>
             <div className="flex items-center gap-3">
-              <span className="text-2xl" aria-hidden="true">{config.icon}</span>
+              <TradeIcon trade={bid.tradeType} className="w-7 h-7 shrink-0 text-orange-500" />
               <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
                 {bid.jobName}
               </h1>

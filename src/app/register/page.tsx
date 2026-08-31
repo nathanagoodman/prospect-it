@@ -4,24 +4,15 @@ import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { TradeIcon, NavIcon } from "@/components/icons";
 
+// The display name doubles as the icon key once lowercased, which keeps
+// this list to one column and makes a missing icon impossible to miss.
 const TRADES = [
-  { name: "Electrical", icon: "⚡" },
-  { name: "Plumbing", icon: "🔧" },
-  { name: "HVAC", icon: "❄️" },
-  { name: "Roofing", icon: "🏠" },
-  { name: "Concrete", icon: "🧱" },
-  { name: "Framing", icon: "🪵" },
-  { name: "Painting", icon: "🎨" },
-  { name: "Landscaping", icon: "🌿" },
-  { name: "Drywall", icon: "🪟" },
-  { name: "Flooring", icon: "🪵" },
-  { name: "Masonry", icon: "🧱" },
-  { name: "Welding", icon: "🔥" },
-  { name: "Demolition", icon: "💥" },
-  { name: "Excavation", icon: "⛏️" },
-  { name: "Insulation", icon: "🧤" },
-];
+  "Electrical", "Plumbing", "HVAC", "Roofing", "Concrete", "Framing",
+  "Painting", "Landscaping", "Drywall", "Flooring", "Masonry", "Welding",
+  "Demolition", "Excavation", "Insulation",
+].map((name) => ({ name }));
 
 type Tier = "GC" | "TRADE" | null;
 
@@ -198,7 +189,7 @@ export default function RegisterPage() {
                 onClick={() => handleTierSelect("GC")}
                 className="p-8 border-2 border-slate-200 rounded-2xl hover:border-orange-500 hover:bg-orange-50 transition-all text-left group"
               >
-                <div className="text-5xl mb-4">🏗️</div>
+                <div className="mb-4 text-orange-500"><TradeIcon trade="general" className="w-12 h-12" /></div>
                 <h2 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-orange-600 transition-colors">
                   General Contractor
                 </h2>
@@ -211,7 +202,7 @@ export default function RegisterPage() {
                 onClick={() => handleTierSelect("TRADE")}
                 className="p-8 border-2 border-slate-200 rounded-2xl hover:border-orange-500 hover:bg-orange-50 transition-all text-left group"
               >
-                <div className="text-5xl mb-4">🔧</div>
+                <div className="mb-4 text-orange-500"><NavIcon name="jobs" className="w-12 h-12" /></div>
                 <h2 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-orange-600 transition-colors">
                   Trade / Subcontractor
                 </h2>
@@ -329,7 +320,7 @@ export default function RegisterPage() {
                             : "bg-white text-slate-700 border border-slate-200 hover:border-orange-400"
                         }`}
                       >
-                        <span>{trade.icon}</span>
+                        <TradeIcon trade={trade.name} className="w-4 h-4 shrink-0" />
                         <span>{trade.name}</span>
                       </button>
                     ))}
@@ -363,7 +354,7 @@ export default function RegisterPage() {
                               : "bg-white text-slate-700 border border-slate-200 hover:border-orange-400"
                           }`}
                         >
-                          <span>{trade.icon}</span>
+                          <TradeIcon trade={trade.name} className="w-4 h-4 shrink-0" />
                           <span>{trade.name}</span>
                         </button>
                       ))}
@@ -386,7 +377,7 @@ export default function RegisterPage() {
                               : "bg-white text-slate-700 border border-slate-200 hover:border-orange-400"
                           }`}
                         >
-                          <span>{trade.icon}</span>
+                          <TradeIcon trade={trade.name} className="w-4 h-4 shrink-0" />
                           <span>{trade.name}</span>
                         </button>
                       ))}

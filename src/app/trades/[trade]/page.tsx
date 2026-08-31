@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTradeContent, TRADE_SLUGS } from "@/lib/trade-content";
 import { TRADE_CONFIGS } from "@/lib/trades";
+import { TradeIcon } from "@/components/icons";
 
 const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL ||
@@ -119,7 +120,7 @@ export default async function TradePage({
             <span className="text-slate-600">{config.label}</span>
           </nav>
 
-          <div className="mb-4 text-4xl" aria-hidden="true">{config.icon}</div>
+          <div className="mb-4 text-orange-500"><TradeIcon trade={trade} className="w-10 h-10" /></div>
           <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
             {content.headline}
           </h1>

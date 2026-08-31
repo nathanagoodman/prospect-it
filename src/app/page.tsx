@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { PLAN_LIST } from "@/lib/plans";
+import { NavIcon } from "@/components/icons";
 
 const TRADES = [
   "General Contractor",
@@ -193,8 +194,15 @@ function DashboardMockup() {
             <div className="w-7 h-7 bg-gradient-to-br from-orange-500 to-orange-600 rounded-md flex items-center justify-center">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M3 21L12 3L21 21H3Z" stroke="white" strokeWidth="2.5" strokeLinejoin="round"/><line x1="7.5" y1="14" x2="16.5" y2="14" stroke="white" strokeWidth="2" strokeLinecap="round"/></svg>
             </div>
-            {["📊","📋","🔨","👥","✉️"].map((icon, i) => (
-              <div key={i} className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm ${i === 0 ? "bg-orange-500" : "hover:bg-slate-700"}`}>{icon}</div>
+            {["dashboard", "bids", "jobs", "clients", "invoices"].map((name, i) => (
+              <div
+                key={name}
+                className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                  i === 0 ? "bg-orange-500 text-white" : "text-slate-400 hover:bg-slate-700"
+                }`}
+              >
+                <NavIcon name={name} className="w-4 h-4" />
+              </div>
             ))}
           </div>
 

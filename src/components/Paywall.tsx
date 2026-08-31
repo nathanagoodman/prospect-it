@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { NavIcon } from "@/components/icons";
 
 interface PaywallProps {
   feature: string;
@@ -38,7 +39,9 @@ export default function Paywall({
       </div>
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="bg-white rounded-2xl shadow-xl border border-slate-200 p-8 text-center max-w-sm mx-4">
-          <div className="text-4xl mb-3">🔒</div>
+          <div className="mb-3 flex justify-center text-slate-400">
+            <NavIcon name="lock" className="w-9 h-9" />
+          </div>
           <h3 className="text-lg font-bold text-slate-900 mb-2">
             {feature} requires {requiredPlan}
           </h3>

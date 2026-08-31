@@ -11,6 +11,7 @@ import {
   type TradeType,
 } from "@/lib/trades";
 import { estimateFromMetrics, hasCostBasis } from "@/lib/estimator";
+import { TradeIcon } from "@/components/icons";
 import {
   assembliesForTrade,
   hasAssemblies,
@@ -49,25 +50,6 @@ interface SubBidEntry {
   bidAmount: number;
   notes: string;
 }
-
-const TRADE_ICONS: { [key: string]: string } = {
-  electrical: "⚡",
-  plumbing: "🔧",
-  hvac: "❄️",
-  roofing: "🏠",
-  framing: "🪵",
-  drywall: "🪟",
-  painting: "🎨",
-  flooring: "🪵",
-  masonry: "🧱",
-  concrete: "🧱",
-  landscaping: "🌿",
-  welding: "🔥",
-  demolition: "💥",
-  excavation: "⛏️",
-  insulation: "🧤",
-  general: "🏗️",
-};
 
 export default function NewBidPage() {
   const router = useRouter();
@@ -543,7 +525,7 @@ export default function NewBidPage() {
             Create New Bid
           </h1>
           {isGC && (
-            <span className="inline-block px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-full">
+            <span className="inline-block px-3 py-1 bg-slate-800 text-white text-xs font-bold rounded-full">
               GC Mode
             </span>
           )}
@@ -635,7 +617,7 @@ export default function NewBidPage() {
                         .filter((config) => config.id !== "general")
                         .map((config) => (
                           <option key={config.id} value={config.id}>
-                            {config.icon} {config.label}
+                            {config.label}
                           </option>
                         ))}
                     </select>
@@ -731,7 +713,7 @@ export default function NewBidPage() {
                             </svg>
                           </div>
                         )}
-                        <span className="text-2xl">{TRADE_ICONS[trade.id] || trade.icon}</span>
+                        <TradeIcon trade={trade.id} className={`w-6 h-6 ${isSelected ? "text-orange-600" : "text-slate-500"}`} />
                         <span className={`text-xs font-semibold text-center leading-tight ${
                           isSelected ? "text-orange-700" : "text-slate-600"
                         }`}>
@@ -767,7 +749,7 @@ export default function NewBidPage() {
                           className="flex items-start gap-4 p-4 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 transition-colors"
                         >
                           <div className="flex items-center gap-3 min-w-[160px]">
-                            <span className="text-xl">{TRADE_ICONS[tradeId] || config.icon}</span>
+                            <TradeIcon trade={tradeId} className="w-5 h-5 shrink-0 text-slate-500" />
                             <span className="text-sm font-bold text-slate-900">{config.label}</span>
                           </div>
                           <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1184,9 +1166,10 @@ export default function NewBidPage() {
               {formData.tradeType && (
                 <div className="bg-orange-50/50 rounded-2xl border border-orange-200 shadow-sm p-5 sm:p-8">
                   <div className="flex items-center gap-2 mb-6 pb-4 border-b border-orange-200">
-                    <span className="text-2xl">
-                      {getTradeConfig(formData.tradeType).icon}
-                    </span>
+                    <TradeIcon
+                      trade={formData.tradeType}
+                      className="w-6 h-6 shrink-0 text-orange-600"
+                    />
                     <h2 className="text-lg font-bold text-slate-900">
                       {getTradeConfig(formData.tradeType).label} Metrics
                     </h2>
@@ -1485,7 +1468,7 @@ export default function NewBidPage() {
                     return (
                       <div key={tradeId} className="flex justify-between text-sm">
                         <span className="text-slate-500 flex items-center gap-1.5">
-                          <span className="text-base">{TRADE_ICONS[tradeId]}</span>
+                          <TradeIcon trade={tradeId} className="w-4 h-4 shrink-0" />
                           {config.label}
                         </span>
                         <span className={`font-semibold ${amount > 0 ? "text-slate-900" : "text-slate-300"}`}>
@@ -1745,7 +1728,15 @@ export default function NewBidPage() {
                 <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
                   Margin
                 </p>
-                <p className="text-sm font-bold text-orange-400">
+                <p
+                  className={`text-sm font-bold ${
+                    calculations.profitMargin >= 15
+                      ? "text-emerald-400"
+                      : calculations.profitMargin > 0
+                        ? "text-amber-400"
+                        : "text-slate-400"
+                  }`}
+                >
                   {calculations.profitMargin.toFixed(1)}%
                 </p>
               </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { TradeIcon } from "@/components/icons";
 
 interface UserData {
   id: string;
@@ -35,13 +36,6 @@ const ALL_TRADES = [
   "painting", "flooring", "masonry", "concrete", "landscaping",
   "carpentry", "general", "steel", "demolition",
 ];
-
-const TRADE_ICONS: { [key: string]: string } = {
-  electrical: "⚡", plumbing: "🔧", hvac: "❄️", roofing: "🏠",
-  framing: "🪵", drywall: "📋", painting: "🎨", flooring: "🪚",
-  masonry: "🧱", concrete: "🪨", landscaping: "🌳", carpentry: "🔨",
-  general: "🏗️", steel: "⚙️", demolition: "💥",
-};
 
 const COLOR_PRESETS = [
   "#f97316", "#ef4444", "#3b82f6", "#10b981", "#8b5cf6",
@@ -324,7 +318,7 @@ export default function SettingsPage() {
                         isEnabled ? "border-orange-500 bg-orange-50 ring-2 ring-orange-500" : "border-slate-200 bg-white hover:border-slate-300"
                       }`}
                     >
-                      <span className="text-2xl">{TRADE_ICONS[trade]}</span>
+                      <TradeIcon trade={trade} className="w-6 h-6 shrink-0 text-slate-500" />
                       <span className={`text-xs font-semibold capitalize ${isEnabled ? "text-orange-700" : "text-slate-700"}`}>{trade}</span>
                     </button>
                   );

@@ -106,14 +106,14 @@ export default function PricingPage() {
                 key={plan.key}
                 className={`relative bg-white rounded-2xl border-2 shadow-sm p-8 flex flex-col ${
                   isPopular
-                    ? "border-blue-500 shadow-lg shadow-blue-100 scale-[1.02]"
+                    ? "border-orange-500 shadow-lg shadow-orange-500/10 scale-[1.02]"
                     : "border-slate-200"
                 }`}
               >
                 {plan.badge && (
                   <div
                     className={`absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-bold text-white ${
-                      isPopular ? "bg-blue-500" : "bg-purple-500"
+                      isPopular ? "bg-orange-500" : "bg-slate-800"
                     }`}
                   >
                     {plan.badge}
@@ -138,13 +138,7 @@ export default function PricingPage() {
                     <li key={idx} className="flex items-start gap-3 text-sm">
                       <svg
                         className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
-                          feature.comingSoon
-                            ? "text-slate-300"
-                            : plan.accentColor === "orange"
-                            ? "text-orange-500"
-                            : plan.accentColor === "blue"
-                            ? "text-blue-500"
-                            : "text-purple-500"
+                          feature.comingSoon ? "text-slate-300" : "text-orange-500"
                         }`}
                         fill="none"
                         stroke="currentColor"
@@ -173,9 +167,7 @@ export default function PricingPage() {
                   disabled={loading === plan.key}
                   className={`w-full py-3.5 rounded-xl font-bold text-sm transition-colors disabled:opacity-50 ${
                     isPopular
-                      ? "bg-blue-600 text-white hover:bg-blue-700"
-                      : plan.accentColor === "purple"
-                      ? "bg-slate-900 text-white hover:bg-slate-800"
+                      ? "bg-orange-500 text-white hover:bg-orange-600"
                       : "bg-slate-900 text-white hover:bg-slate-800"
                   }`}
                 >

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { TRADE_SLUGS, TRADE_CONTENT } from "@/lib/trade-content";
 import { TRADE_CONFIGS } from "@/lib/trades";
+import { TradeIcon } from "@/components/icons";
 
 const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL ||
@@ -101,7 +102,7 @@ export default function TradesIndexPage() {
                 href={`/trades/${slug}`}
                 className="group rounded-2xl border border-slate-200 p-6 transition hover:border-orange-500 hover:shadow-lg hover:shadow-orange-500/5"
               >
-                <div className="mb-3 text-3xl" aria-hidden="true">{config.icon}</div>
+                <div className="mb-3 text-orange-500"><TradeIcon trade={slug} className="w-8 h-8" /></div>
                 <h2 className="font-bold text-slate-900 group-hover:text-orange-600">
                   {config.label}
                 </h2>

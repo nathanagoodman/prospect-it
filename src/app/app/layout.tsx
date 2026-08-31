@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import SubscriptionBanner from "@/components/SubscriptionBanner";
+import { NavIcon, TradeIcon } from "@/components/icons";
 
 interface UserData {
   tier: "GC" | "TRADE";
@@ -19,24 +20,6 @@ interface NavItem {
   label: string;
   icon: string;
 }
-
-const TRADE_ICONS: { [key: string]: string } = {
-  electrical: "⚡",
-  plumbing: "🔧",
-  hvac: "❄️",
-  roofing: "🏠",
-  framing: "🪵",
-  drywall: "📋",
-  painting: "🎨",
-  flooring: "🪚",
-  masonry: "🧱",
-  concrete: "🪨",
-  landscaping: "🌳",
-  carpentry: "🔨",
-  general: "🏗️",
-  steel: "⚙️",
-  demolition: "💥",
-};
 
 export default function AppLayout({
   children,
@@ -68,18 +51,18 @@ export default function AppLayout({
   }, []);
 
   const baseNavItems: NavItem[] = [
-    { href: "/app", label: "Dashboard", icon: "📊" },
-    { href: "/app/bids", label: "Bids", icon: "📋" },
-    { href: "/app/invoices", label: "Invoices", icon: "📄" },
-    { href: "/app/jobs", label: "Jobs", icon: "🔨" },
-    { href: "/app/clients", label: "Clients", icon: "👥" },
+    { href: "/app", label: "Dashboard", icon: "dashboard" },
+    { href: "/app/bids", label: "Bids", icon: "bids" },
+    { href: "/app/invoices", label: "Invoices", icon: "invoices" },
+    { href: "/app/jobs", label: "Jobs", icon: "jobs" },
+    { href: "/app/clients", label: "Clients", icon: "clients" },
     // Email sequences are intentionally hidden: the page has no API behind
     // it and everything the user builds is lost on refresh. Restore this
     // once /api/email-sequences and the send scheduler exist.
     // { href: "/app/email", label: "Email", icon: "✉️" },
   ];
 
-  const navItems = user?.tier === "GC" ? [...baseNavItems, { href: "/app/subs", label: "Subs", icon: "👷" }] : baseNavItems;
+  const navItems = user?.tier === "GC" ? [...baseNavItems, { href: "/app/subs", label: "Subs", icon: "subs" }] : baseNavItems;
 
   const isActive = (href: string) => {
     if (href === "/app") {
@@ -134,12 +117,12 @@ export default function AppLayout({
           <div className="px-4 py-3 border-b border-slate-800/80">
             <div className="flex items-center gap-2">
               {user.tier === "GC" ? (
-                <span className="inline-block px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-full">
+                <span className="inline-block px-3 py-1 bg-slate-700 text-white text-xs font-bold rounded-full">
                   GC
                 </span>
               ) : (
                 <span className="inline-flex items-center gap-1 px-3 py-1 bg-orange-500 text-white text-xs font-bold rounded-full">
-                  {TRADE_ICONS[user.tradeType || "general"]}
+                  <TradeIcon trade={user.tradeType || "general"} className="w-3.5 h-3.5" />
                   {user.tradeType ? user.tradeType.charAt(0).toUpperCase() + user.tradeType.slice(1) : "Trade"}
                 </span>
               )}
@@ -147,8 +130,8 @@ export default function AppLayout({
             {user.enabledTrades && user.enabledTrades.length > 0 && (
               <div className="mt-2 flex flex-wrap gap-1">
                 {user.enabledTrades.slice(0, 4).map((trade) => (
-                  <span key={trade} title={trade} className="text-lg">
-                    {TRADE_ICONS[trade] || "🔧"}
+                  <span key={trade} title={trade} className="text-slate-400">
+                    <TradeIcon trade={trade} className="w-4 h-4" />
                   </span>
                 ))}
                 {user.enabledTrades.length > 4 && (
@@ -174,7 +157,7 @@ export default function AppLayout({
                 }`}
                 title={sidebarExpanded ? "" : item.label}
               >
-                <span className="text-xl flex-shrink-0">{item.icon}</span>
+                <NavIcon name={item.icon} className="w-5 h-5 flex-shrink-0" />
                 {sidebarExpanded && <span className="text-sm font-semibold">{item.label}</span>}
               </button>
             );
@@ -188,7 +171,8 @@ export default function AppLayout({
             className="w-full px-3 py-2.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg text-sm flex items-center justify-center transition-colors"
             title="Settings"
           >
-            {sidebarExpanded ? "⚙️ Settings" : "⚙️"}
+            <NavIcon name="settings" className="w-5 h-5 shrink-0" />
+            {sidebarExpanded && <span className="ml-2">Settings</span>}
           </button>
           <button
             onClick={() => setSidebarExpanded(!sidebarExpanded)}
@@ -201,7 +185,11 @@ export default function AppLayout({
             onClick={handleLogout}
             className="w-full px-3 py-2.5 bg-slate-800 hover:bg-red-600 text-slate-300 hover:text-white rounded-lg text-sm transition-colors font-medium"
           >
-            {sidebarExpanded ? "Logout" : "🚪"}
+            {sidebarExpanded ? (
+              "Logout"
+            ) : (
+              <NavIcon name="logout" className="w-5 h-5 mx-auto" />
+            )}
           </button>
         </div>
       </div>
@@ -235,7 +223,7 @@ export default function AppLayout({
                   active ? "text-orange-400" : "text-slate-400"
                 }`}
               >
-                <span className="text-lg leading-none">{item.icon}</span>
+                <NavIcon name={item.icon} className="w-5 h-5" />
                 <span className="text-[10px] font-semibold">{item.label}</span>
               </button>
             );
@@ -246,7 +234,7 @@ export default function AppLayout({
               isActive("/app/settings") ? "text-orange-400" : "text-slate-400"
             }`}
           >
-            <span className="text-lg leading-none">⚙️</span>
+            <NavIcon name="settings" className="w-5 h-5" />
             <span className="text-[10px] font-semibold">Settings</span>
           </button>
         </div>
