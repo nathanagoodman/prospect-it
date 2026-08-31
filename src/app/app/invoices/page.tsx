@@ -68,14 +68,14 @@ export default function InvoicesPage() {
 
   if (loading) {
     return (
-      <div className="p-8 bg-slate-50 min-h-screen flex items-center justify-center">
+      <div className="p-4 sm:p-8 bg-slate-50 min-h-screen flex items-center justify-center">
         <div className="animate-spin h-8 w-8 border-4 border-orange-500 border-t-transparent rounded-full" />
       </div>
     );
   }
 
   return (
-    <div className="p-8 bg-slate-50 min-h-screen">
+    <div className="p-4 sm:p-8 bg-slate-50 min-h-screen">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -140,6 +140,7 @@ export default function InvoicesPage() {
         </div>
       ) : (
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-slate-100">
@@ -182,6 +183,7 @@ export default function InvoicesPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>

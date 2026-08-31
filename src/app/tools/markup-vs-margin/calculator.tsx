@@ -57,6 +57,7 @@ export default function MarkupCalculator() {
               <input
                 id="cost"
                 type="number"
+                inputMode="decimal"
                 min="0"
                 step="100"
                 value={cost || ""}
@@ -92,6 +93,7 @@ export default function MarkupCalculator() {
             <div className="relative mt-3">
               <input
                 type="number"
+                inputMode="decimal"
                 min="0"
                 max="99"
                 step="0.5"

@@ -115,14 +115,14 @@ export default function EmailPage() {
 
   if (loading) {
     return (
-      <div className="p-8 bg-slate-50 min-h-screen">
+      <div className="p-4 sm:p-8 bg-slate-50 min-h-screen">
         <div className="text-center text-slate-500">Loading sequences...</div>
       </div>
     );
   }
 
   return (
-    <div className="p-8 bg-slate-50 min-h-screen">
+    <div className="p-4 sm:p-8 bg-slate-50 min-h-screen">
       {/* This page has no backend yet — sequences live in React state only
           and are lost on refresh. Say so plainly rather than letting people
           build something that silently disappears. */}

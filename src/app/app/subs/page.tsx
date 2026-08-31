@@ -33,7 +33,7 @@ export default function SubsPage() {
   );
 
   return (
-    <div className="p-8 bg-slate-50 min-h-screen">
+    <div className="p-4 sm:p-8 bg-slate-50 min-h-screen">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-4xl font-black tracking-tight text-slate-900">Subcontractors</h1>

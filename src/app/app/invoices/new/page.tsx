@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import { toClientLineItems } from "@/lib/bid-calc";
 
 interface LineItem {
   description: string;
@@ -98,57 +99,17 @@ function NewInvoiceForm() {
             projectDescription: bid.description || "",
           }));
 
-          // Build customer-facing line items from the bid.
-          //
-          // Overhead, profit, and contingency are deliberately NOT listed
-          // separately — that would hand the customer an itemized breakdown
-          // of your margin. Instead the markup is distributed proportionally
-          // across the real cost lines, so the lines still sum to the bid
-          // total but read as ordinary prices.
-          const costLines: { description: string; base: number }[] = [];
-
-          if (Array.isArray(bid.lineItems) && bid.lineItems.length > 0) {
-            // Prefer the contractor's own itemization when it exists.
-            for (const li of bid.lineItems) {
-              const base = (li.quantity || 0) * (li.unitPrice || 0);
-              if (base > 0) {
-                costLines.push({
-                  description: li.description || li.category || "Work",
-                  base,
-                });
-              }
-            }
-          } else {
-            if (bid.materialCost > 0) costLines.push({ description: "Materials", base: bid.materialCost });
-            if (bid.laborCost > 0) costLines.push({ description: `Labor (${bid.laborHours || 0} hrs)`, base: bid.laborCost });
-            if (bid.equipmentCost > 0) costLines.push({ description: "Equipment", base: bid.equipmentCost });
-            if (bid.subcontractorCost > 0) costLines.push({ description: "Subcontractor", base: bid.subcontractorCost });
-            if (bid.permitCost > 0) costLines.push({ description: "Permits & fees", base: bid.permitCost });
-          }
-
-          const baseTotal = costLines.reduce((sum, l) => sum + l.base, 0);
-          // Scale cost lines up to the quoted total so the customer sees the
-          // agreed price without seeing how it was composed.
-          const markup =
-            baseTotal > 0 && bid.totalBid > 0 ? bid.totalBid / baseTotal : 1;
-
-          const items: LineItem[] = costLines.map((l) => ({
+          // Build customer-facing line items using the shared converter.
+          // It distributes markup across the real cost lines so overhead,
+          // profit, and contingency never appear on a customer document —
+          // and it sums direct costs AND line items, which an earlier
+          // inline version of this got wrong.
+          const items: LineItem[] = toClientLineItems(bid).map((l) => ({
             description: l.description,
             quantity: 1,
-            unitPrice: Math.round(l.base * markup * 100) / 100,
+            unitPrice: l.amount,
           }));
-
-          // Absorb any rounding drift into the last line so the invoice
-          // total matches the bid exactly.
-          if (items.length > 0) {
-            const sum = items.reduce((s, i) => s + i.unitPrice, 0);
-            const drift = Math.round((bid.totalBid - sum) * 100) / 100;
-            if (drift !== 0) {
-              items[items.length - 1].unitPrice =
-                Math.round((items[items.length - 1].unitPrice + drift) * 100) / 100;
-            }
-            setLineItems(items);
-          }
+          if (items.length > 0) setLineItems(items);
 
           // Set client if bid has one
           if (bid.clientId) {
@@ -387,14 +348,16 @@ function NewInvoiceForm() {
                   </div>
                   <div className="col-span-2">
                     <input
-                      type="number" value={item.quantity} min={0} step={0.5}
+                      type="number"
+                      inputMode="decimal" value={item.quantity} min={0} step={0.5}
                       onChange={(e) => updateLineItem(i, "quantity", parseFloat(e.target.value) || 0)}
                       className="w-full px-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-sm"
                     />
                   </div>
                   <div className="col-span-2">
                     <input
-                      type="number" value={item.unitPrice} min={0} step={0.01}
+                      type="number"
+                      inputMode="decimal" value={item.unitPrice} min={0} step={0.01}
                       onChange={(e) => updateLineItem(i, "unitPrice", parseFloat(e.target.value) || 0)}
                       className="w-full px-3 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white text-sm"
                     />
@@ -425,7 +388,8 @@ function NewInvoiceForm() {
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">Tax Rate (%)</label>
                 <input
-                  type="number" value={form.taxRate} min={0} step={0.1}
+                  type="number"
+                  inputMode="decimal" value={form.taxRate} min={0} step={0.1}
                   onChange={(e) => setForm({ ...form, taxRate: parseFloat(e.target.value) || 0 })}
                   className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
                 />
@@ -433,7 +397,8 @@ function NewInvoiceForm() {
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">Discount ($)</label>
                 <input
-                  type="number" value={form.discount} min={0} step={0.01}
+                  type="number"
+                  inputMode="decimal" value={form.discount} min={0} step={0.01}
                   onChange={(e) => setForm({ ...form, discount: parseFloat(e.target.value) || 0 })}
                   className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
                 />

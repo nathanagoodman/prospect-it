@@ -248,7 +248,7 @@ export default function BidDetailPage({
 
   if (loading) {
     return (
-      <div className="p-8">
+      <div className="p-4 sm:p-8">
         <p className="text-sm text-slate-400">Loading bid…</p>
       </div>
     );
@@ -256,7 +256,7 @@ export default function BidDetailPage({
 
   if (error && !bid) {
     return (
-      <div className="p-8">
+      <div className="p-4 sm:p-8">
         <div className="rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
           {error}
         </div>
@@ -279,7 +279,7 @@ export default function BidDetailPage({
   );
 
   return (
-    <div className="min-h-screen bg-slate-50 p-8">
+    <div className="min-h-screen bg-slate-50 p-4 sm:p-8">
       <div className="mx-auto max-w-5xl">
         <Link
           href="/app/bids"
@@ -340,7 +340,7 @@ export default function BidDetailPage({
         </div>
 
         {/* Share */}
-        <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6">
+        <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
               <h2 className="font-bold text-slate-900">Send to your customer</h2>
@@ -409,7 +409,7 @@ export default function BidDetailPage({
         <div className="mt-6 grid gap-6 lg:grid-cols-3">
           {/* Cost breakdown — internal only */}
           <div className="lg:col-span-2 space-y-6">
-            <section className="rounded-2xl border border-slate-200 bg-white p-6">
+            <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
               <h2 className="text-sm font-bold uppercase tracking-widest text-slate-400">
                 Cost breakdown
               </h2>
@@ -483,7 +483,7 @@ export default function BidDetailPage({
             </section>
 
             {bid.lineItems.length > 0 && (
-              <section className="rounded-2xl border border-slate-200 bg-white p-6">
+              <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
                 <h2 className="text-sm font-bold uppercase tracking-widest text-slate-400">
                   Line items
                 </h2>
@@ -521,7 +521,7 @@ export default function BidDetailPage({
           {/* Sidebar */}
           <div className="space-y-6">
             {enteredMetrics.length > 0 && (
-              <section className="rounded-2xl border border-slate-200 bg-white p-6">
+              <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
                 <h2 className="text-sm font-bold uppercase tracking-widest text-slate-400">
                   Takeoff
                 </h2>
@@ -538,7 +538,7 @@ export default function BidDetailPage({
               </section>
             )}
 
-            <section className="rounded-2xl border border-slate-200 bg-white p-6">
+            <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
               <h2 className="text-sm font-bold uppercase tracking-widest text-slate-400">
                 Actions
               </h2>

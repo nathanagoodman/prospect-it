@@ -123,7 +123,7 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="p-8 bg-slate-50 min-h-screen">
+      <div className="p-4 sm:p-8 bg-slate-50 min-h-screen">
         <div className="flex justify-center items-center h-64">
           <div className="text-center">
             <div className="inline-block w-8 h-8 border-4 border-slate-200 border-t-slate-900 rounded-full animate-spin mb-4"></div>
@@ -135,32 +135,32 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="p-8 bg-slate-50 min-h-screen">
+    <div className="p-4 sm:p-8 bg-slate-50 min-h-screen">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-black tracking-tight text-slate-900">
+        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900">
           Welcome back{user?.name ? `, ${user.name.split(" ")[0]}` : ""}
         </h1>
         <p className="text-slate-500 font-medium mt-2">{getFormattedDate()}</p>
       </div>
 
       {/* Stats Cards - Dynamic based on tier */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mb-8">
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 border-l-4 border-l-orange-500">
           <p className="text-slate-600 text-sm font-medium">{user?.tier === "GC" ? "Projects Managed" : "Bids Submitted"}</p>
-          <p className="text-4xl font-black text-slate-900 mt-2">{stats.totalBids}</p>
+          <p className="text-3xl sm:text-4xl font-black text-slate-900 mt-2">{stats.totalBids}</p>
         </div>
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 border-l-4 border-l-blue-500">
           <p className="text-slate-600 text-sm font-medium">Active Jobs</p>
-          <p className="text-4xl font-black text-slate-900 mt-2">{stats.activeJobs}</p>
+          <p className="text-3xl sm:text-4xl font-black text-slate-900 mt-2">{stats.activeJobs}</p>
         </div>
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 border-l-4 border-l-purple-500">
           <p className="text-slate-600 text-sm font-medium">Total Clients</p>
-          <p className="text-4xl font-black text-slate-900 mt-2">{stats.totalClients}</p>
+          <p className="text-3xl sm:text-4xl font-black text-slate-900 mt-2">{stats.totalClients}</p>
         </div>
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 border-l-4 border-l-green-500">
           <p className="text-slate-600 text-sm font-medium">Win Rate</p>
-          <p className="text-4xl font-black text-slate-900 mt-2">{stats.winRate}%</p>
+          <p className="text-3xl sm:text-4xl font-black text-slate-900 mt-2">{stats.winRate}%</p>
         </div>
       </div>
 
@@ -192,7 +192,7 @@ export default function Dashboard() {
       {/* Quick Action Card */}
       {user?.tier === "TRADE" && (
         <div className="mb-8">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-8">
             <div className="flex items-start justify-between">
               <div>
                 <h3 className="text-2xl font-black tracking-tight text-slate-900">Quick Bid</h3>
@@ -211,7 +211,7 @@ export default function Dashboard() {
 
       {user?.tier === "GC" && (
         <div className="mb-8">
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-8">
             <div className="flex items-start justify-between">
               <div>
                 <h3 className="text-2xl font-black tracking-tight text-slate-900">Sub Coordination</h3>

@@ -52,7 +52,7 @@ export default function BidsPage() {
 
   if (loading) {
     return (
-      <div className="p-8 bg-slate-50 min-h-screen">
+      <div className="p-4 sm:p-8 bg-slate-50 min-h-screen">
         <div className="flex justify-center items-center h-64">
           <div className="text-center">
             <div className="inline-block w-8 h-8 border-4 border-slate-200 border-t-slate-900 rounded-full animate-spin mb-4"></div>
@@ -64,7 +64,7 @@ export default function BidsPage() {
   }
 
   return (
-    <div className="p-8 bg-slate-50 min-h-screen">
+    <div className="p-4 sm:p-8 bg-slate-50 min-h-screen">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -108,6 +108,7 @@ export default function BidsPage() {
       {/* Bids Table */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
         {bids.length > 0 ? (
+          <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-slate-50 border-b border-slate-100">
               <tr>
@@ -170,6 +171,7 @@ export default function BidsPage() {
               ))}
             </tbody>
           </table>
+          </div>
         ) : (
           <div className="p-12 text-center">
             <svg className="w-16 h-16 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -38,3 +38,24 @@ html {
   background-color: rgba(249, 115, 22, 0.15);
   color: #0f172a;
 }
+
+/* ─── Mobile ────────────────────────────────────────────────
+   iOS Safari auto-zooms the whole page when you focus an input whose
+   font-size is under 16px, then leaves you scrolled sideways. Contractors
+   fill these forms one-handed on a phone, so force 16px on touch
+   viewports and let the desktop styles win above that. */
+@media (max-width: 767px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Respect the home-indicator area on modern iPhones so the fixed bottom
+   nav isn't half-covered by the system gesture bar. */
+@supports (padding: max(0px)) {
+  .pb-safe {
+    padding-bottom: max(0.625rem, env(safe-area-inset-bottom));
+  }
+}

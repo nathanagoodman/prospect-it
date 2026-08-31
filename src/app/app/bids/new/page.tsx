@@ -398,7 +398,7 @@ export default function NewBidPage() {
 
   if (userLoading) {
     return (
-      <div className="p-8 bg-slate-50 min-h-screen">
+      <div className="p-4 pb-40 lg:pb-8 sm:p-8 bg-slate-50 min-h-screen">
         <div className="flex justify-center items-center h-64">
           <div className="text-center">
             <div className="inline-block w-8 h-8 border-4 border-slate-200 border-t-slate-900 rounded-full animate-spin mb-4"></div>
@@ -410,7 +410,7 @@ export default function NewBidPage() {
   }
 
   return (
-    <div className="p-8 bg-slate-50 min-h-screen">
+    <div className="p-4 sm:p-8 bg-slate-50 min-h-screen">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-4 text-sm">
@@ -435,11 +435,11 @@ export default function NewBidPage() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-5 sm:gap-8">
         {/* Main Form */}
         <div className="lg:col-span-2 space-y-6">
           {/* Job Info Section */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-8">
             <h2 className="text-lg font-bold text-slate-900 border-b border-slate-100 pb-4 mb-6">Job Information</h2>
             <div className="space-y-4">
               <div>
@@ -465,7 +465,7 @@ export default function NewBidPage() {
                   className="w-full rounded-xl border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {!isGC && (
                   <div>
                     <label className="block text-sm font-semibold text-slate-700 mb-2">Trade Type *</label>
@@ -521,7 +521,7 @@ export default function NewBidPage() {
           {isGC && (
             <>
               {/* Trade Selection Grid */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-8">
                 <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
                   <div>
                     <h2 className="text-lg font-bold text-slate-900">Select Trades / Subs</h2>
@@ -590,7 +590,7 @@ export default function NewBidPage() {
 
               {/* Sub Bid Line Items - One section per selected trade */}
               {selectedTrades.length > 0 && (
-                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-8">
                   <h2 className="text-lg font-bold text-slate-900 border-b border-slate-100 pb-4 mb-6">
                     Sub Bids by Trade
                   </h2>
@@ -612,6 +612,7 @@ export default function NewBidPage() {
                               <label className="block text-xs font-medium text-slate-500 mb-1">Bid Amount ($)</label>
                               <input
                                 type="number"
+                                inputMode="decimal"
                                 value={entry?.bidAmount || ""}
                                 onChange={(e) => updateSubBid(tradeId, "bidAmount", e.target.value)}
                                 min="0"
@@ -649,13 +650,14 @@ export default function NewBidPage() {
               )}
 
               {/* GC Costs Section */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-8">
                 <h2 className="text-lg font-bold text-slate-900 border-b border-slate-100 pb-4 mb-6">GC Costs & Fees</h2>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm font-semibold text-slate-700 mb-2">Insurance / Bonding ($)</label>
                     <input
                       type="number"
+                      inputMode="decimal"
                       name="gcInsuranceCost"
                       value={formData.gcInsuranceCost}
                       onChange={handleInputChange}
@@ -668,6 +670,7 @@ export default function NewBidPage() {
                     <label className="block text-sm font-semibold text-slate-700 mb-2">Permits ($)</label>
                     <input
                       type="number"
+                      inputMode="decimal"
                       name="gcPermitCost"
                       value={formData.gcPermitCost}
                       onChange={handleInputChange}
@@ -680,6 +683,7 @@ export default function NewBidPage() {
                     <label className="block text-sm font-semibold text-slate-700 mb-2">Management Fee (%)</label>
                     <input
                       type="number"
+                      inputMode="decimal"
                       name="gcManagementPercent"
                       value={formData.gcManagementPercent}
                       onChange={handleInputChange}
@@ -699,13 +703,14 @@ export default function NewBidPage() {
           {!isGC && (
             <>
               {/* Cost Breakdown Section */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-8">
                 <h2 className="text-lg font-bold text-slate-900 border-b border-slate-100 pb-4 mb-6">Cost Breakdown</h2>
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-semibold text-slate-700 mb-2">Material Cost ($)</label>
                     <input
                       type="number"
+                      inputMode="decimal"
                       name="materialCost"
                       value={formData.materialCost}
                       onChange={handleInputChange}
@@ -715,11 +720,12 @@ export default function NewBidPage() {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-semibold text-slate-700 mb-2">Labor Hours</label>
                       <input
                         type="number"
+                        inputMode="decimal"
                         name="laborHours"
                         value={formData.laborHours}
                         onChange={handleInputChange}
@@ -732,6 +738,7 @@ export default function NewBidPage() {
                       <label className="block text-sm font-semibold text-slate-700 mb-2">Labor Rate ($/hr)</label>
                       <input
                         type="number"
+                        inputMode="decimal"
                         name="laborRate"
                         value={formData.laborRate}
                         onChange={handleInputChange}
@@ -742,11 +749,12 @@ export default function NewBidPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-sm font-semibold text-slate-700 mb-2">Equipment Cost ($)</label>
                       <input
                         type="number"
+                        inputMode="decimal"
                         name="equipmentCost"
                         value={formData.equipmentCost}
                         onChange={handleInputChange}
@@ -759,6 +767,7 @@ export default function NewBidPage() {
                       <label className="block text-sm font-semibold text-slate-700 mb-2">Subcontractor ($)</label>
                       <input
                         type="number"
+                        inputMode="decimal"
                         name="subcontractorCost"
                         value={formData.subcontractorCost}
                         onChange={handleInputChange}
@@ -771,6 +780,7 @@ export default function NewBidPage() {
                       <label className="block text-sm font-semibold text-slate-700 mb-2">Permit Cost ($)</label>
                       <input
                         type="number"
+                        inputMode="decimal"
                         name="permitCost"
                         value={formData.permitCost}
                         onChange={handleInputChange}
@@ -785,7 +795,7 @@ export default function NewBidPage() {
 
               {/* Trade-Specific Metrics Section (TRADE mode only) */}
               {formData.tradeType && (
-                <div className="bg-orange-50/50 rounded-2xl border border-orange-200 shadow-sm p-8">
+                <div className="bg-orange-50/50 rounded-2xl border border-orange-200 shadow-sm p-5 sm:p-8">
                   <div className="flex items-center gap-2 mb-6 pb-4 border-b border-orange-200">
                     <span className="text-2xl">
                       {getTradeConfig(formData.tradeType).icon}
@@ -802,6 +812,7 @@ export default function NewBidPage() {
                         </label>
                         <input
                           type="number"
+                          inputMode="decimal"
                           value={tradeMetrics[metric.key] || ""}
                           onChange={(e) =>
                             handleTradeMetricChange(metric.key, parseFloat(e.target.value) || 0)
@@ -947,7 +958,7 @@ export default function NewBidPage() {
               )}
 
               {/* Line Items Section (TRADE mode only) */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-8">
                 <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
                   <h2 className="text-lg font-bold text-slate-900">Line Items</h2>
                   <button
@@ -992,6 +1003,7 @@ export default function NewBidPage() {
                       />
                       <input
                         type="number"
+                        inputMode="decimal"
                         placeholder="Qty"
                         value={item.qty}
                         onChange={(e) => updateLineItem(item.id, "qty", parseFloat(e.target.value) || 1)}
@@ -999,6 +1011,7 @@ export default function NewBidPage() {
                       />
                       <input
                         type="number"
+                        inputMode="decimal"
                         placeholder="Price"
                         value={item.unitPrice}
                         onChange={(e) => updateLineItem(item.id, "unitPrice", parseFloat(e.target.value) || 0)}
@@ -1021,13 +1034,14 @@ export default function NewBidPage() {
           )}
 
           {/* Markup & Margins Section (Both modes) */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-8">
             <h2 className="text-lg font-bold text-slate-900 border-b border-slate-100 pb-4 mb-6">Markup & Margins</h2>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">Overhead (%)</label>
                 <input
                   type="number"
+                  inputMode="decimal"
                   name="overheadPercent"
                   value={formData.overheadPercent}
                   onChange={handleInputChange}
@@ -1040,6 +1054,7 @@ export default function NewBidPage() {
                 <label className="block text-sm font-semibold text-slate-700 mb-2">Profit (%)</label>
                 <input
                   type="number"
+                  inputMode="decimal"
                   name="profitPercent"
                   value={formData.profitPercent}
                   onChange={handleInputChange}
@@ -1052,6 +1067,7 @@ export default function NewBidPage() {
                 <label className="block text-sm font-semibold text-slate-700 mb-2">Contingency (%)</label>
                 <input
                   type="number"
+                  inputMode="decimal"
                   name="contingencyPercent"
                   value={formData.contingencyPercent}
                   onChange={handleInputChange}
@@ -1068,7 +1084,7 @@ export default function NewBidPage() {
             Sidebar: Bid Summary
             ═══════════════════════════════════════════════════════════ */}
         <div className="lg:col-span-1">
-          <div className="sticky top-8 bg-white rounded-2xl border border-slate-200 shadow-lg p-8">
+          <div className="sticky top-8 bg-white rounded-2xl border border-slate-200 shadow-lg p-5 sm:p-8">
             <h3 className="text-lg font-bold text-slate-900 mb-6 pb-4 border-b border-slate-100">Bid Summary</h3>
 
             {/* GC: Sub Bid Breakdown */}
@@ -1188,6 +1204,45 @@ export default function NewBidPage() {
               >
                 Cancel
               </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* ─── Mobile running total ───────────────────────────────
+            On desktop the summary card is sticky in the right column.
+            On a phone it lands below the entire form, so the number the
+            contractor is working toward scrolls out of sight while they
+            type. This pins it above the bottom nav instead. */}
+        <div className="fixed bottom-16 left-0 right-0 z-40 border-t border-slate-700 bg-slate-900 px-4 py-3 lg:hidden">
+          <div className="flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                Total bid
+              </p>
+              <p className="truncate text-xl font-black text-white">
+                $
+                {calculations.totalBid.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="text-right">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                  Margin
+                </p>
+                <p className="text-sm font-bold text-orange-400">
+                  {calculations.profitMargin.toFixed(1)}%
+                </p>
+              </div>
+              <button
+                type="submit"
+                disabled={submitting}
+                className="shrink-0 rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-bold text-white transition-colors disabled:bg-slate-600"
+              >
+                {submitting ? "Saving…" : "Save"}
+              </button>
             </div>
           </div>
         </div>

@@ -95,8 +95,8 @@ export default function AppLayout({
   if (loading) {
     return (
       <div className="flex h-screen bg-slate-50">
-        <div className="fixed left-0 top-0 h-screen bg-slate-900 w-16 z-40"></div>
-        <div className="flex-1 ml-16 flex items-center justify-center">
+        <div className="fixed left-0 top-0 h-screen bg-slate-900 w-16 z-40 hidden md:block"></div>
+        <div className="flex-1 md:ml-16 flex items-center justify-center">
           <div className="text-slate-400 font-medium">Loading...</div>
         </div>
       </div>
@@ -107,7 +107,7 @@ export default function AppLayout({
     <div className="flex h-screen bg-slate-50">
       {/* Sidebar */}
       <div
-        className={`fixed left-0 top-0 h-screen bg-slate-900 text-white transition-all duration-300 z-40 flex flex-col ${
+        className={`fixed left-0 top-0 h-screen bg-slate-900 text-white transition-all duration-300 z-40 flex-col hidden md:flex ${
           sidebarExpanded ? "w-60" : "w-16"
         }`}
       >
@@ -207,13 +207,50 @@ export default function AppLayout({
       </div>
 
       {/* Main Content */}
-      <div className={`flex-1 transition-all duration-300 ${sidebarExpanded ? "ml-60" : "ml-16"}`}>
+      <div
+        className={`flex-1 transition-all duration-300 ${
+          sidebarExpanded ? "md:ml-60" : "md:ml-16"
+        }`}
+      >
         <SubscriptionBanner
           plan={user?.subscriptionPlan || null}
           status={user?.subscriptionStatus || null}
         />
-        <main className="h-screen overflow-auto">{children}</main>
+        {/* pb-20 on mobile keeps content clear of the bottom nav */}
+        <main className="h-screen overflow-auto pb-20 md:pb-0">{children}</main>
       </div>
+
+      {/* ─── Mobile bottom navigation ───────────────────────────
+          Contractors use this on a phone at the job site. A bottom bar
+          is thumb-reachable one-handed; the desktop icon rail is not. */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-800 bg-slate-900 pb-safe md:hidden">
+        <div className="flex">
+          {navItems.slice(0, 4).map((item) => {
+            const active = isActive(item.href);
+            return (
+              <button
+                key={item.href}
+                onClick={() => router.push(item.href)}
+                className={`flex flex-1 flex-col items-center gap-0.5 py-2.5 transition-colors ${
+                  active ? "text-orange-400" : "text-slate-400"
+                }`}
+              >
+                <span className="text-lg leading-none">{item.icon}</span>
+                <span className="text-[10px] font-semibold">{item.label}</span>
+              </button>
+            );
+          })}
+          <button
+            onClick={() => router.push("/app/settings")}
+            className={`flex flex-1 flex-col items-center gap-0.5 py-2.5 transition-colors ${
+              isActive("/app/settings") ? "text-orange-400" : "text-slate-400"
+            }`}
+          >
+            <span className="text-lg leading-none">⚙️</span>
+            <span className="text-[10px] font-semibold">Settings</span>
+          </button>
+        </div>
+      </nav>
     </div>
   );
 }
