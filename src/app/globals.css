@@ -1,42 +1,155 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #0f172a;
-  --primary: #f97316;
-  --primary-dark: #ea580c;
-  --secondary: #1e293b;
-  --accent: #0ea5e9;
-}
+/* ═══════════════════════════════════════════════════════════════════════
+   Pro Spec IQ — design foundations
+
+   The strategy here is to retune Tailwind's built-in `slate` and `orange`
+   ramps rather than rename anything. Every existing `slate-900` and
+   `orange-500` in the codebase (1,400+ and 350+ usages) picks up the new
+   values automatically, so the visual system changes in one file instead
+   of in three hundred find-and-replaces.
+
+   Two things this fixes that were measured, not guessed:
+
+   1. White text on the old orange-500 (#f97316) was 2.80:1 contrast —
+      below even the 3:1 large-text floor. Every primary CTA on the site
+      failed WCAG. The new orange-500 is the same hue (24.6°) darkened
+      until it clears 4.5:1, so buttons pass AA without changing color
+      family.
+
+   2. slate-900 (#0f172a) was functionally black. The brand is described
+      as blue and orange, but there was no blue — so the dark end of the
+      ramp now carries real chroma.
+   ═══════════════════════════════════════════════════════════════════════ */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-primary-dark: var(--primary-dark);
-  --color-secondary: var(--secondary);
-  --color-accent: var(--accent);
-  --font-sans: "Inter", "Segoe UI", Arial, Helvetica, sans-serif;
-  --font-mono: "SF Mono", "Fira Code", monospace;
+  /* ─── Type ──────────────────────────────────────────────────────────
+     --font-inter is supplied by next/font in layout.tsx. The stack still
+     lists fallbacks, but they should now never be reached. */
+  --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Fira Code", monospace;
+
+  /* ─── Neutrals: navy-tinted slate ───────────────────────────────────
+     The light end stays close to stock Tailwind so borders and page
+     backgrounds don't shift. Chroma is added progressively toward the
+     dark end, where it reads as brand rather than as a color cast.
+     Contrast on white is equal to or better than stock at every step. */
+  --color-slate-50: #f7f9fc;
+  --color-slate-100: #eff2f7;
+  --color-slate-200: #e2e7f0;
+  --color-slate-300: #c9d1e0;
+  --color-slate-400: #8e99ae; /* 2.87:1 — decorative/placeholder only */
+  --color-slate-500: #626e86; /* 5.13:1 — AA (stock was 4.76) */
+  --color-slate-600: #46536e; /* 7.71:1 — AA */
+  --color-slate-700: #2e3c58;
+  --color-slate-800: #1d2942; /* 14.50:1 */
+  --color-slate-900: #16233f; /* 15.60:1 — the anchor navy */
+  --color-slate-950: #0d1729;
+
+  /* ─── Orange: same hue, corrected for contrast ──────────────────────
+     Hue held at 24.6° (identical to the original #f97316) and darkened
+     until white text clears AA. 400 stays bright for large display text
+     and for use on dark surfaces, where it has plenty of contrast. */
+  --color-orange-50: #fdf4ed;
+  --color-orange-100: #fae6d4;
+  --color-orange-200: #f5c9a5;
+  --color-orange-300: #efa870;
+  --color-orange-400: #e4823a; /* large text / on navy */
+  --color-orange-500: #c45508; /* 4.52:1 white-on — AA. Buttons, links. */
+  --color-orange-600: #a84706; /* hover */
+  --color-orange-700: #8a3a05;
+  --color-orange-800: #6e2e05;
+  --color-orange-900: #5a2604;
+  --color-orange-950: #331502;
+
+  /* ─── Semantic: these mean something, and only this ─────────────────
+     Reserved for margin health and job status. Nothing decorative should
+     ever use them, or they stop carrying signal. */
+  --color-healthy: #0e7a5f; /* 5.29:1 */
+  --color-thin: #b45309; /* 5.02:1 */
+  --color-underwater: #b4232b; /* 6.53:1 */
+
+  --color-background: #ffffff;
+  --color-foreground: #16233f;
+  --color-primary: #c45508;
+  --color-primary-dark: #a84706;
+  --color-secondary: #1d2942;
+  --color-accent: #2563a8;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #16233f;
+  --primary: #c45508;
+  --primary-dark: #a84706;
+  --secondary: #1d2942;
+  --accent: #2563a8;
+
+  /* Elevation. Flat 1px borders everywhere read as unfinished; a small
+     shadow scale gives cards a sense of sitting on the page. Tinted with
+     the navy rather than pure black so shadows don't look grey. */
+  --shadow-sm: 0 1px 2px 0 rgb(22 35 63 / 0.05);
+  --shadow-card: 0 1px 3px 0 rgb(22 35 63 / 0.07),
+    0 1px 2px -1px rgb(22 35 63 / 0.04);
+  --shadow-raised: 0 4px 12px -2px rgb(22 35 63 / 0.1),
+    0 2px 4px -2px rgb(22 35 63 / 0.06);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Inter", "Segoe UI", Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Contextual alternates and kerning on by default — small refinement
+     that Inter is designed for and that costs nothing. */
+  font-feature-settings: "cv11", "ss01";
+  font-variation-settings: normal;
 }
 
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
 }
 
-/* Selection color */
 ::selection {
-  background-color: rgba(249, 115, 22, 0.15);
-  color: #0f172a;
+  background-color: rgb(196 85 8 / 0.14);
+  color: #16233f;
+}
+
+/* ─── Numerals ──────────────────────────────────────────────────────────
+   The single highest-impact typographic change for an estimating tool.
+   By default every digit is a different width, so a column of dollar
+   figures wobbles instead of forming a grid. Tabular figures fix it.
+
+   Applied at the body level rather than per-component. In this product
+   essentially every number is money, a margin percentage, or a quantity,
+   and all of them belong in a column — so tabular is the correct default
+   and proportional is the exception. Much of the UI uses CSS grid rather
+   than real <table> elements, so a table-only rule would have missed the
+   dashboard, the bid list, and the estimator entirely.
+
+   Headings opt back out: tabular figures are designed for alignment at
+   text sizes, and at 96px the fixed widths leave visible gaps. */
+body {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "cv11", "ss01";
+}
+
+h1,
+h2,
+.proportional-nums {
+  font-variant-numeric: proportional-nums;
+  font-feature-settings: "pnum" 1, "cv11", "ss01";
+}
+
+/* Headings tighten as they grow. Tailwind's tracking utilities are
+   per-class; this makes the default behaviour correct so individual
+   overrides become the exception. */
+h1,
+h2,
+h3 {
+  letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
 /* ─── Mobile ────────────────────────────────────────────────
@@ -57,5 +170,20 @@ html {
 @supports (padding: max(0px)) {
   .pb-safe {
     padding-bottom: max(0.625rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Users who ask for reduced motion get it — the smooth scroll above and
+   any transitions should not fight an accessibility preference. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

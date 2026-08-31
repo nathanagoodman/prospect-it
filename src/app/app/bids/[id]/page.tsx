@@ -299,7 +299,7 @@ export default function BidDetailPage({
           <div>
             <div className="flex items-center gap-3">
               <span className="text-2xl" aria-hidden="true">{config.icon}</span>
-              <h1 className="text-3xl font-black tracking-tight text-slate-900">
+              <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
                 {bid.jobName}
               </h1>
             </div>
@@ -309,7 +309,7 @@ export default function BidDetailPage({
             </p>
           </div>
           <div className="text-right">
-            <p className="text-3xl font-black text-slate-900">
+            <p className="text-3xl font-extrabold text-slate-900">
               {money(bid.totalBid)}
             </p>
             <p className="text-sm text-slate-500">
@@ -470,8 +470,8 @@ export default function BidDetailPage({
                 </div>
 
                 <div className="flex justify-between border-t-2 border-slate-900 pt-3">
-                  <dt className="font-black text-slate-900">Total bid</dt>
-                  <dd className="text-xl font-black text-orange-600">
+                  <dt className="font-bold text-slate-900">Total bid</dt>
+                  <dd className="text-xl font-bold text-orange-600">
                     {money(bid.totalBid)}
                   </dd>
                 </div>

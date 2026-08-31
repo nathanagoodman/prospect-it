@@ -36,7 +36,7 @@ export default function SubsPage() {
     <div className="p-4 sm:p-8 bg-slate-50 min-h-screen">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-4xl font-black tracking-tight text-slate-900">Subcontractors</h1>
+          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900">Subcontractors</h1>
           <p className="text-slate-500 font-medium mt-2">
             Manage your subcontractors and trade partners
           </p>
@@ -51,7 +51,7 @@ export default function SubsPage() {
 
       {showForm && (
         <div className="bg-white rounded-2xl border border-slate-200 p-8 mb-8 shadow-sm">
-          <h2 className="text-2xl font-black tracking-tight text-slate-900 mb-6">
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 mb-6">
             Add New Subcontractor
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -155,7 +155,7 @@ export default function SubsPage() {
           <svg className="w-16 h-16 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.856-1.487M15 10a3 3 0 11-6 0 3 3 0 016 0zM6 20h12a6 6 0 00-6-6 6 6 0 00-6 6z" />
           </svg>
-          <h3 className="text-lg font-black tracking-tight text-slate-900 mb-2">
+          <h3 className="text-lg font-bold tracking-tight text-slate-900 mb-2">
             No subcontractors yet
           </h3>
           <p className="text-slate-500 font-medium mb-6">

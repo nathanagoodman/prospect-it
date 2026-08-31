@@ -197,7 +197,7 @@ function KPI({
         {label}
       </div>
       <div
-        className={`mt-2 text-2xl font-black ${
+        className={`mt-2 text-2xl font-bold ${
           accent ? "text-orange-500" : "text-slate-900"
         }`}
       >

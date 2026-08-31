@@ -21,11 +21,13 @@ interface Job {
 const JOB_STATUSES = ["NOT_STARTED", "IN_PROGRESS", "ON_HOLD", "PUNCH_LIST", "COMPLETED"];
 
 const STATUS_COLORS: { [key: string]: string } = {
-  NOT_STARTED: "bg-slate-100 text-slate-800",
-  IN_PROGRESS: "bg-blue-100 text-blue-800",
-  ON_HOLD: "bg-yellow-100 text-yellow-800",
-  PUNCH_LIST: "bg-purple-100 text-purple-800",
-  COMPLETED: "bg-green-100 text-green-800",
+  NOT_STARTED: "bg-slate-100 text-slate-600 ring-1 ring-inset ring-slate-200",
+  IN_PROGRESS: "bg-slate-800 text-white ring-1 ring-inset ring-slate-800",
+  // Amber earns its place here: on hold is the one status that means
+  // something needs a decision.
+  ON_HOLD: "bg-amber-50 text-amber-800 ring-1 ring-inset ring-amber-200",
+  PUNCH_LIST: "bg-white text-slate-800 ring-1 ring-inset ring-slate-300",
+  COMPLETED: "bg-emerald-50 text-emerald-800 ring-1 ring-inset ring-emerald-200",
 };
 
 const STATUS_DISPLAY: { [key: string]: string } = {
@@ -86,7 +88,7 @@ export default function JobsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Jobs</h1>
+          <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Jobs</h1>
           <p className="text-slate-500 font-medium mt-2">Track and manage all your projects</p>
         </div>
         <div className="flex items-center gap-3">

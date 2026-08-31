@@ -35,19 +35,19 @@ export default function BidsPage() {
   };
 
   const statusColors: { [key: string]: string } = {
-    DRAFT: "bg-slate-100 text-slate-800",
-    READY: "bg-blue-100 text-blue-800",
-    SUBMITTED: "bg-purple-100 text-purple-800",
-    ACCEPTED: "bg-green-100 text-green-800",
-    REJECTED: "bg-red-100 text-red-800",
+    DRAFT: "bg-slate-100 text-slate-600 ring-1 ring-inset ring-slate-200",
+    READY: "bg-white text-slate-800 ring-1 ring-inset ring-slate-300",
+    SUBMITTED: "bg-slate-800 text-white ring-1 ring-inset ring-slate-800",
+    ACCEPTED: "bg-emerald-50 text-emerald-800 ring-1 ring-inset ring-emerald-200",
+    REJECTED: "bg-red-50 text-red-800 ring-1 ring-inset ring-red-200",
   };
 
   const statusBgColors: { [key: string]: string } = {
-    DRAFT: "bg-slate-50",
-    READY: "bg-blue-50",
-    SUBMITTED: "bg-purple-50",
-    ACCEPTED: "bg-green-50",
-    REJECTED: "bg-red-50",
+    DRAFT: "bg-white",
+    READY: "bg-white",
+    SUBMITTED: "bg-white",
+    ACCEPTED: "bg-emerald-50/40",
+    REJECTED: "bg-red-50/40",
   };
 
   if (loading) {
@@ -68,7 +68,7 @@ export default function BidsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-4xl font-black tracking-tight text-slate-900">Bids</h1>
+          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900">Bids</h1>
           <p className="text-slate-500 font-medium mt-2">Manage and track all your bids</p>
         </div>
         <Link
@@ -83,23 +83,23 @@ export default function BidsPage() {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 border-l-4 border-l-orange-500">
           <p className="text-slate-600 text-sm font-medium">Total Bids</p>
-          <p className="text-4xl font-black text-slate-900 mt-2">{bids.length}</p>
+          <p className="text-4xl font-extrabold text-slate-900 mt-2">{bids.length}</p>
         </div>
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 border-l-4 border-l-blue-500">
           <p className="text-slate-600 text-sm font-medium">Total Value</p>
-          <p className="text-4xl font-black text-slate-900 mt-2">
+          <p className="text-4xl font-extrabold text-slate-900 mt-2">
             ${(bids.reduce((sum, b) => sum + b.totalBid, 0) / 1000).toFixed(0)}k
           </p>
         </div>
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 border-l-4 border-l-purple-500">
           <p className="text-slate-600 text-sm font-medium">Avg. Margin</p>
-          <p className="text-4xl font-black text-slate-900 mt-2">
+          <p className="text-4xl font-extrabold text-slate-900 mt-2">
             {(bids.reduce((sum, b) => sum + b.profitMargin, 0) / Math.max(bids.length, 1)).toFixed(1)}%
           </p>
         </div>
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 border-l-4 border-l-green-500">
           <p className="text-slate-600 text-sm font-medium">Accepted</p>
-          <p className="text-4xl font-black text-slate-900 mt-2">
+          <p className="text-4xl font-extrabold text-slate-900 mt-2">
             {bids.filter((b) => b.status === "ACCEPTED").length}
           </p>
         </div>

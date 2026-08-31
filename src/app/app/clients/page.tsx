@@ -122,7 +122,7 @@ export default function ClientsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Clients</h1>
+          <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Clients</h1>
           <p className="text-slate-500 font-medium mt-2">Manage your sales pipeline and client relationships</p>
         </div>
         <button

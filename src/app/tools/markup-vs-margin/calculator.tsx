@@ -113,7 +113,7 @@ export default function MarkupCalculator() {
           <p className="text-xs font-bold uppercase tracking-widest text-orange-400/80">
             Charge the customer
           </p>
-          <p className="mt-2 text-4xl font-black text-white md:text-5xl">
+          <p className="mt-2 text-4xl font-extrabold text-white md:text-5xl">
             {money(price)}
           </p>
           <p className="mt-2 text-sm text-slate-400">

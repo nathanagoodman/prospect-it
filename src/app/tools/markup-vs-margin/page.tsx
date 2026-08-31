@@ -102,7 +102,7 @@ export default function MarkupVsMarginPage() {
             <span className="mx-2">/</span>
             <span className="text-slate-600">Markup vs Margin Calculator</span>
           </nav>
-          <h1 className="text-3xl font-black tracking-tight text-slate-900 md:text-4xl">
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
             Markup vs Margin Calculator
           </h1>
           <p className="mt-4 text-lg leading-relaxed text-slate-600">
@@ -117,7 +117,7 @@ export default function MarkupVsMarginPage() {
 
       {/* Explanation */}
       <section className="mx-auto max-w-3xl px-6 pb-16">
-        <h2 className="text-2xl font-black tracking-tight text-slate-900">
+        <h2 className="text-2xl font-bold tracking-tight text-slate-900">
           Why this trips people up
         </h2>
         <p className="mt-4 leading-relaxed text-slate-600">
@@ -165,7 +165,7 @@ export default function MarkupVsMarginPage() {
           </p>
         </div>
 
-        <h2 className="mt-12 text-2xl font-black tracking-tight text-slate-900">
+        <h2 className="mt-12 text-2xl font-bold tracking-tight text-slate-900">
           Common questions
         </h2>
         <div className="mt-6 space-y-4">
@@ -189,7 +189,7 @@ export default function MarkupVsMarginPage() {
       {/* Soft CTA */}
       <section className="border-t border-slate-100 bg-slate-50/50">
         <div className="mx-auto max-w-3xl px-6 py-14 text-center">
-          <h2 className="text-2xl font-black tracking-tight text-slate-900">
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900">
             This is one number out of a whole bid
           </h2>
           <p className="mx-auto mt-4 max-w-xl leading-relaxed text-slate-600">

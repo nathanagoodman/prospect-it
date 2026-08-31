@@ -76,7 +76,7 @@ export default function TradesIndexPage() {
             <span className="mx-2">/</span>
             <span className="text-slate-600">Trades</span>
           </nav>
-          <h1 className="text-3xl font-black tracking-tight text-slate-900 md:text-5xl">
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 md:text-5xl">
             Estimating software built for your trade
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate-600">
@@ -126,7 +126,7 @@ export default function TradesIndexPage() {
 
       <section className="border-t border-slate-100 bg-slate-50/50">
         <div className="mx-auto max-w-4xl px-6 py-16 text-center">
-          <h2 className="text-2xl font-black tracking-tight text-slate-900 md:text-3xl">
+          <h2 className="text-2xl font-extrabold tracking-tight text-slate-900 md:text-3xl">
             Don&apos;t see your trade?
           </h2>
           <p className="mx-auto mt-4 max-w-xl leading-relaxed text-slate-600">

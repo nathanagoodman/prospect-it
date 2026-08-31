@@ -539,7 +539,7 @@ export default function NewBidPage() {
           <span className="text-slate-600">New Bid</span>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900">
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
             Create New Bid
           </h1>
           {isGC && (
@@ -1566,7 +1566,7 @@ export default function NewBidPage() {
 
               <div className="pt-4 border-t border-slate-200 flex justify-between">
                 <span className="font-bold text-slate-900">Total Bid</span>
-                <span className="text-3xl font-black text-slate-900">
+                <span className="text-3xl font-extrabold text-slate-900">
                   ${calculations.totalBid.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
               </div>
@@ -1732,7 +1732,7 @@ export default function NewBidPage() {
               <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
                 Total bid
               </p>
-              <p className="truncate text-xl font-black text-white">
+              <p className="truncate text-xl font-bold text-white">
                 $
                 {calculations.totalBid.toLocaleString("en-US", {
                   minimumFractionDigits: 2,

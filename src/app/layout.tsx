@@ -1,8 +1,31 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
+/**
+ * globals.css asked for Inter but nothing ever downloaded it, so every
+ * visitor without Inter installed locally was silently served Arial or
+ * Segoe UI. The hero's tight tracking is tuned for Inter, so the fallback
+ * didn't just look different, it looked wrong.
+ *
+ * The file is committed rather than pulled from Google at build time:
+ * next/font/google needs network access during the build, which makes the
+ * build fail anywhere that can't reach fonts.googleapis.com. Self-hosting
+ * a single 48KB variable file removes that dependency, drops a third-party
+ * request at runtime, and covers weights 100-900 from one download.
+ */
+const inter = localFont({
+  src: "./fonts/inter-variable.woff2",
+  weight: "100 900",
+  style: "normal",
+  display: "swap",
+  variable: "--font-inter",
+  // Metric-matched fallback so the swap from system font to Inter doesn't
+  // shift the layout — this is what keeps CLS at zero.
+  fallback: ["ui-sans-serif", "system-ui", "Segoe UI", "Arial", "sans-serif"],
+});
 const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL ||
   process.env.NEXTAUTH_URL ||
@@ -158,7 +181,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" className={`h-full antialiased ${inter.variable}`}>
       <body className="min-h-full flex flex-col font-sans">
         {/* Rendered in the tree rather than a hand-written <head>, which is
             the documented Next.js pattern for JSON-LD and avoids conflicting

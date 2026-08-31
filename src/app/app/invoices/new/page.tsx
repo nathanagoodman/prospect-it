@@ -213,7 +213,7 @@ function NewInvoiceForm() {
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
           Back
         </button>
-        <h1 className="text-4xl font-black tracking-tight text-slate-900">New {docType === "ESTIMATE" ? "Estimate" : "Invoice"}</h1>
+        <h1 className="text-4xl font-extrabold tracking-tight text-slate-900">New {docType === "ESTIMATE" ? "Estimate" : "Invoice"}</h1>
         <p className="text-slate-500 font-medium mt-2">Fill in the details below to create a professional document</p>
       </div>
 
@@ -225,7 +225,7 @@ function NewInvoiceForm() {
         <div className="lg:col-span-2 space-y-8">
           {/* Document Type */}
           <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-            <h2 className="text-xl font-black tracking-tight text-slate-900 mb-4">Document Type</h2>
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 mb-4">Document Type</h2>
             <div className="grid grid-cols-2 gap-4">
               {(["ESTIMATE", "INVOICE"] as const).map((type) => (
                 <button
@@ -251,7 +251,7 @@ function NewInvoiceForm() {
 
           {/* Client */}
           <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-            <h2 className="text-xl font-black tracking-tight text-slate-900 mb-4">Client Information</h2>
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 mb-4">Client Information</h2>
             {clients.length > 0 && (
               <div className="mb-6">
                 <label className="block text-sm font-semibold text-slate-700 mb-2">Select Existing Client</label>
@@ -292,7 +292,7 @@ function NewInvoiceForm() {
 
           {/* Project */}
           <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-            <h2 className="text-xl font-black tracking-tight text-slate-900 mb-4">Project Details</h2>
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 mb-4">Project Details</h2>
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">Project Name</label>
@@ -319,7 +319,7 @@ function NewInvoiceForm() {
           {/* Line Items */}
           <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-black tracking-tight text-slate-900">Line Items</h2>
+              <h2 className="text-xl font-bold tracking-tight text-slate-900">Line Items</h2>
               <button
                 onClick={addLineItem}
                 className="px-4 py-2 text-sm font-semibold text-orange-600 hover:text-orange-700 hover:bg-orange-50 rounded-lg transition-colors"
@@ -383,7 +383,7 @@ function NewInvoiceForm() {
 
           {/* Tax, Notes, Terms */}
           <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-            <h2 className="text-xl font-black tracking-tight text-slate-900 mb-4">Additional Details</h2>
+            <h2 className="text-xl font-bold tracking-tight text-slate-900 mb-4">Additional Details</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">Tax Rate (%)</label>
@@ -440,7 +440,7 @@ function NewInvoiceForm() {
         {/* Sidebar Summary */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-2xl border border-slate-200 p-8 sticky top-8 shadow-sm space-y-6">
-            <h3 className="text-lg font-black tracking-tight text-slate-900">Summary</h3>
+            <h3 className="text-lg font-bold tracking-tight text-slate-900">Summary</h3>
             <div className="space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="text-slate-600">Subtotal</span>
@@ -460,7 +460,7 @@ function NewInvoiceForm() {
               )}
               <div className="pt-3 border-t border-slate-200 flex justify-between">
                 <span className="font-bold text-slate-900">Total</span>
-                <span className="text-2xl font-black text-slate-900">{fmt(total)}</span>
+                <span className="text-2xl font-bold text-slate-900">{fmt(total)}</span>
               </div>
             </div>
             <button

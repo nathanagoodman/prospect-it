@@ -211,15 +211,40 @@ function DashboardMockup() {
 
             {/* Stats row */}
             <div className="grid grid-cols-4 gap-3 mb-6">
+              {/* Neutral by default. Only margin gets tinted, because margin
+                  is the only one of these that can be bad — so it's the only
+                  one where color carries information rather than decoration. */}
               {[
-                { label: "Active Bids", val: "12", color: "from-orange-50 to-orange-100 border-orange-200" },
-                { label: "Jobs", val: "8", color: "from-blue-50 to-blue-100 border-blue-200" },
-                { label: "Clients", val: "34", color: "from-purple-50 to-purple-100 border-purple-200" },
-                { label: "Win Rate", val: "73%", color: "from-green-50 to-green-100 border-green-200" },
+                { label: "Active Bids", val: "12", sub: "3 due this week" },
+                { label: "Jobs", val: "8", sub: "2 in progress" },
+                { label: "Pipeline", val: "$553,700", sub: "across 12 bids" },
+                { label: "Avg Margin", val: "18.8%", sub: "\u25b2 2.1 vs last month", good: true },
               ].map((s) => (
-                <div key={s.label} className={`bg-gradient-to-br ${s.color} border rounded-xl p-3`}>
-                  <div className="text-[10px] text-slate-500 font-medium">{s.label}</div>
-                  <div className="text-xl font-black text-slate-800 mt-0.5">{s.val}</div>
+                <div
+                  key={s.label}
+                  className={`rounded-xl border p-3 ${
+                    s.good
+                      ? "border-emerald-200 bg-emerald-50/60"
+                      : "border-slate-200 bg-white"
+                  }`}
+                >
+                  <div className="text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                    {s.label}
+                  </div>
+                  <div
+                    className={`mt-1 text-xl font-bold tracking-tight tabular-nums ${
+                      s.good ? "text-emerald-800" : "text-slate-900"
+                    }`}
+                  >
+                    {s.val}
+                  </div>
+                  <div
+                    className={`mt-0.5 text-[9.5px] font-medium tabular-nums ${
+                      s.good ? "text-emerald-700" : "text-slate-400"
+                    }`}
+                  >
+                    {s.sub}
+                  </div>
                 </div>
               ))}
             </div>
@@ -230,15 +255,15 @@ function DashboardMockup() {
                 <span>Project</span><span>Client</span><span>Bid</span><span>Margin</span><span>Status</span>
               </div>
               {[
-                { name: "Office Renovation", client: "Apex Dev", bid: "$124,500", margin: "18.2%", status: "Submitted", statusColor: "bg-purple-100 text-purple-700" },
-                { name: "Retail Build-Out", client: "MG Holdings", bid: "$89,200", margin: "22.4%", status: "Accepted", statusColor: "bg-green-100 text-green-700" },
-                { name: "Warehouse Expansion", client: "LDR Logistics", bid: "$340,000", margin: "15.8%", status: "Draft", statusColor: "bg-slate-100 text-slate-600" },
+                { name: "Office Renovation", client: "Apex Dev", bid: "$124,500", margin: "18.2%", marginColor: "text-emerald-700", status: "Submitted", statusColor: "bg-slate-100 text-slate-600" },
+                { name: "Retail Build-Out", client: "MG Holdings", bid: "$89,200", margin: "22.4%", marginColor: "text-emerald-700", status: "Accepted", statusColor: "bg-emerald-100 text-emerald-800" },
+                { name: "Tenant Improvement", client: "LDR Logistics", bid: "$11,175", margin: "9.4%", marginColor: "text-red-700 font-bold", status: "Draft", statusColor: "bg-slate-100 text-slate-600" },
               ].map((row) => (
                 <div key={row.name} className="grid grid-cols-5 gap-4 px-4 py-3 border-b border-slate-50 text-xs text-slate-700">
                   <span className="font-semibold text-slate-900">{row.name}</span>
                   <span>{row.client}</span>
-                  <span className="font-medium">{row.bid}</span>
-                  <span className="font-medium text-green-600">{row.margin}</span>
+                  <span className="font-medium tabular-nums">{row.bid}</span>
+                  <span className={`font-medium tabular-nums ${row.marginColor}`}>{row.margin}</span>
                   <span><span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${row.statusColor}`}>{row.status}</span></span>
                 </div>
               ))}
@@ -310,10 +335,16 @@ export default function LandingPage() {
             The platform for construction pros
           </div>
 
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-slate-900 leading-[0.95] max-w-5xl mx-auto tracking-tighter">
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold text-slate-900 leading-[0.95] max-w-5xl mx-auto tracking-tighter">
             Bid Smarter.
             <br />
-            <span className="bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">Build Bigger.</span>
+            {/* Both lines sit in navy so the headline reads as one statement
+                rather than two competing ones. Orange survives only on the
+                period — which makes the CTA the loudest thing on the page,
+                where the click actually is. */}
+            <span className="text-slate-900">
+              Build Bigger<span className="text-orange-500">.</span>
+            </span>
           </h1>
 
           <p className="mt-8 text-lg md:text-xl text-slate-500 max-w-2xl mx-auto leading-relaxed font-normal">
@@ -367,12 +398,12 @@ export default function LandingPage() {
               <Link
                 key={t.slug}
                 href={`/trades/${t.slug}`}
-                className="text-sm md:text-base font-black text-slate-400 hover:text-orange-500 tracking-tight whitespace-nowrap transition-colors"
+                className="text-sm md:text-base font-bold text-slate-400 hover:text-orange-500 tracking-tight whitespace-nowrap transition-colors"
               >
                 {t.label}
               </Link>
             ))}
-            <Link href="/trades" className="text-sm md:text-base font-black text-orange-500 hover:text-orange-600 tracking-tight whitespace-nowrap transition-colors">
+            <Link href="/trades" className="text-sm md:text-base font-bold text-orange-500 hover:text-orange-600 tracking-tight whitespace-nowrap transition-colors">
               + 9 MORE
             </Link>
           </div>
@@ -392,7 +423,7 @@ export default function LandingPage() {
               { stat: "7", label: "Day free trial, no card charged" },
             ].map((s) => (
               <div key={s.label}>
-                <p className="text-4xl md:text-6xl font-black bg-gradient-to-b from-orange-400 to-orange-600 bg-clip-text text-transparent">{s.stat}</p>
+                <p className="text-4xl md:text-6xl font-extrabold tracking-tight text-slate-900 tabular-nums">{s.stat}</p>
                 <p className="text-sm text-slate-400 mt-3 font-medium">{s.label}</p>
               </div>
             ))}
@@ -404,7 +435,7 @@ export default function LandingPage() {
       <section id="features" className="max-w-7xl mx-auto px-6 py-28">
         <div className="text-center mb-20">
           <p className="text-xs font-bold text-orange-500 uppercase tracking-widest mb-4">Features</p>
-          <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">
+          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
             Everything you need to<br className="hidden md:block" /> win more work
           </h2>
           <p className="text-slate-500 mt-5 max-w-xl mx-auto text-lg">
@@ -435,7 +466,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20">
             <p className="text-xs font-bold text-orange-500 uppercase tracking-widest mb-4">How it works</p>
-            <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">
+            <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
               Up and running in minutes
             </h2>
           </div>
@@ -446,7 +477,7 @@ export default function LandingPage() {
               { step: "03", title: "Win more work", desc: "Track jobs, manage clients, and send automated follow-ups. Grow your business on autopilot." },
             ].map((item) => (
               <div key={item.step} className="text-center">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-slate-900 text-white font-black text-lg mb-6">{item.step}</div>
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-slate-900 text-white font-bold text-lg mb-6">{item.step}</div>
                 <h3 className="text-lg font-bold text-slate-900 mb-3">{item.title}</h3>
                 <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
               </div>
@@ -459,7 +490,7 @@ export default function LandingPage() {
       <section id="trades" className="py-28">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-xs font-bold text-orange-500 uppercase tracking-widest mb-4">Built for the field</p>
-          <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-4 tracking-tight">
+          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
             Every trade. Every crew size.
           </h2>
           <p className="text-slate-500 max-w-xl mx-auto mb-14 text-lg">
@@ -508,7 +539,7 @@ export default function LandingPage() {
         <div className="relative max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <p className="text-xs font-bold text-orange-400 uppercase tracking-widest mb-4">Pricing</p>
-            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight">Simple, honest pricing</h2>
+            <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">Simple, honest pricing</h2>
             <p className="text-slate-400 mt-4 text-lg">No per-seat fees. No hidden costs. Cancel anytime.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -535,7 +566,7 @@ export default function LandingPage() {
                   {plan.description}
                 </p>
                 <div className="mt-6 mb-8">
-                  <span className={`text-5xl font-black ${plan.badge === "Most Popular" ? "text-slate-900" : "text-white"}`}>{`$${plan.price}`}</span>
+                  <span className={`text-5xl font-extrabold ${plan.badge === "Most Popular" ? "text-slate-900" : "text-white"}`}>{`$${plan.price}`}</span>
                   <span className={`text-sm ${plan.badge === "Most Popular" ? "text-slate-500" : "text-slate-500"}`}>
                     {"/mo"}
                   </span>
@@ -575,7 +606,7 @@ export default function LandingPage() {
       <section className="py-28 relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(249,115,22,0.05),transparent_70%)]"></div>
         <div className="relative max-w-2xl mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">Stop leaving money<br />on the table</h2>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight">Stop leaving money<br />on the table</h2>
           <p className="text-slate-500 mt-6 text-lg">
             Get on the list for early access. We&apos;re onboarding founding contractors now, and early accounts help shape what gets built next.
           </p>

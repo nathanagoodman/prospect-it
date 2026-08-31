@@ -215,7 +215,7 @@ export default function SettingsPage() {
   return (
     <div className="p-4 sm:p-8 bg-slate-50 min-h-screen">
       <div className="mb-8">
-        <h1 className="text-4xl font-black tracking-tight text-slate-900">Settings</h1>
+        <h1 className="text-4xl font-extrabold tracking-tight text-slate-900">Settings</h1>
         <p className="text-slate-500 font-medium mt-2">Manage your profile, branding, and preferences</p>
       </div>
 
@@ -251,7 +251,7 @@ export default function SettingsPage() {
           <div className="lg:col-span-2 space-y-8">
             {/* Profile Section */}
             <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-              <h2 className="text-2xl font-black tracking-tight text-slate-900 mb-6">Profile</h2>
+              <h2 className="text-2xl font-bold tracking-tight text-slate-900 mb-6">Profile</h2>
               <div className="space-y-6">
                 {[
                   { label: "Name", name: "name", type: "text", placeholder: "Your name" },
@@ -276,7 +276,7 @@ export default function SettingsPage() {
 
             {/* Tier Section */}
             <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-              <h2 className="text-2xl font-black tracking-tight text-slate-900 mb-6">Account Type</h2>
+              <h2 className="text-2xl font-bold tracking-tight text-slate-900 mb-6">Account Type</h2>
               <p className="text-sm text-slate-600 font-medium mb-6">Choose your account type. This determines your available features and dashboard.</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[
@@ -293,7 +293,7 @@ export default function SettingsPage() {
                     <svg className="w-8 h-8 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={icon} />
                     </svg>
-                    <div className="font-black tracking-tight text-slate-900">{label}</div>
+                    <div className="font-bold tracking-tight text-slate-900">{label}</div>
                     <div className="text-xs text-slate-600 font-medium">{sub}</div>
                   </button>
                 ))}
@@ -311,7 +311,7 @@ export default function SettingsPage() {
 
             {/* Trade Toggles */}
             <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-              <h2 className="text-2xl font-black tracking-tight text-slate-900 mb-2">Trade Specialties</h2>
+              <h2 className="text-2xl font-bold tracking-tight text-slate-900 mb-2">Trade Specialties</h2>
               <p className="text-sm text-slate-600 font-medium mb-6">Select all trades you work in.</p>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {ALL_TRADES.map((trade) => {
@@ -336,7 +336,7 @@ export default function SettingsPage() {
           {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl border border-slate-200 p-8 sticky top-8 shadow-sm">
-              <h3 className="text-sm font-black tracking-tight text-slate-900 mb-4">Actions</h3>
+              <h3 className="text-sm font-bold tracking-tight text-slate-900 mb-4">Actions</h3>
               <button
                 onClick={handleSave}
                 disabled={saving}
@@ -345,7 +345,7 @@ export default function SettingsPage() {
                 {saving ? "Saving..." : "Save Changes"}
               </button>
               <div className="mt-6 pt-6 border-t border-slate-200">
-                <h3 className="text-sm font-black tracking-tight text-slate-900 mb-4">Summary</h3>
+                <h3 className="text-sm font-bold tracking-tight text-slate-900 mb-4">Summary</h3>
                 <div className="space-y-3 text-sm">
                   <div>
                     <p className="text-slate-600 font-medium">Account Type</p>
@@ -366,7 +366,7 @@ export default function SettingsPage() {
           <div className="lg:col-span-2 space-y-8">
             {/* Logo Upload */}
             <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-              <h2 className="text-2xl font-black tracking-tight text-slate-900 mb-2">Company Logo</h2>
+              <h2 className="text-2xl font-bold tracking-tight text-slate-900 mb-2">Company Logo</h2>
               <p className="text-sm text-slate-600 font-medium mb-6">Upload your logo to appear on estimates and invoices. Max 500KB, PNG or JPG.</p>
               <div className="flex items-start gap-6">
                 <div className="w-32 h-32 rounded-2xl border-2 border-dashed border-slate-300 flex items-center justify-center bg-slate-50 overflow-hidden flex-shrink-0">
@@ -400,7 +400,7 @@ export default function SettingsPage() {
 
             {/* Company Info */}
             <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-              <h2 className="text-2xl font-black tracking-tight text-slate-900 mb-6">Company Information</h2>
+              <h2 className="text-2xl font-bold tracking-tight text-slate-900 mb-6">Company Information</h2>
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {[
@@ -453,7 +453,7 @@ export default function SettingsPage() {
 
             {/* Accent Color */}
             <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-              <h2 className="text-2xl font-black tracking-tight text-slate-900 mb-2">Document Accent Color</h2>
+              <h2 className="text-2xl font-bold tracking-tight text-slate-900 mb-2">Document Accent Color</h2>
               <p className="text-sm text-slate-600 font-medium mb-6">Choose a color for headers and accents on your estimates and invoices.</p>
               <div className="flex flex-wrap gap-3">
                 {COLOR_PRESETS.map((color) => (
@@ -480,7 +480,7 @@ export default function SettingsPage() {
 
             {/* Payment Terms & Notes */}
             <div className="bg-white rounded-2xl border border-slate-200 p-8 shadow-sm">
-              <h2 className="text-2xl font-black tracking-tight text-slate-900 mb-2">Default Document Text</h2>
+              <h2 className="text-2xl font-bold tracking-tight text-slate-900 mb-2">Default Document Text</h2>
               <p className="text-sm text-slate-600 font-medium mb-6">Set default text that appears on every estimate and invoice. You can override per document.</p>
               <div className="space-y-6">
                 <div>
@@ -517,7 +517,7 @@ export default function SettingsPage() {
           {/* Sidebar Preview */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl border border-slate-200 p-8 sticky top-8 shadow-sm space-y-6">
-              <h3 className="text-sm font-black tracking-tight text-slate-900">Save Branding</h3>
+              <h3 className="text-sm font-bold tracking-tight text-slate-900">Save Branding</h3>
               <button
                 onClick={handleSaveProfile}
                 disabled={savingProfile}
@@ -527,7 +527,7 @@ export default function SettingsPage() {
               </button>
 
               <div className="pt-6 border-t border-slate-200">
-                <h3 className="text-sm font-black tracking-tight text-slate-900 mb-4">Document Preview</h3>
+                <h3 className="text-sm font-bold tracking-tight text-slate-900 mb-4">Document Preview</h3>
                 <div className="rounded-xl border border-slate-200 overflow-hidden">
                   {/* Mini invoice preview */}
                   <div className="p-3" style={{ borderTop: `3px solid ${profile.accentColor}` }}>

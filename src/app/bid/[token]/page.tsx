@@ -124,7 +124,7 @@ export default function PublicBidPage({
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={c.logoBase64} alt={c.name} className="mb-3 max-h-16" />
               ) : (
-                <h2 className="text-xl font-black tracking-tight text-slate-900">
+                <h2 className="text-xl font-bold tracking-tight text-slate-900">
                   {c.name}
                 </h2>
               )}
@@ -180,7 +180,7 @@ export default function PublicBidPage({
 
           {/* Scope */}
           <section className="mt-8">
-            <h1 className="text-2xl font-black tracking-tight text-slate-900">
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
               {proposal.jobName}
             </h1>
             {proposal.description && (
@@ -216,7 +216,7 @@ export default function PublicBidPage({
                   </td>
                   <td className="pt-5 text-right">
                     <span
-                      className="text-2xl font-black"
+                      className="text-2xl font-bold"
                       style={{ color: accent }}
                     >
                       {money(proposal.total)}

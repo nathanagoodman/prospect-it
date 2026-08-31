@@ -88,7 +88,7 @@ export default function PricingPage() {
 
       {/* Hero */}
       <div className="max-w-6xl mx-auto px-6 py-16 text-center">
-        <h1 className="text-5xl font-black tracking-tight text-slate-900 mb-4">
+        <h1 className="text-5xl font-extrabold tracking-tight text-slate-900 mb-4">
           Simple, transparent pricing
         </h1>
         <p className="text-xl text-slate-500 max-w-2xl mx-auto">
@@ -127,7 +127,7 @@ export default function PricingPage() {
 
                 <div className="mb-8">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-5xl font-black text-slate-900">${plan.price}</span>
+                    <span className="text-5xl font-extrabold text-slate-900">${plan.price}</span>
                     <span className="text-slate-500 font-medium">/mo</span>
                   </div>
                   <p className="text-xs text-slate-400 mt-1">7-day free trial included</p>

@@ -406,7 +406,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
             All Documents
           </button>
-          <h1 className="text-4xl font-black tracking-tight text-slate-900">{invoice.invoiceNumber}</h1>
+          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900">{invoice.invoiceNumber}</h1>
           <div className="flex items-center gap-3 mt-2">
             <span className={`px-3 py-1 rounded-full text-xs font-bold ${invoice.type === "ESTIMATE" ? "bg-orange-100 text-orange-700" : "bg-blue-100 text-blue-700"}`}>
               {invoice.type}
@@ -458,7 +458,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
                   </div>
                 </div>
                 <div className="text-right">
-                  <h3 className="text-2xl font-black" style={{ color: profile?.accentColor || "#f97316" }}>
+                  <h3 className="text-2xl font-bold" style={{ color: profile?.accentColor || "#f97316" }}>
                     {invoice.type}
                   </h3>
                   <p className="text-sm text-slate-500 mt-1">#{invoice.invoiceNumber}</p>
@@ -529,7 +529,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
                   )}
                   <div className="flex justify-between pt-3 border-t border-slate-200">
                     <span className="font-bold text-slate-900">Total</span>
-                    <span className="text-xl font-black text-slate-900">{fmt(invoice.total)}</span>
+                    <span className="text-xl font-bold text-slate-900">{fmt(invoice.total)}</span>
                   </div>
                 </div>
               </div>
@@ -566,7 +566,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
         <div className="lg:col-span-1 space-y-6">
           {/* Status */}
           <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-            <h3 className="text-sm font-black tracking-tight text-slate-900 mb-4">Update Status</h3>
+            <h3 className="text-sm font-bold tracking-tight text-slate-900 mb-4">Update Status</h3>
             <div className="grid grid-cols-2 gap-2">
               {["DRAFT", "SENT", "ACCEPTED", "PAID", "OVERDUE", "CANCELLED"].map((s) => (
                 <button
@@ -586,7 +586,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
 
           {/* Actions */}
           <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-            <h3 className="text-sm font-black tracking-tight text-slate-900 mb-4">Quick Info</h3>
+            <h3 className="text-sm font-bold tracking-tight text-slate-900 mb-4">Quick Info</h3>
             <div className="space-y-3 text-sm">
               <div>
                 <p className="text-slate-500">Client</p>
@@ -608,7 +608,7 @@ export default function InvoiceDetailPage({ params }: { params: Promise<{ id: st
               )}
               <div className="pt-3 border-t border-slate-200">
                 <p className="text-slate-500">Total</p>
-                <p className="text-2xl font-black text-slate-900">{fmt(invoice.total)}</p>
+                <p className="text-2xl font-bold text-slate-900">{fmt(invoice.total)}</p>
               </div>
             </div>
           </div>

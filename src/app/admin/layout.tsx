@@ -28,7 +28,7 @@ export default async function AdminLayout({
               <span className="text-lg font-extralight tracking-tight text-slate-900">
                 PRO SPEC
               </span>
-              <span className="text-lg font-black tracking-tight text-orange-500">
+              <span className="text-lg font-bold tracking-tight text-orange-500">
                 IQ
               </span>
             </Link>

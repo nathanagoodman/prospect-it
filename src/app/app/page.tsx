@@ -109,11 +109,11 @@ export default function Dashboard() {
   }, []);
 
   const statusColors: { [key: string]: string } = {
-    DRAFT: "bg-slate-100 text-slate-800",
-    READY: "bg-blue-100 text-blue-800",
-    SUBMITTED: "bg-purple-100 text-purple-800",
-    ACCEPTED: "bg-green-100 text-green-800",
-    REJECTED: "bg-red-100 text-red-800",
+    DRAFT: "bg-slate-100 text-slate-600 ring-1 ring-inset ring-slate-200",
+    READY: "bg-white text-slate-800 ring-1 ring-inset ring-slate-300",
+    SUBMITTED: "bg-slate-800 text-white ring-1 ring-inset ring-slate-800",
+    ACCEPTED: "bg-emerald-50 text-emerald-800 ring-1 ring-inset ring-emerald-200",
+    REJECTED: "bg-red-50 text-red-800 ring-1 ring-inset ring-red-200",
   };
 
   const getFormattedDate = () => {
@@ -138,29 +138,71 @@ export default function Dashboard() {
     <div className="p-4 sm:p-8 bg-slate-50 min-h-screen">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900">
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
           Welcome back{user?.name ? `, ${user.name.split(" ")[0]}` : ""}
         </h1>
         <p className="text-slate-500 font-medium mt-2">{getFormattedDate()}</p>
       </div>
 
-      {/* Stats Cards - Dynamic based on tier */}
+      {/* Stats Cards - Dynamic based on tier.
+
+          These used to carry four different colored left borders (orange,
+          blue, purple, green), which told the eye nothing about which
+          number mattered. Counts are now neutral; win rate is the only one
+          that can be good or bad, so it's the only one that gets color —
+          and the color follows the actual value rather than being fixed. */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mb-8">
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 border-l-4 border-l-orange-500">
-          <p className="text-slate-600 text-sm font-medium">{user?.tier === "GC" ? "Projects Managed" : "Bids Submitted"}</p>
-          <p className="text-3xl sm:text-4xl font-black text-slate-900 mt-2">{stats.totalBids}</p>
-        </div>
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 border-l-4 border-l-blue-500">
-          <p className="text-slate-600 text-sm font-medium">Active Jobs</p>
-          <p className="text-3xl sm:text-4xl font-black text-slate-900 mt-2">{stats.activeJobs}</p>
-        </div>
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 border-l-4 border-l-purple-500">
-          <p className="text-slate-600 text-sm font-medium">Total Clients</p>
-          <p className="text-3xl sm:text-4xl font-black text-slate-900 mt-2">{stats.totalClients}</p>
-        </div>
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 border-l-4 border-l-green-500">
-          <p className="text-slate-600 text-sm font-medium">Win Rate</p>
-          <p className="text-3xl sm:text-4xl font-black text-slate-900 mt-2">{stats.winRate}%</p>
+        {[
+          {
+            label: user?.tier === "GC" ? "Projects Managed" : "Bids Submitted",
+            value: stats.totalBids,
+          },
+          { label: "Active Jobs", value: stats.activeJobs },
+          { label: "Total Clients", value: stats.totalClients },
+        ].map((s) => (
+          <div
+            key={s.label}
+            className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6"
+          >
+            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              {s.label}
+            </p>
+            <p className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 mt-2 tabular-nums">
+              {s.value}
+            </p>
+          </div>
+        ))}
+        <div
+          className={`rounded-2xl border shadow-sm p-6 ${
+            stats.winRate >= 40
+              ? "border-emerald-200 bg-emerald-50/50"
+              : stats.winRate > 0
+                ? "border-amber-200 bg-amber-50/50"
+                : "border-slate-200 bg-white"
+          }`}
+        >
+          <p
+            className={`text-[11px] font-bold uppercase tracking-wider ${
+              stats.winRate >= 40
+                ? "text-emerald-700"
+                : stats.winRate > 0
+                  ? "text-amber-700"
+                  : "text-slate-500"
+            }`}
+          >
+            Win Rate
+          </p>
+          <p
+            className={`text-3xl sm:text-4xl font-extrabold tracking-tight mt-2 tabular-nums ${
+              stats.winRate >= 40
+                ? "text-emerald-800"
+                : stats.winRate > 0
+                  ? "text-amber-800"
+                  : "text-slate-900"
+            }`}
+          >
+            {stats.winRate}%
+          </p>
         </div>
       </div>
 
@@ -168,7 +210,7 @@ export default function Dashboard() {
       {user?.enabledTrades && user.enabledTrades.length > 0 && (
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-black tracking-tight text-slate-900">Your Trades</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-slate-900">Your Trades</h2>
             <Link
               href="/app/settings"
               className="text-orange-600 hover:text-orange-700 text-sm font-medium transition-colors"
@@ -195,7 +237,7 @@ export default function Dashboard() {
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-8">
             <div className="flex items-start justify-between">
               <div>
-                <h3 className="text-2xl font-black tracking-tight text-slate-900">Quick Bid</h3>
+                <h3 className="text-2xl font-bold tracking-tight text-slate-900">Quick Bid</h3>
                 <p className="text-slate-500 font-medium mt-1">Start a new bid in your primary trade</p>
               </div>
               <Link
@@ -214,7 +256,7 @@ export default function Dashboard() {
           <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-8">
             <div className="flex items-start justify-between">
               <div>
-                <h3 className="text-2xl font-black tracking-tight text-slate-900">Sub Coordination</h3>
+                <h3 className="text-2xl font-bold tracking-tight text-slate-900">Sub Coordination</h3>
                 <p className="text-slate-500 font-medium mt-1">Manage your subcontractors and delegated work</p>
               </div>
               <Link
@@ -231,7 +273,7 @@ export default function Dashboard() {
       {/* Recent Bids Section */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-black tracking-tight text-slate-900">Recent Bids</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900">Recent Bids</h2>
           <Link
             href="/app/bids"
             className="text-orange-600 hover:text-orange-700 text-sm font-medium transition-colors"
@@ -294,7 +336,7 @@ export default function Dashboard() {
       {/* Recent Jobs Section */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-black tracking-tight text-slate-900">Recent Jobs</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900">Recent Jobs</h2>
           <Link
             href="/app/jobs"
             className="text-orange-600 hover:text-orange-700 text-sm font-medium transition-colors"

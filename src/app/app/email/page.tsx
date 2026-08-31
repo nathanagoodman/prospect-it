@@ -140,7 +140,7 @@ export default function EmailPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-4xl font-black tracking-tight text-slate-900">Email Sequences</h1>
+          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900">Email Sequences</h1>
           <p className="text-slate-500 font-medium mt-2">Create and manage outreach email templates</p>
         </div>
         <button
@@ -157,7 +157,7 @@ export default function EmailPage() {
       {/* Form Section */}
       {showForm && (
         <div className="bg-white border border-slate-200 rounded-2xl p-8 mb-8 shadow-sm">
-          <h2 className="text-2xl font-black tracking-tight text-slate-900 mb-6">
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 mb-6">
             {editingId ? "Edit Sequence" : "Create New Sequence"}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -246,7 +246,7 @@ export default function EmailPage() {
           <svg className="w-16 h-16 mx-auto mb-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>
-          <h3 className="text-lg font-black tracking-tight text-slate-900 mb-2">No email sequences yet</h3>
+          <h3 className="text-lg font-bold tracking-tight text-slate-900 mb-2">No email sequences yet</h3>
           <p className="text-slate-500 font-medium mb-6">Create your first email sequence to start automating outreach</p>
           <button
             onClick={() => setShowForm(!showForm)}
@@ -263,7 +263,7 @@ export default function EmailPage() {
               className="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-sm transition-shadow shadow-sm"
             >
               <div className="flex items-start justify-between mb-4">
-                <h3 className="text-lg font-black tracking-tight text-slate-900 flex-1">{sequence.name}</h3>
+                <h3 className="text-lg font-bold tracking-tight text-slate-900 flex-1">{sequence.name}</h3>
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleEdit(sequence)}

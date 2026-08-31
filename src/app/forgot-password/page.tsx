@@ -40,7 +40,7 @@ export default function ForgotPasswordPage() {
           <span className="text-2xl font-extralight tracking-tight text-slate-900">
             PRO SPEC
           </span>
-          <span className="text-2xl font-black tracking-tight text-orange-500">
+          <span className="text-2xl font-bold tracking-tight text-orange-500">
             IQ
           </span>
         </Link>

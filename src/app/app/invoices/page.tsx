@@ -79,7 +79,7 @@ export default function InvoicesPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-4xl font-black tracking-tight text-slate-900">Invoices &amp; Estimates</h1>
+          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900">Invoices &amp; Estimates</h1>
           <p className="text-slate-500 font-medium mt-2">Create, manage, and download professional documents</p>
         </div>
         <Link
@@ -103,7 +103,7 @@ export default function InvoicesPage() {
         ].map((stat) => (
           <div key={stat.label} className={`bg-white rounded-2xl border border-slate-200 p-6 shadow-sm border-l-4 ${stat.color}`}>
             <p className="text-sm text-slate-600 font-medium">{stat.label}</p>
-            <p className="text-2xl font-black tracking-tight text-slate-900 mt-1">{stat.value}</p>
+            <p className="text-2xl font-bold tracking-tight text-slate-900 mt-1">{stat.value}</p>
           </div>
         ))}
       </div>
