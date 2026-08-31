@@ -11,6 +11,12 @@ import {
   type TradeType,
 } from "@/lib/trades";
 import { estimateFromMetrics, hasCostBasis } from "@/lib/estimator";
+import {
+  assembliesForTrade,
+  hasAssemblies,
+  totalAssemblies,
+  type AssemblyLine,
+} from "@/lib/assemblies";
 
 interface LineItem {
   id: string;
@@ -103,6 +109,20 @@ export default function NewBidPage() {
 
   const [tradeMetrics, setTradeMetrics] = useState<TradeMetrics>({});
 
+  // Labor burden helper.
+  //
+  // The single most common way a contractor under-bids: typing their base
+  // wage into the labor rate. A tradesperson paid $45/hr actually costs
+  // the business $63-72 once payroll taxes, workers' comp, liability, and
+  // benefits are counted. Bidding at base wage silently gives away that
+  // difference on every hour of every job.
+  const [showBurden, setShowBurden] = useState(false);
+  const [baseWage, setBaseWage] = useState(0);
+  const [burdenPercent, setBurdenPercent] = useState(45);
+
+  const loadedRate =
+    baseWage > 0 ? Math.round(baseWage * (1 + burdenPercent / 100) * 100) / 100 : 0;
+
   // Inline client creation. Without this, discovering mid-bid that the
   // customer isn't saved yet means abandoning the bid, going to Clients,
   // and starting over — painful on desktop, a dealbreaker on a phone at
@@ -180,6 +200,33 @@ export default function NewBidPage() {
   // Everything downstream keys off this: a GC in trade mode behaves
   // exactly like a trade account.
   const isGC = isGCAccount && bidMode === "project";
+
+  // Assembly-based takeoff. Contractors count what they can see —
+  // receptacles, fixtures, registers — and each assembly carries the
+  // material and labor that go with it. This sits alongside the older
+  // aggregate metrics rather than replacing them.
+  const [assemblyQty, setAssemblyQty] = useState<Record<string, number>>({});
+
+  const tradeAssemblies = useMemo(
+    () => (formData.tradeType ? assembliesForTrade(formData.tradeType) : []),
+    [formData.tradeType]
+  );
+
+  const assemblyTotals = useMemo(() => {
+    const selections: AssemblyLine[] = Object.entries(assemblyQty)
+      .filter(([, q]) => (Number(q) || 0) > 0)
+      .map(([assemblyId, quantity]) => ({ assemblyId, quantity: Number(quantity) }));
+    return selections.length ? totalAssemblies(selections) : null;
+  }, [assemblyQty]);
+
+  const applyAssemblies = () => {
+    if (!assemblyTotals) return;
+    setFormData((prev) => ({
+      ...prev,
+      materialCost: assemblyTotals.materialCost,
+      laborHours: assemblyTotals.laborHours,
+    }));
+  };
 
   // Suggested material/labor derived from the trade takeoff quantities.
   // This is a suggestion only — it is never written into formData unless
@@ -325,6 +372,7 @@ export default function NewBidPage() {
         contingencyPercent: tradeConfig.defaultContingency,
       }));
       setTradeMetrics({});
+      setAssemblyQty({});
     } else {
       setFormData((prev) => ({
         ...prev,
@@ -435,7 +483,12 @@ export default function NewBidPage() {
             ...formData,
             ...calculations,
             lineItems,
-            tradeMetrics,
+            tradeMetrics: {
+              ...tradeMetrics,
+              // Stored alongside the aggregate metrics so a saved bid can
+              // be reopened with the takeoff intact.
+              _assemblies: assemblyQty,
+            },
           };
 
       const res = await fetch("/api/bids", {
@@ -845,7 +898,9 @@ export default function NewBidPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-slate-700 mb-2">Labor Rate ($/hr)</label>
+                      <label className="block text-sm font-semibold text-slate-700 mb-2">
+                        Labor Rate ($/hr)
+                      </label>
                       <input
                         type="number"
                         inputMode="decimal"
@@ -856,6 +911,79 @@ export default function NewBidPage() {
                         step="0.01"
                         className="w-full rounded-xl border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4"
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowBurden(!showBurden)}
+                        className="mt-2 text-xs font-semibold text-orange-600 hover:text-orange-700"
+                      >
+                        {showBurden ? "Hide" : "This should be your loaded cost, not base wage →"}
+                      </button>
+
+                      {showBurden && (
+                        <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
+                          <p className="text-xs leading-relaxed text-amber-900">
+                            Your true labor cost includes payroll taxes, workers&apos;
+                            comp, liability, and benefits — typically <strong>35–60%</strong>{" "}
+                            on top of the wage. Bidding at base wage gives that
+                            difference away on every hour.
+                          </p>
+                          <div className="mt-3 grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-amber-800">
+                                Base wage $/hr
+                              </label>
+                              <input
+                                type="number"
+                                inputMode="decimal"
+                                min="0"
+                                step="0.5"
+                                value={baseWage || ""}
+                                onChange={(e) => setBaseWage(parseFloat(e.target.value) || 0)}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") e.preventDefault();
+                                }}
+                                placeholder="45"
+                                className="w-full rounded-lg border border-amber-300 bg-white px-3 py-2"
+                              />
+                            </div>
+                            <div>
+                              <label className="mb-1 block text-[10px] font-bold uppercase tracking-widest text-amber-800">
+                                Burden %
+                              </label>
+                              <input
+                                type="number"
+                                inputMode="decimal"
+                                min="0"
+                                max="200"
+                                step="1"
+                                value={burdenPercent}
+                                onChange={(e) => setBurdenPercent(parseFloat(e.target.value) || 0)}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter") e.preventDefault();
+                                }}
+                                className="w-full rounded-lg border border-amber-300 bg-white px-3 py-2"
+                              />
+                            </div>
+                          </div>
+                          {loadedRate > 0 && (
+                            <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+                              <p className="text-sm text-amber-900">
+                                Loaded cost:{" "}
+                                <strong className="text-base">${loadedRate.toFixed(2)}/hr</strong>
+                              </p>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  setFormData((prev) => ({ ...prev, laborRate: loadedRate }))
+                                }
+                                className="rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-bold text-white transition hover:bg-amber-700"
+                              >
+                                Use this rate
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -902,6 +1030,155 @@ export default function NewBidPage() {
                   </div>
                 </div>
               </div>
+
+              {/* ─── Assembly takeoff ───────────────────────────────────
+                  Count what you can see. Each assembly bundles its own
+                  material and labor, which is how the estimating books
+                  and the good spreadsheets work. */}
+              {formData.tradeType && hasAssemblies(formData.tradeType) && (
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-8">
+                  <div className="mb-5 flex flex-wrap items-start justify-between gap-3 border-b border-slate-100 pb-4">
+                    <div>
+                      <h2 className="text-lg font-bold text-slate-900">Takeoff</h2>
+                      <p className="mt-0.5 text-sm text-slate-500">
+                        Count the work. Each line carries its own material and labor.
+                      </p>
+                    </div>
+                    {assemblyTotals && (
+                      <button
+                        type="button"
+                        onClick={applyAssemblies}
+                        className="shrink-0 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+                      >
+                        Use these numbers
+                      </button>
+                    )}
+                  </div>
+
+                  {Object.entries(
+                    tradeAssemblies.reduce<Record<string, typeof tradeAssemblies>>(
+                      (acc, a) => {
+                        (acc[a.category] ||= []).push(a);
+                        return acc;
+                      },
+                      {}
+                    )
+                  ).map(([category, items]) => (
+                    <div key={category} className="mb-5 last:mb-0">
+                      <h3 className="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                        {category}
+                      </h3>
+                      <div className="space-y-2">
+                        {items.map((a) => {
+                          const qty = assemblyQty[a.id] || 0;
+                          return (
+                            <div
+                              key={a.id}
+                              className={`flex flex-wrap items-center gap-3 rounded-xl border px-3 py-2.5 transition ${
+                                qty > 0
+                                  ? "border-orange-300 bg-orange-50/50"
+                                  : "border-slate-200"
+                              }`}
+                            >
+                              <div className="min-w-0 flex-1">
+                                <p className="font-medium text-slate-800">{a.name}</p>
+                                <p className="text-xs leading-relaxed text-slate-500">
+                                  {a.includes}
+                                </p>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="hidden text-xs text-slate-400 sm:inline">
+                                  ${a.material} + {a.laborHours}h / {a.unit}
+                                </span>
+                                <input
+                                  type="number"
+                                  inputMode="decimal"
+                                  min="0"
+                                  step="1"
+                                  value={qty || ""}
+                                  placeholder="0"
+                                  onChange={(e) =>
+                                    setAssemblyQty((prev) => ({
+                                      ...prev,
+                                      [a.id]: parseFloat(e.target.value) || 0,
+                                    }))
+                                  }
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") e.preventDefault();
+                                  }}
+                                  className="w-20 rounded-lg border border-slate-200 px-3 py-2 text-center focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+
+                  {assemblyTotals && (
+                    <div className="mt-6 rounded-xl bg-slate-900 p-5">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-orange-400/80">
+                            Takeoff total
+                          </p>
+                          <p className="mt-1 text-lg font-bold text-white">
+                            $
+                            {assemblyTotals.materialCost.toLocaleString("en-US", {
+                              maximumFractionDigits: 0,
+                            })}{" "}
+                            material ·{" "}
+                            {assemblyTotals.laborHours.toLocaleString("en-US", {
+                              maximumFractionDigits: 1,
+                            })}{" "}
+                            hours
+                          </p>
+                          {formData.laborRate > 0 && (
+                            <p className="mt-0.5 text-sm text-slate-400">
+                              ≈ $
+                              {(
+                                assemblyTotals.materialCost +
+                                assemblyTotals.laborHours * formData.laborRate
+                              ).toLocaleString("en-US", { maximumFractionDigits: 0 })}{" "}
+                              cost at your ${formData.laborRate}/hr
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      <details className="group mt-4">
+                        <summary className="cursor-pointer list-none text-sm font-semibold text-orange-400 hover:text-orange-300">
+                          <span className="group-open:hidden">Show the math →</span>
+                          <span className="hidden group-open:inline">Hide the math ↑</span>
+                        </summary>
+                        <div className="mt-3 space-y-1.5">
+                          {assemblyTotals.lines.map((l) => (
+                            <div
+                              key={l.assembly.id}
+                              className="flex flex-wrap justify-between gap-2 border-b border-slate-800 pb-1.5 text-sm"
+                            >
+                              <span className="text-slate-300">
+                                {l.quantity} × {l.assembly.name}
+                              </span>
+                              <span className="text-slate-400">
+                                ${l.material.toLocaleString("en-US", { maximumFractionDigits: 0 })} ·{" "}
+                                {l.laborHours.toFixed(1)}h
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                        <p className="mt-4 rounded-lg bg-amber-500/10 px-3 py-2 text-xs leading-relaxed text-amber-200">
+                          <strong>These are generic starting rates, not market data.</strong>{" "}
+                          Material prices and crew productivity vary a lot by region and
+                          supplier. Adjust anything that doesn&apos;t match your numbers —
+                          your own rates will always beat ours.
+                        </p>
+                      </details>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Trade-Specific Metrics Section (TRADE mode only) */}
               {formData.tradeType && (
