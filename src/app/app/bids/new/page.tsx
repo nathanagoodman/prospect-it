@@ -179,14 +179,23 @@ export default function NewBidPage() {
         managementFee,
       });
     } else {
-      // TRADE mode: original calculation
+      // TRADE mode: cost buckets plus any itemized lines.
       const laborCost = formData.laborHours * formData.laborRate;
+
+      // Line items are part of the bid, not decoration. Without this a
+      // user could itemize the whole job and still see a $0 total.
+      const lineItemsTotal = lineItems.reduce(
+        (sum, li) => sum + (li.qty || 0) * (li.unitPrice || 0),
+        0
+      );
+
       const subtotal =
         formData.materialCost +
         laborCost +
         formData.equipmentCost +
         formData.subcontractorCost +
-        formData.permitCost;
+        formData.permitCost +
+        lineItemsTotal;
 
       const overhead = subtotal * (formData.overheadPercent / 100);
       const profit = subtotal * (formData.profitPercent / 100);

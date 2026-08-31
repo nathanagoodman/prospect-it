@@ -1,16 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAdminUser } from "@/lib/admin-auth";
+import { PLAN_PRICE, type PlanKey } from "@/lib/plans";
 
 export const dynamic = "force-dynamic";
 
-// Monthly price per plan. Kept local so this route never has to construct a
-// Stripe client (which throws when STRIPE_SECRET_KEY is absent).
-const PLAN_PRICE: Record<string, number> = {
-  PRO: 49,
-  GC_PRO: 99,
-  GC_ELITE: 249,
-};
+// Prices come from the shared plan module, which has no Stripe import —
+// so this route never constructs a Stripe client (which would throw when
+// STRIPE_SECRET_KEY is absent).
 
 export async function GET() {
   const admin = await getAdminUser();
@@ -84,7 +81,7 @@ export async function GET() {
     let paying = 0;
 
     for (const sub of subs) {
-      const price = PLAN_PRICE[sub.plan] ?? 0;
+      const price = PLAN_PRICE[sub.plan as PlanKey] ?? 0;
       if (sub.status === "ACTIVE") {
         mrr += price;
         paying += 1;

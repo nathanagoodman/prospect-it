@@ -2,39 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import {
+  normalizeLineItems,
+  sumLineItems,
+  calculateBidTotals,
+} from "@/lib/bid-calc";
 
-function calculateBidTotals(bidData: {
-  materialCost: number;
-  laborCost: number;
-  equipmentCost: number;
-  subcontractorCost: number;
-  permitCost: number;
-  overheadPercent: number;
-  profitPercent: number;
-  contingencyPercent: number;
-}) {
-  const subtotal =
-    bidData.materialCost +
-    bidData.laborCost +
-    bidData.equipmentCost +
-    bidData.subcontractorCost +
-    bidData.permitCost;
-
-  const overhead = subtotal * (bidData.overheadPercent / 100);
-  const profit = subtotal * (bidData.profitPercent / 100);
-  const contingency = subtotal * (bidData.contingencyPercent / 100);
-  const totalBid = subtotal + overhead + profit + contingency;
-  const profitMargin = totalBid > 0 ? (profit / totalBid) * 100 : 0;
-
-  return {
-    subtotal,
-    overhead,
-    profit,
-    contingency,
-    totalBid,
-    profitMargin,
-  };
-}
 
 export async function GET(
   request: NextRequest,
@@ -50,7 +23,7 @@ export async function GET(
       );
     }
 
-    const userId = (session.user as any).id;
+    const userId = session.user.id;
     const { id } = await params;
 
     const bid = await prisma.bid.findUnique({
@@ -96,13 +69,14 @@ export async function PUT(
       );
     }
 
-    const userId = (session.user as any).id;
+    const userId = session.user.id;
     const { id } = await params;
     const data = await request.json();
 
     // Verify ownership
     const existingBid = await prisma.bid.findUnique({
       where: { id },
+      include: { lineItems: true },
     });
 
     if (!existingBid) {
@@ -119,6 +93,24 @@ export async function PUT(
       );
     }
 
+    // If the client sent line items, they replace the existing set.
+    // Otherwise keep what's already saved so a partial update (e.g. a
+    // status change) can't wipe them.
+    const hasNewLineItems = Array.isArray(data.lineItems);
+    const lineItems = hasNewLineItems ? normalizeLineItems(data.lineItems) : [];
+    const lineItemsTotal = hasNewLineItems
+      ? sumLineItems(lineItems)
+      : sumLineItems(existingBid.lineItems);
+
+    const tradeType = data.tradeType ?? existingBid.tradeType;
+    const isGC = tradeType === "general";
+    const existingMetrics =
+      (existingBid.tradeMetrics as Record<string, unknown> | null) ?? {};
+    const metrics = { ...existingMetrics, ...(data.tradeMetrics ?? {}) };
+
+    const gcNum = (key: string) =>
+      isGC ? Number(data[key] ?? metrics[key] ?? 0) || 0 : 0;
+
     // Calculate new totals
     const totals = calculateBidTotals({
       materialCost: data.materialCost ?? existingBid.materialCost,
@@ -129,6 +121,10 @@ export async function PUT(
       overheadPercent: data.overheadPercent ?? existingBid.overheadPercent,
       profitPercent: data.profitPercent ?? existingBid.profitPercent,
       contingencyPercent: data.contingencyPercent ?? existingBid.contingencyPercent,
+      lineItemsTotal,
+      gcInsuranceCost: gcNum("gcInsuranceCost"),
+      gcPermitCost: gcNum("gcPermitCost"),
+      gcManagementPercent: gcNum("gcManagementPercent"),
     });
 
     const bid = await prisma.bid.update({
@@ -136,7 +132,8 @@ export async function PUT(
       data: {
         jobName: data.jobName ?? existingBid.jobName,
         description: data.description ?? existingBid.description,
-        tradeType: data.tradeType ?? existingBid.tradeType,
+        tradeType,
+        tradeMetrics: metrics,
         clientId: data.clientId ?? existingBid.clientId,
         materialCost: data.materialCost ?? existingBid.materialCost,
         laborCost: data.laborCost ?? existingBid.laborCost,
@@ -151,6 +148,9 @@ export async function PUT(
         ...totals,
         status: data.status ?? existingBid.status,
         dueDate: data.dueDate ? new Date(data.dueDate) : existingBid.dueDate,
+        ...(hasNewLineItems
+          ? { lineItems: { deleteMany: {}, create: lineItems } }
+          : {}),
       },
       include: { lineItems: true },
     });
@@ -179,7 +179,7 @@ export async function DELETE(
       );
     }
 
-    const userId = (session.user as any).id;
+    const userId = session.user.id;
     const { id } = await params;
 
     // Verify ownership

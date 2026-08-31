@@ -73,7 +73,10 @@ export default function AppLayout({
     { href: "/app/invoices", label: "Invoices", icon: "📄" },
     { href: "/app/jobs", label: "Jobs", icon: "🔨" },
     { href: "/app/clients", label: "Clients", icon: "👥" },
-    { href: "/app/email", label: "Email", icon: "✉️" },
+    // Email sequences are intentionally hidden: the page has no API behind
+    // it and everything the user builds is lost on refresh. Restore this
+    // once /api/email-sequences and the send scheduler exist.
+    // { href: "/app/email", label: "Email", icon: "✉️" },
   ];
 
   const navItems = user?.tier === "GC" ? [...baseNavItems, { href: "/app/subs", label: "Subs", icon: "👷" }] : baseNavItems;

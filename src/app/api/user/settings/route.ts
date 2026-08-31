@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { normalizeTradeId, normalizeTradeIds } from "@/lib/trades";
 
 export async function GET(request: NextRequest) {
   try {
@@ -80,7 +81,8 @@ export async function PATCH(request: NextRequest) {
     if (data.company !== undefined) updateData.company = data.company;
     if (data.phone !== undefined) updateData.phone = data.phone;
     if (data.tier !== undefined) updateData.tier = data.tier;
-    if (data.tradeType !== undefined) updateData.tradeType = data.tradeType;
+    if (data.tradeType !== undefined)
+      updateData.tradeType = normalizeTradeId(data.tradeType);
     if (data.enabledTrades !== undefined) {
       // Validate enabledTrades is an array
       if (!Array.isArray(data.enabledTrades)) {
@@ -89,7 +91,7 @@ export async function PATCH(request: NextRequest) {
           { status: 400 }
         );
       }
-      updateData.enabledTrades = data.enabledTrades;
+      updateData.enabledTrades = normalizeTradeIds(data.enabledTrades);
     }
 
     const updatedUser = await prisma.user.update({

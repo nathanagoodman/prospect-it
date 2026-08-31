@@ -1,62 +1,10 @@
 "use client";
 
+import { PLAN_LIST } from "@/lib/plans";
+
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-const PLANS = [
-  {
-    key: "PRO",
-    name: "Pro",
-    price: 49,
-    description: "Built for trade professionals",
-    badge: null,
-    accentColor: "orange",
-    features: [
-      "Single trade profile",
-      "Unlimited bids",
-      "Trade-specific metrics & analytics",
-      "Invoicing & estimates",
-      "Unlimited clients",
-      "Email sequences",
-      "Company branding",
-    ],
-    cta: "Start 7-Day Free Trial",
-  },
-  {
-    key: "GC_PRO",
-    name: "GC Pro",
-    price: 99,
-    description: "For General Contractors managing full projects",
-    badge: "Most Popular",
-    accentColor: "blue",
-    features: [
-      "Everything in Pro",
-      "Multi-trade project bidding",
-      "Sub bid coordination",
-      "Full project management",
-      "GC-specific cost tracking",
-      "Priority support",
-    ],
-    cta: "Start 7-Day Free Trial",
-  },
-  {
-    key: "GC_ELITE",
-    name: "GC Elite",
-    price: 249,
-    description: "The ultimate toolkit for top-tier GCs",
-    badge: "Best Value",
-    accentColor: "purple",
-    features: [
-      "Everything in GC Pro",
-      "AI plan set reading (auto-generate bids)",
-      "AI-powered bid optimization",
-      "Custom sub rate cards",
-      "Advanced analytics & reporting",
-      "Dedicated onboarding",
-    ],
-    cta: "Start 7-Day Free Trial",
-  },
-];
 
 export default function PricingPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -151,7 +99,7 @@ export default function PricingPage() {
       {/* Pricing Cards */}
       <div className="max-w-6xl mx-auto px-6 pb-24">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {PLANS.map((plan) => {
+          {PLAN_LIST.map((plan) => {
             const isPopular = plan.badge === "Most Popular";
             return (
               <div
@@ -190,7 +138,9 @@ export default function PricingPage() {
                     <li key={idx} className="flex items-start gap-3 text-sm">
                       <svg
                         className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
-                          plan.accentColor === "orange"
+                          feature.comingSoon
+                            ? "text-slate-300"
+                            : plan.accentColor === "orange"
                             ? "text-orange-500"
                             : plan.accentColor === "blue"
                             ? "text-blue-500"
@@ -202,7 +152,18 @@ export default function PricingPage() {
                       >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                       </svg>
-                      <span className="text-slate-700">{feature}</span>
+                      <span
+                        className={
+                          feature.comingSoon ? "text-slate-400" : "text-slate-700"
+                        }
+                      >
+                        {feature.label}
+                        {feature.comingSoon && (
+                          <span className="ml-2 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-500">
+                            Soon
+                          </span>
+                        )}
+                      </span>
                     </li>
                   ))}
                 </ul>

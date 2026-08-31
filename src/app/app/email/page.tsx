@@ -123,6 +123,20 @@ export default function EmailPage() {
 
   return (
     <div className="p-8 bg-slate-50 min-h-screen">
+      {/* This page has no backend yet — sequences live in React state only
+          and are lost on refresh. Say so plainly rather than letting people
+          build something that silently disappears. */}
+      <div className="mb-8 rounded-xl border border-amber-300 bg-amber-50 px-5 py-4">
+        <p className="font-semibold text-amber-900">
+          Preview — sequences aren&apos;t saved yet
+        </p>
+        <p className="mt-1 text-sm leading-relaxed text-amber-800">
+          You can explore the editor, but nothing here is stored and no emails
+          are sent. Anything you write will be lost when you leave the page.
+          We&apos;ll turn this on once sending is wired up.
+        </p>
+      </div>
+
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>

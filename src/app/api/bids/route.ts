@@ -3,39 +3,11 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { logActivity } from "@/lib/activity";
-
-function calculateBidTotals(bidData: {
-  materialCost: number;
-  laborCost: number;
-  equipmentCost: number;
-  subcontractorCost: number;
-  permitCost: number;
-  overheadPercent: number;
-  profitPercent: number;
-  contingencyPercent: number;
-}) {
-  const subtotal =
-    bidData.materialCost +
-    bidData.laborCost +
-    bidData.equipmentCost +
-    bidData.subcontractorCost +
-    bidData.permitCost;
-
-  const overhead = subtotal * (bidData.overheadPercent / 100);
-  const profit = subtotal * (bidData.profitPercent / 100);
-  const contingency = subtotal * (bidData.contingencyPercent / 100);
-  const totalBid = subtotal + overhead + profit + contingency;
-  const profitMargin = totalBid > 0 ? (profit / totalBid) * 100 : 0;
-
-  return {
-    subtotal,
-    overhead,
-    profit,
-    contingency,
-    totalBid,
-    profitMargin,
-  };
-}
+import {
+  normalizeLineItems,
+  sumLineItems,
+  calculateBidTotals,
+} from "@/lib/bid-calc";
 
 export async function GET(request: NextRequest) {
   try {
@@ -48,7 +20,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const userId = (session.user as any).id;
+    const userId = session.user.id;
 
     const bids = await prisma.bid.findMany({
       where: { userId },
@@ -77,7 +49,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const userId = (session.user as any).id;
+    const userId = session.user.id;
     const data = await request.json();
 
     // Validate required fields
@@ -88,17 +60,45 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Calculate totals
+    const lineItems = normalizeLineItems(data.lineItems);
+    const lineItemsTotal = sumLineItems(lineItems);
+
+    // GC bids carry their value in sub bids (sent as line items) plus
+    // project-level costs, not in the material/labor buckets. Without
+    // these, every GC bid computed to zero.
+    const isGC = data.tradeType === "general";
+
     const totals = calculateBidTotals({
       materialCost: data.materialCost || 0,
       laborCost: data.laborCost || 0,
       equipmentCost: data.equipmentCost || 0,
       subcontractorCost: data.subcontractorCost || 0,
       permitCost: data.permitCost || 0,
-      overheadPercent: data.overheadPercent || 10,
-      profitPercent: data.profitPercent || 15,
-      contingencyPercent: data.contingencyPercent || 5,
+      overheadPercent: data.overheadPercent ?? 10,
+      profitPercent: data.profitPercent ?? 15,
+      contingencyPercent: data.contingencyPercent ?? 5,
+      lineItemsTotal,
+      gcInsuranceCost: isGC ? data.gcInsuranceCost || 0 : 0,
+      gcPermitCost: isGC ? data.gcPermitCost || 0 : 0,
+      gcManagementPercent: isGC ? data.gcManagementPercent || 0 : 0,
     });
+
+    // Preserve the trade-specific inputs the user filled in. These were
+    // previously collected, displayed, and then discarded on save.
+    const tradeMetrics =
+      data.tradeMetrics && typeof data.tradeMetrics === "object"
+        ? {
+            ...data.tradeMetrics,
+            ...(isGC
+              ? {
+                  selectedTrades: data.selectedTrades ?? [],
+                  gcInsuranceCost: data.gcInsuranceCost || 0,
+                  gcPermitCost: data.gcPermitCost || 0,
+                  gcManagementPercent: data.gcManagementPercent || 0,
+                }
+              : {}),
+          }
+        : undefined;
 
     const bid = await prisma.bid.create({
       data: {
@@ -106,6 +106,7 @@ export async function POST(request: NextRequest) {
         jobName: data.jobName,
         description: data.description || null,
         tradeType: data.tradeType,
+        tradeMetrics,
         clientId: data.clientId || null,
         materialCost: data.materialCost || 0,
         laborCost: data.laborCost || 0,
@@ -114,12 +115,15 @@ export async function POST(request: NextRequest) {
         equipmentCost: data.equipmentCost || 0,
         subcontractorCost: data.subcontractorCost || 0,
         permitCost: data.permitCost || 0,
-        overheadPercent: data.overheadPercent || 10,
-        profitPercent: data.profitPercent || 15,
-        contingencyPercent: data.contingencyPercent || 5,
+        overheadPercent: data.overheadPercent ?? 10,
+        profitPercent: data.profitPercent ?? 15,
+        contingencyPercent: data.contingencyPercent ?? 5,
         ...totals,
         status: data.status || "DRAFT",
         dueDate: data.dueDate ? new Date(data.dueDate) : null,
+        // Persist line items. Previously collected by the form, posted,
+        // and then silently dropped — this table had never held a row.
+        lineItems: lineItems.length ? { create: lineItems } : undefined,
       },
       include: { lineItems: true },
     });

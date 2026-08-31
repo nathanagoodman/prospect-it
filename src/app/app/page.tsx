@@ -14,16 +14,6 @@ interface Bid {
   createdAt: string;
 }
 
-interface Job {
-  id: string;
-  name: string;
-  clientId: string;
-  contractAmount: number;
-  status: string;
-  startDate: string | null;
-  endDate: string | null;
-}
-
 interface UserData {
   tier: "GC" | "TRADE";
   tradeType?: string;
@@ -51,7 +41,6 @@ const TRADE_NAMES: { [key: string]: string } = {
 
 export default function Dashboard() {
   const [bids, setBids] = useState<Bid[]>([]);
-  const [jobs, setJobs] = useState<Job[]>([]);
   const [user, setUser] = useState<UserData | null>(null);
   const [stats, setStats] = useState({
     totalBids: 0,
@@ -71,19 +60,42 @@ export default function Dashboard() {
           setUser(userData);
         }
 
-        // Fetch bids
-        const bidsRes = await fetch("/api/bids");
-        const bidsData = (await bidsRes.json()) as Bid[];
+        // These endpoints all exist and work — previously two of the four
+        // stats were hardcoded to 0, so the dashboard reported zero clients
+        // to users who had added dozens.
+        const [bidsRes, jobsRes, clientsRes] = await Promise.all([
+          fetch("/api/bids"),
+          fetch("/api/jobs"),
+          fetch("/api/clients"),
+        ]);
+
+        const bidsData = (bidsRes.ok ? await bidsRes.json() : []) as Bid[];
+        const jobsData = jobsRes.ok ? await jobsRes.json() : [];
+        const clientsData = clientsRes.ok ? await clientsRes.json() : [];
+
         setBids(bidsData.slice(0, 5)); // Recent 5
 
-        // Calculate stats
-        const acceptedBids = bidsData.filter((b) => b.status === "ACCEPTED").length;
-        const winRate = bidsData.length > 0 ? (acceptedBids / bidsData.length) * 100 : 0;
+        // Win rate should measure decided bids, not drafts. Counting
+        // drafts in the denominator pins it near 0% forever.
+        const decided = bidsData.filter(
+          (b) => b.status === "ACCEPTED" || b.status === "REJECTED"
+        );
+        const accepted = decided.filter((b) => b.status === "ACCEPTED").length;
+        const winRate = decided.length > 0 ? (accepted / decided.length) * 100 : 0;
+
+        const activeJobs = Array.isArray(jobsData)
+          ? jobsData.filter(
+              (j: { status?: string }) =>
+                j.status === "IN_PROGRESS" ||
+                j.status === "NOT_STARTED" ||
+                j.status === "PUNCH_LIST"
+            ).length
+          : 0;
 
         setStats({
           totalBids: bidsData.length,
-          activeJobs: 0, // Will be updated when jobs API is available
-          totalClients: 0, // Will be updated when clients are fetched
+          activeJobs,
+          totalClients: Array.isArray(clientsData) ? clientsData.length : 0,
           winRate: Math.round(winRate),
         });
       } catch (error) {

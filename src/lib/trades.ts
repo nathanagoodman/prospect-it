@@ -1071,3 +1071,61 @@ export function getAllTradeOptions(): { value: string; label: string; icon: stri
     icon: tc.icon,
   }));
 }
+
+// ─── Trade ID Normalization ─────────────────────────────────
+/**
+ * Maps a human-facing trade label to its canonical TradeType id.
+ *
+ * The registration form presents display names ("Electrical", "HVAC",
+ * "General Contractor") while the rest of the app keys on lowercase ids
+ * ("electrical", "hvac", "general"). Storing the display name meant trade
+ * lookups silently failed and saving Settings wiped the user's selection.
+ * Normalize on write so both sides agree.
+ */
+export function normalizeTradeId(input: string | null | undefined): string | null {
+  if (!input) return null;
+
+  const raw = input.trim();
+  if (!raw) return null;
+
+  const key = raw.toLowerCase().replace(/[\s_-]+/g, "");
+
+  const aliases: Record<string, TradeType> = {
+    generalcontractor: "general",
+    gc: "general",
+    general: "general",
+    electrical: "electrical",
+    electrician: "electrical",
+    plumbing: "plumbing",
+    plumber: "plumbing",
+    hvac: "hvac",
+    roofing: "roofing",
+    roofer: "roofing",
+    concrete: "concrete",
+    framing: "framing",
+    framer: "framing",
+    painting: "painting",
+    painter: "painting",
+    landscaping: "landscaping",
+    drywall: "drywall",
+    flooring: "flooring",
+    masonry: "masonry",
+    welding: "welding",
+    demolition: "demolition",
+    excavation: "excavation",
+    insulation: "insulation",
+  };
+
+  return aliases[key] ?? key;
+}
+
+/** Normalizes a list of trade labels, dropping blanks and duplicates. */
+export function normalizeTradeIds(input: unknown): string[] {
+  if (!Array.isArray(input)) return [];
+  const out = new Set<string>();
+  for (const item of input) {
+    const id = normalizeTradeId(typeof item === "string" ? item : null);
+    if (id) out.add(id);
+  }
+  return [...out];
+}

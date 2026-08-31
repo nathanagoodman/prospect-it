@@ -5,13 +5,17 @@ import Link from "next/link";
 
 interface Job {
   id: string;
-  name: string;
-  clientId: string;
+  // The API returns jobName / expectedEndDate; the old interface used
+  // name / endDate, so every row would have rendered blank.
+  jobName: string;
+  clientId: string | null;
+  tradeType: string;
   contractAmount: number;
   status: string;
   startDate: string | null;
-  endDate: string | null;
+  expectedEndDate: string | null;
   createdAt: string;
+  client?: { id: string; name: string; company: string | null } | null;
 }
 
 const JOB_STATUSES = ["NOT_STARTED", "IN_PROGRESS", "ON_HOLD", "PUNCH_LIST", "COMPLETED"];
@@ -36,6 +40,7 @@ export default function JobsPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<"kanban" | "table">("kanban");
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchJobs();
@@ -43,10 +48,14 @@ export default function JobsPage() {
 
   const fetchJobs = async () => {
     try {
-      // For now, simulate with empty data since jobs API may not be fully set up
-      setJobs([]);
-    } catch (error) {
-      console.error("Error fetching jobs:", error);
+      const res = await fetch("/api/jobs");
+      if (!res.ok) throw new Error("Could not load jobs");
+      const data = await res.json();
+      setJobs(Array.isArray(data) ? data : []);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching jobs:", err);
+      setError("Could not load your jobs. Please refresh to try again.");
     } finally {
       setLoading(false);
     }
@@ -104,13 +113,19 @@ export default function JobsPage() {
             </button>
           </div>
           <Link
-            href="/app/jobs/new"
+            href="/app/bids"
             className="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-xl font-semibold transition-colors duration-200"
           >
-            New Job
+            View Bids
           </Link>
         </div>
       </div>
+
+      {error && (
+        <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </div>
+      )}
 
       {jobs.length === 0 ? (
         <div className="bg-white border border-slate-200 rounded-2xl p-16 text-center shadow-sm">
@@ -120,12 +135,15 @@ export default function JobsPage() {
             </svg>
           </div>
           <h3 className="text-lg font-bold text-slate-900 mb-2">No jobs yet</h3>
-          <p className="text-slate-500 font-medium mb-6">Get started by creating your first job</p>
+          <p className="text-slate-500 font-medium mb-6">
+            Jobs are created from bids you&apos;ve won. Build a bid first, then
+            mark it accepted to start tracking the work.
+          </p>
           <Link
-            href="/app/jobs/new"
+            href="/app/bids/new"
             className="inline-block bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-xl font-semibold transition-colors duration-200"
           >
-            Create Your First Job
+            Create a Bid
           </Link>
         </div>
       ) : viewMode === "kanban" ? (
@@ -141,7 +159,7 @@ export default function JobsPage() {
                       key={job.id}
                       className="bg-slate-50 p-4 rounded-xl border border-slate-200 hover:shadow-md hover:border-slate-300 transition-all duration-200"
                     >
-                      <h4 className="font-semibold text-slate-900 mb-3">{job.name}</h4>
+                      <h4 className="font-semibold text-slate-900 mb-3">{job.jobName}</h4>
                       <div className="text-sm text-slate-600 space-y-1 mb-4">
                         <p>Amount: ${job.contractAmount.toLocaleString()}</p>
                         {job.startDate && (
@@ -188,7 +206,7 @@ export default function JobsPage() {
             <tbody className="divide-y divide-slate-200">
               {jobs.map((job) => (
                 <tr key={job.id} className="hover:bg-slate-50/50 transition-colors duration-150">
-                  <td className="px-8 py-4 font-medium text-slate-900">{job.name}</td>
+                  <td className="px-8 py-4 font-medium text-slate-900">{job.jobName}</td>
                   <td className="px-8 py-4 text-slate-600">${job.contractAmount.toLocaleString()}</td>
                   <td className="px-8 py-4">
                     <span
@@ -203,7 +221,7 @@ export default function JobsPage() {
                     {job.startDate ? new Date(job.startDate).toLocaleDateString() : "—"}
                   </td>
                   <td className="px-8 py-4 text-slate-600">
-                    {job.endDate ? new Date(job.endDate).toLocaleDateString() : "—"}
+                    {job.expectedEndDate ? new Date(job.expectedEndDate).toLocaleDateString() : "—"}
                   </td>
                 </tr>
               ))}

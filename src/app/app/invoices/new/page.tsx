@@ -98,17 +98,57 @@ function NewInvoiceForm() {
             projectDescription: bid.description || "",
           }));
 
-          // Build line items from bid cost breakdown
-          const items: LineItem[] = [];
-          if (bid.materialCost > 0) items.push({ description: "Materials", quantity: 1, unitPrice: bid.materialCost });
-          if (bid.laborCost > 0) items.push({ description: `Labor (${bid.laborHours || 0} hrs)`, quantity: 1, unitPrice: bid.laborCost });
-          if (bid.equipmentCost > 0) items.push({ description: "Equipment", quantity: 1, unitPrice: bid.equipmentCost });
-          if (bid.subcontractorCost > 0) items.push({ description: "Subcontractor", quantity: 1, unitPrice: bid.subcontractorCost });
-          if (bid.permitCost > 0) items.push({ description: "Permits", quantity: 1, unitPrice: bid.permitCost });
-          if (bid.overhead > 0) items.push({ description: `Overhead (${bid.overheadPercent}%)`, quantity: 1, unitPrice: bid.overhead });
-          if (bid.profit > 0) items.push({ description: `Profit (${bid.profitPercent}%)`, quantity: 1, unitPrice: bid.profit });
-          if (bid.contingency > 0) items.push({ description: `Contingency (${bid.contingencyPercent}%)`, quantity: 1, unitPrice: bid.contingency });
-          if (items.length > 0) setLineItems(items);
+          // Build customer-facing line items from the bid.
+          //
+          // Overhead, profit, and contingency are deliberately NOT listed
+          // separately — that would hand the customer an itemized breakdown
+          // of your margin. Instead the markup is distributed proportionally
+          // across the real cost lines, so the lines still sum to the bid
+          // total but read as ordinary prices.
+          const costLines: { description: string; base: number }[] = [];
+
+          if (Array.isArray(bid.lineItems) && bid.lineItems.length > 0) {
+            // Prefer the contractor's own itemization when it exists.
+            for (const li of bid.lineItems) {
+              const base = (li.quantity || 0) * (li.unitPrice || 0);
+              if (base > 0) {
+                costLines.push({
+                  description: li.description || li.category || "Work",
+                  base,
+                });
+              }
+            }
+          } else {
+            if (bid.materialCost > 0) costLines.push({ description: "Materials", base: bid.materialCost });
+            if (bid.laborCost > 0) costLines.push({ description: `Labor (${bid.laborHours || 0} hrs)`, base: bid.laborCost });
+            if (bid.equipmentCost > 0) costLines.push({ description: "Equipment", base: bid.equipmentCost });
+            if (bid.subcontractorCost > 0) costLines.push({ description: "Subcontractor", base: bid.subcontractorCost });
+            if (bid.permitCost > 0) costLines.push({ description: "Permits & fees", base: bid.permitCost });
+          }
+
+          const baseTotal = costLines.reduce((sum, l) => sum + l.base, 0);
+          // Scale cost lines up to the quoted total so the customer sees the
+          // agreed price without seeing how it was composed.
+          const markup =
+            baseTotal > 0 && bid.totalBid > 0 ? bid.totalBid / baseTotal : 1;
+
+          const items: LineItem[] = costLines.map((l) => ({
+            description: l.description,
+            quantity: 1,
+            unitPrice: Math.round(l.base * markup * 100) / 100,
+          }));
+
+          // Absorb any rounding drift into the last line so the invoice
+          // total matches the bid exactly.
+          if (items.length > 0) {
+            const sum = items.reduce((s, i) => s + i.unitPrice, 0);
+            const drift = Math.round((bid.totalBid - sum) * 100) / 100;
+            if (drift !== 0) {
+              items[items.length - 1].unitPrice =
+                Math.round((items[items.length - 1].unitPrice + drift) * 100) / 100;
+            }
+            setLineItems(items);
+          }
 
           // Set client if bid has one
           if (bid.clientId) {

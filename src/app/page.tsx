@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { PLAN_LIST } from "@/lib/plans";
 
 const TRADES = [
   "General Contractor",
@@ -107,11 +108,13 @@ const FEATURES = [
     icon: <IconEmail />,
     title: "Email Sequences",
     desc: "Automated outreach to new leads and follow-ups to existing clients. Stay top of mind without lifting a finger.",
+    comingSoon: true,
   },
   {
     icon: <IconChange />,
     title: "Change Orders",
     desc: "Log and track every scope change with dollar amounts. Keep clients informed and your margins protected.",
+    comingSoon: true,
   },
 ];
 
@@ -338,7 +341,7 @@ export default function LandingPage() {
 
           {/* Trust line */}
           <p className="mt-8 text-xs text-slate-400 font-medium tracking-wide">
-            NO CREDIT CARD REQUIRED &nbsp;&bull;&nbsp; 14-DAY FREE TRIAL &nbsp;&bull;&nbsp; CANCEL ANYTIME
+            NO CREDIT CARD REQUIRED &nbsp;&bull;&nbsp; 7-DAY FREE TRIAL &nbsp;&bull;&nbsp; CANCEL ANYTIME
           </p>
         </div>
 
@@ -413,7 +416,14 @@ export default function LandingPage() {
           {FEATURES.map((f) => (
             <div key={f.title} className="bg-white p-8 hover:bg-orange-50/30 transition-colors duration-300 group">
               <div className="text-orange-500 mb-5 group-hover:text-orange-600 transition-colors">{f.icon}</div>
-              <h3 className="text-base font-bold text-slate-900 mb-2">{f.title}</h3>
+              <h3 className="text-base font-bold text-slate-900 mb-2 flex items-center gap-2">
+                {f.title}
+                {"comingSoon" in f && f.comingSoon && (
+                  <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-slate-500">
+                    Soon
+                  </span>
+                )}
+              </h3>
               <p className="text-slate-500 text-sm leading-relaxed">{f.desc}</p>
             </div>
           ))}
@@ -502,64 +512,53 @@ export default function LandingPage() {
             <p className="text-slate-400 mt-4 text-lg">No per-seat fees. No hidden costs. Cancel anytime.</p>
           </div>
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {[
-              {
-                name: "Starter", price: "$49", period: "/mo",
-                desc: "For solo contractors getting organized",
-                popular: false,
-                features: ["Unlimited bids", "Profit margin calculator", "Up to 50 clients", "Basic job tracking", "Email support"],
-              },
-              {
-                name: "Pro", price: "$99", period: "/mo",
-                desc: "For growing companies winning more work",
-                popular: true,
-                features: ["Everything in Starter", "Unlimited clients", "Email sequences", "Change order tracking", "Daily job logs", "CSV import/export", "Priority support"],
-              },
-              {
-                name: "Enterprise", price: "$249", period: "/mo",
-                desc: "For established firms scaling operations",
-                popular: false,
-                features: ["Everything in Pro", "Multi-user access", "Custom branding", "API access", "Dedicated account manager", "Custom integrations"],
-              },
-            ].map((plan) => (
+            {PLAN_LIST.map((plan) => (
               <div
-                key={plan.name}
+                key={plan.key}
                 className={`rounded-2xl p-8 transition-all duration-300 relative ${
-                  plan.popular
+                  plan.badge === "Most Popular"
                     ? "bg-white text-slate-900 shadow-2xl shadow-orange-500/10 ring-2 ring-orange-500 scale-[1.02]"
                     : "bg-slate-800/50 text-white border border-slate-700/50 hover:border-slate-600"
                 }`}
               >
-                {plan.popular && (
+                {plan.badge === "Most Popular" && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                     <span className="text-xs font-bold bg-orange-500 text-white px-5 py-1.5 rounded-full uppercase tracking-wider shadow-lg shadow-orange-500/30">
                       Most Popular
                     </span>
                   </div>
                 )}
-                <h3 className={`text-lg font-bold ${plan.popular ? "text-slate-900 mt-2" : "text-white"}`}>
+                <h3 className={`text-lg font-bold ${plan.badge === "Most Popular" ? "text-slate-900 mt-2" : "text-white"}`}>
                   {plan.name}
                 </h3>
-                <p className={`text-sm mt-1 ${plan.popular ? "text-slate-500" : "text-slate-400"}`}>
-                  {plan.desc}
+                <p className={`text-sm mt-1 ${plan.badge === "Most Popular" ? "text-slate-500" : "text-slate-400"}`}>
+                  {plan.description}
                 </p>
                 <div className="mt-6 mb-8">
-                  <span className={`text-5xl font-black ${plan.popular ? "text-slate-900" : "text-white"}`}>{plan.price}</span>
-                  <span className={`text-sm ${plan.popular ? "text-slate-500" : "text-slate-500"}`}>
-                    {plan.period}
+                  <span className={`text-5xl font-black ${plan.badge === "Most Popular" ? "text-slate-900" : "text-white"}`}>{`$${plan.price}`}</span>
+                  <span className={`text-sm ${plan.badge === "Most Popular" ? "text-slate-500" : "text-slate-500"}`}>
+                    {"/mo"}
                   </span>
                 </div>
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((f) => (
-                    <li key={f} className={`text-sm flex items-center gap-3 ${plan.popular ? "text-slate-600" : "text-slate-300"}`}>
-                      <span className="text-orange-500 flex-shrink-0"><IconCheck /></span>{f}
+                    <li key={f.label} className={`text-sm flex items-center gap-3 ${plan.badge === "Most Popular" ? "text-slate-600" : "text-slate-300"} ${f.comingSoon ? "opacity-60" : ""}`}>
+                      <span className={f.comingSoon ? "text-slate-400 flex-shrink-0" : "text-orange-500 flex-shrink-0"}><IconCheck /></span>
+                      <span>
+                        {f.label}
+                        {f.comingSoon && (
+                          <span className="ml-2 rounded bg-slate-700/60 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-slate-300">
+                            Soon
+                          </span>
+                        )}
+                      </span>
                     </li>
                   ))}
                 </ul>
                 <Link
                   href="/register"
                   className={`block w-full text-center py-3.5 rounded-xl font-bold transition text-sm ${
-                    plan.popular
+                    plan.badge === "Most Popular"
                       ? "bg-orange-500 text-white hover:bg-orange-600 shadow-lg shadow-orange-500/25"
                       : "bg-white/10 text-white hover:bg-white/20 border border-slate-600"
                   }`}

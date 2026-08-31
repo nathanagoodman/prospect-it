@@ -5,6 +5,7 @@ import { logActivity } from "@/lib/activity";
 import { enforceRateLimit } from "@/lib/rate-limit";
 import { registerSchema, firstError } from "@/lib/validation";
 import { TOS_VERSION } from "@/lib/auth";
+import { normalizeTradeId, normalizeTradeIds } from "@/lib/trades";
 
 export async function POST(req: NextRequest) {
   // 5 signups per IP per 15 minutes.
@@ -39,9 +40,10 @@ export async function POST(req: NextRequest) {
         email,
         hashedPassword,
         company: company || null,
-        tradeType: tradeType || null,
+        // Normalize to canonical trade ids so downstream lookups work.
+        tradeType: normalizeTradeId(tradeType),
         tier,
-        enabledTrades: enabledTrades ?? [],
+        enabledTrades: normalizeTradeIds(enabledTrades),
         tosAcceptedAt: new Date(),
         privacyAcceptedAt: new Date(),
         tosVersion: TOS_VERSION,
