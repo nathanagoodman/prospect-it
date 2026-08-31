@@ -11,7 +11,9 @@ next-env.d.ts
 tsconfig.tsbuildinfo
 *.tsbuildinfo
 
-# Temporary staging from the admin/production-hardening update
+# Temporary staging folders and their backups (any update batch)
 .claude-updates/
-.claude-updates-backup-*/
+.seo-update/
+.claude-staged/
+*-backup-20*/
 .write-test

@@ -6,7 +6,7 @@ import "./globals.css";
 const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL ||
   process.env.NEXTAUTH_URL ||
-  "https://prospeciq.com"
+  "https://www.prospeciq.com"
 ).replace(/\/$/, "");
 
 const TITLE = "Pro Spec IQ — Bid Smarter. Build Bigger.";
