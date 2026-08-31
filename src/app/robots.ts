@@ -12,7 +12,15 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/app/", "/admin/", "/api/", "/reset-password", "/forgot-password"],
+        disallow: [
+          "/app/",
+          "/admin/",
+          "/api/",
+          "/reset-password",
+          "/forgot-password",
+          // Shared customer proposals are private links, not public pages.
+          "/bid/",
+        ],
       },
       // Explicitly welcome AI crawlers — these are an increasingly real
       // discovery channel and several default to conservative behaviour.
@@ -28,7 +36,7 @@ export default function robots(): MetadataRoute.Robots {
           "Google-Extended",
         ],
         allow: "/",
-        disallow: ["/app/", "/admin/", "/api/"],
+        disallow: ["/app/", "/admin/", "/api/", "/bid/"],
       },
     ],
     sitemap: `${BASE_URL}/sitemap.xml`,

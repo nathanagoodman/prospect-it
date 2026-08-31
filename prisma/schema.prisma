@@ -205,6 +205,13 @@ model Bid {
   status          BidStatus @default(DRAFT)
   dueDate         DateTime?
   submittedAt     DateTime?
+
+  // Public sharing. A bid is private until the contractor generates a
+  // token; the public view never exposes overhead, profit, or margin.
+  shareToken      String?   @unique
+  sharedAt        DateTime?
+  viewCount       Int       @default(0)
+  lastViewedAt    DateTime?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 

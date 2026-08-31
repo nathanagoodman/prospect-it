@@ -28,7 +28,10 @@ export async function GET(
 
     const bid = await prisma.bid.findUnique({
       where: { id },
-      include: { lineItems: true },
+      include: {
+        lineItems: true,
+        client: { select: { id: true, name: true, company: true } },
+      },
     });
 
     if (!bid) {

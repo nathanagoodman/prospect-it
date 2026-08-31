@@ -68,6 +68,23 @@ if ! git diff --quiet -- package.json 2>/dev/null || [ ! -d node_modules ]; then
   echo ""
 fi
 
+# ─── 2b. Push schema changes to the database ─────────────────
+# A Prisma schema change that never reaches Postgres means the deployed
+# code queries columns that don't exist, and every affected page 500s.
+# `prisma generate` (postinstall) only builds types, not tables.
+if ! git diff --quiet -- prisma/schema.prisma 2>/dev/null; then
+  bold "prisma/schema.prisma changed — syncing the database"
+  if ! npx prisma db push; then
+    echo ""
+    red "Database sync failed. Nothing was committed."
+    red "Fix the error above, or paste it to Claude, then run ship.sh again."
+    exit 1
+  fi
+  echo ""
+  green "Database in sync."
+  echo ""
+fi
+
 # ─── 3. Build ────────────────────────────────────────────────
 bold "Building"
 if ! npm run build; then

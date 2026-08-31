@@ -93,3 +93,89 @@ export function calculateBidTotals(bidData: BidTotalsInput) {
     profitMargin,
   };
 }
+
+// ─── Client-facing presentation ─────────────────────────────
+
+export interface ClientBidLine {
+  description: string;
+  amount: number;
+}
+
+export interface BidForClientView {
+  materialCost: number;
+  laborCost: number;
+  laborHours: number;
+  equipmentCost: number;
+  subcontractorCost: number;
+  permitCost: number;
+  totalBid: number;
+  lineItems?: { description: string; category: string; quantity: number; unitPrice: number; total: number }[];
+}
+
+/**
+ * Converts a bid into the line items a CUSTOMER should see.
+ *
+ * SECURITY-ADJACENT: overhead, profit, contingency, subtotal, and margin
+ * must never reach the customer. Handing a client an itemized breakdown of
+ * your markup costs contractors jobs. This function is the single place
+ * that decides what's safe to show, so the PDF, the public share page, and
+ * the invoice prefill can't drift apart on it.
+ *
+ * The markup is distributed proportionally across the real cost lines, so
+ * the lines still sum to the quoted total but read as ordinary prices.
+ */
+export function toClientLineItems(bid: BidForClientView): ClientBidLine[] {
+  // Build the base ADDITIVELY. calculateBidTotals sums direct costs AND
+  // line items, so the customer view has to do the same. Treating line
+  // items as the whole base (an earlier version of this) made every other
+  // cost vanish and scaled a single item up to the entire bid total.
+  const base: ClientBidLine[] = [];
+
+  if (bid.materialCost > 0)
+    base.push({ description: "Materials", amount: bid.materialCost });
+  if (bid.laborCost > 0)
+    // Deliberately no hour count: pairing hours with a marked-up labor
+    // figure lets the customer divide out an implied rate.
+    base.push({ description: "Labor", amount: bid.laborCost });
+  if (bid.equipmentCost > 0)
+    base.push({ description: "Equipment", amount: bid.equipmentCost });
+  if (bid.subcontractorCost > 0)
+    base.push({ description: "Subcontractor", amount: bid.subcontractorCost });
+  if (bid.permitCost > 0)
+    base.push({ description: "Permits & fees", amount: bid.permitCost });
+
+  for (const li of bid.lineItems ?? []) {
+    const amount = li.total || li.quantity * li.unitPrice;
+    if (amount > 0) {
+      base.push({
+        description: li.description || li.category || "Work",
+        amount,
+      });
+    }
+  }
+
+  const baseTotal = base.reduce((sum, l) => sum + l.amount, 0);
+  if (baseTotal <= 0 || bid.totalBid <= 0) {
+    // Nothing itemizable — show the total as a single line rather than
+    // exposing an empty breakdown.
+    return bid.totalBid > 0
+      ? [{ description: "Scope of work as described", amount: bid.totalBid }]
+      : [];
+  }
+
+  const markup = bid.totalBid / baseTotal;
+  const scaled = base.map((l) => ({
+    description: l.description,
+    amount: Math.round(l.amount * markup * 100) / 100,
+  }));
+
+  // Absorb rounding drift into the last line so it sums exactly.
+  const sum = scaled.reduce((s, l) => s + l.amount, 0);
+  const drift = Math.round((bid.totalBid - sum) * 100) / 100;
+  if (drift !== 0 && scaled.length > 0) {
+    scaled[scaled.length - 1].amount =
+      Math.round((scaled[scaled.length - 1].amount + drift) * 100) / 100;
+  }
+
+  return scaled;
+}
