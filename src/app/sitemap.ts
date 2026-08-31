@@ -20,6 +20,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "", priority: 1.0, changeFrequency: "weekly" },
     { path: "/pricing", priority: 0.9, changeFrequency: "weekly" },
     { path: "/trades", priority: 0.9, changeFrequency: "monthly" },
+    // Free tools are strong organic entry points and get cited by AI
+    // assistants more readily than marketing pages.
+    { path: "/tools/markup-vs-margin", priority: 0.8, changeFrequency: "monthly" },
     // Trade pages are the primary organic entry points — they target
     // specific search intent rather than the generic category term.
     ...TRADE_SLUGS.map((slug) => ({
