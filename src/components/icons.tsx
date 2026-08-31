@@ -193,9 +193,9 @@ const Demolition = (p: IconProps) => (
 // Shovel.
 const Excavation = (p: IconProps) => (
   <Svg {...p}>
-    <path d="M10 3h4v3h-4z" />
-    <path d="M12 6v10" />
-    <path d="M9 16h6v2a3 3 0 0 1-6 0z" />
+    <path d="M10 3h4v2.5h-4z" />
+    <path d="M12 5.5V13" />
+    <path d="M8 13h8v3.5a4 4 0 0 1-8 0z" />
   </Svg>
 );
 
@@ -204,9 +204,9 @@ const Insulation = (p: IconProps) => (
   <Svg {...p}>
     <path d="M5 3v18" />
     <path d="M19 3v18" />
-    <path d="M5 7c3.5 2.5 10.5-2.5 14 0" />
-    <path d="M5 12c3.5 2.5 10.5-2.5 14 0" />
-    <path d="M5 17c3.5 2.5 10.5-2.5 14 0" />
+    <path d="M5 7c3.5 4.5 10.5-4.5 14 0" />
+    <path d="M5 12c3.5 4.5 10.5-4.5 14 0" />
+    <path d="M5 17c3.5 4.5 10.5-4.5 14 0" />
   </Svg>
 );
 
