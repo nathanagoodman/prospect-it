@@ -35,6 +35,12 @@ export const metadata: Metadata = {
   authors: [{ name: "Pro Spec IQ" }],
   creator: "Pro Spec IQ",
   alternates: { canonical: "/" },
+  // Google Search Console ownership. This is a public token by design —
+  // it appears in page source. Leave it in place; removing it un-verifies
+  // the property.
+  verification: {
+    google: "i8BI2A_Yziu0yj1WiOULs8K2YcPqhG2DJIBwd-54LBU",
+  },
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
