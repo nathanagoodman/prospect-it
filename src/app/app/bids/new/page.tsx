@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -10,6 +10,7 @@ import {
   ALL_METRICS,
   type TradeType,
 } from "@/lib/trades";
+import { estimateFromMetrics, hasCostBasis } from "@/lib/estimator";
 
 interface LineItem {
   id: string;
@@ -117,6 +118,28 @@ export default function NewBidPage() {
   });
 
   const isGC = user?.tier === "GC";
+
+  // Suggested material/labor derived from the trade takeoff quantities.
+  // This is a suggestion only — it is never written into formData unless
+  // the user explicitly applies it.
+  const estimate = useMemo(() => {
+    if (isGC || !formData.tradeType) return null;
+    const labels: Record<string, { label: string; unit: string }> = {};
+    for (const m of getTradeSpecificMetrics(formData.tradeType)) {
+      labels[m.key] = { label: m.label, unit: m.unit };
+    }
+    const result = estimateFromMetrics(formData.tradeType, tradeMetrics, labels);
+    return result.available ? result : null;
+  }, [isGC, formData.tradeType, tradeMetrics]);
+
+  const applyEstimate = () => {
+    if (!estimate) return;
+    setFormData((prev) => ({
+      ...prev,
+      materialCost: estimate.materialCost,
+      laborHours: estimate.laborHours,
+    }));
+  };
 
   useEffect(() => {
     fetchUserData();
@@ -793,6 +816,133 @@ export default function NewBidPage() {
                       </div>
                     ))}
                   </div>
+
+                  {/* Suggested estimate derived from the quantities above.
+                      Shown with full arithmetic and applied only on click —
+                      never silently written over the user's own numbers. */}
+                  {estimate && (
+                    <div className="mt-6 rounded-xl border border-slate-300 bg-white p-5">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                          <h3 className="font-bold text-slate-900">
+                            Suggested from your takeoff
+                          </h3>
+                          <p className="mt-1 text-sm text-slate-600">
+                            <span className="font-semibold text-slate-900">
+                              ${estimate.materialCost.toLocaleString("en-US", { maximumFractionDigits: 0 })}
+                            </span>{" "}
+                            material ·{" "}
+                            <span className="font-semibold text-slate-900">
+                              {estimate.laborHours.toLocaleString("en-US", { maximumFractionDigits: 1 })}
+                            </span>{" "}
+                            labor hours
+                            {formData.laborRate > 0 && (
+                              <>
+                                {" "}(≈ $
+                                {(estimate.laborHours * formData.laborRate).toLocaleString("en-US", { maximumFractionDigits: 0 })}{" "}
+                                at your ${formData.laborRate}/hr)
+                              </>
+                            )}
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={applyEstimate}
+                          className="shrink-0 rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800"
+                        >
+                          Use these numbers
+                        </button>
+                      </div>
+
+                      {formData.laborRate <= 0 && (
+                        <p className="mt-3 text-xs text-slate-500">
+                          Set your labor rate below and the hours above will price
+                          themselves.
+                        </p>
+                      )}
+
+                      <details className="mt-4 group">
+                        <summary className="cursor-pointer list-none text-sm font-semibold text-orange-600 hover:text-orange-700">
+                          <span className="group-open:hidden">Show the math →</span>
+                          <span className="hidden group-open:inline">Hide the math ↑</span>
+                        </summary>
+
+                        <div className="mt-3 overflow-x-auto">
+                          <table className="w-full text-sm">
+                            <thead>
+                              <tr className="border-b border-slate-200 text-left text-[10px] uppercase tracking-widest text-slate-400">
+                                <th className="py-2 font-semibold">Input</th>
+                                <th className="py-2 font-semibold">Qty</th>
+                                <th className="py-2 font-semibold">Material</th>
+                                <th className="py-2 font-semibold">Hours</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {estimate.lines.map((line) => (
+                                <tr key={line.metricKey} className="border-b border-slate-100">
+                                  <td className="py-2">
+                                    <div className="font-medium text-slate-800">{line.label}</div>
+                                    {line.note && (
+                                      <div className="text-xs text-slate-500">{line.note}</div>
+                                    )}
+                                  </td>
+                                  <td className="py-2 whitespace-nowrap text-slate-600">
+                                    {line.quantity} {line.unit}
+                                  </td>
+                                  <td className="py-2 whitespace-nowrap text-slate-600">
+                                    {line.materialRate > 0 ? (
+                                      <>
+                                        × ${line.materialRate} ={" "}
+                                        <span className="font-medium text-slate-900">
+                                          ${line.material.toLocaleString("en-US", { maximumFractionDigits: 0 })}
+                                        </span>
+                                      </>
+                                    ) : (
+                                      <span className="text-slate-400">—</span>
+                                    )}
+                                  </td>
+                                  <td className="py-2 whitespace-nowrap text-slate-600">
+                                    {line.laborRate > 0 ? (
+                                      <>
+                                        × {line.laborRate} ={" "}
+                                        <span className="font-medium text-slate-900">
+                                          {line.laborHours.toFixed(1)} hrs
+                                        </span>
+                                      </>
+                                    ) : (
+                                      <span className="text-slate-400">—</span>
+                                    )}
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+
+                        {estimate.adjustments.length > 0 && (
+                          <ul className="mt-3 space-y-1 text-xs text-slate-600">
+                            {estimate.adjustments.map((a) => (
+                              <li key={a}>• {a}</li>
+                            ))}
+                          </ul>
+                        )}
+
+                        <p className="mt-4 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-xs leading-relaxed text-amber-900">
+                          <strong>These are generic starting rates, not market
+                          data.</strong> Material prices and crew productivity vary a
+                          lot by region, supplier, and job. Treat this as a sanity
+                          check against your own numbers — never as the bid itself.
+                        </p>
+                      </details>
+                    </div>
+                  )}
+
+                  {!estimate && hasCostBasis(formData.tradeType) && (
+                    <p className="mt-6 rounded-xl border border-dashed border-slate-300 px-4 py-3 text-sm text-slate-500">
+                      Enter quantities above and we&apos;ll suggest material cost and
+                      labor hours, with the arithmetic shown.
+                    </p>
+                  )}
                 </div>
               )}
 
