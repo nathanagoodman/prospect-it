@@ -167,7 +167,19 @@ export default function NewBidPage() {
     managementFee: 0,
   });
 
-  const isGC = user?.tier === "GC";
+  const isGCAccount = user?.tier === "GC";
+
+  // A GC account can bid two ways:
+  //   "project" — multiple trades, each with a sub bid (the default)
+  //   "trade"   — a single scope they're self-performing, using the same
+  //               trade-specific estimator a trade account gets
+  // Previously a GC was locked into "project", so a GC who pours their own
+  // concrete had no way to estimate it properly.
+  const [bidMode, setBidMode] = useState<"project" | "trade">("project");
+
+  // Everything downstream keys off this: a GC in trade mode behaves
+  // exactly like a trade account.
+  const isGC = isGCAccount && bidMode === "project";
 
   // Suggested material/labor derived from the trade takeoff quantities.
   // This is a suggestion only — it is never written into formData unless
@@ -198,7 +210,10 @@ export default function NewBidPage() {
 
   useEffect(() => {
     recalculateTotals();
-  }, [formData, lineItems, subBids, selectedTrades, user]);
+    // bidMode belongs here: switching between project and single-trade
+    // changes which branch computes the total. Without it the sidebar
+    // would show a stale number until some other field changed.
+  }, [formData, lineItems, subBids, selectedTrades, user, bidMode]);
 
   const fetchUserData = async () => {
     try {
@@ -470,18 +485,50 @@ export default function NewBidPage() {
           <span className="text-slate-400">/</span>
           <span className="text-slate-600">New Bid</span>
         </div>
-        <div className="flex items-center gap-3">
-          <h1 className="text-4xl font-black tracking-tight text-slate-900">Create New Bid</h1>
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900">
+            Create New Bid
+          </h1>
           {isGC && (
             <span className="inline-block px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-full">
               GC Mode
             </span>
           )}
         </div>
-        <p className="text-slate-500 mt-1">
+
+        {isGCAccount && (
+          <div className="mt-4 inline-flex rounded-xl bg-slate-200/70 p-1">
+            <button
+              type="button"
+              onClick={() => setBidMode("project")}
+              className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
+                bidMode === "project"
+                  ? "bg-white text-slate-900 shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Multi-trade project
+            </button>
+            <button
+              type="button"
+              onClick={() => setBidMode("trade")}
+              className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
+                bidMode === "trade"
+                  ? "bg-white text-slate-900 shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Single trade
+            </button>
+          </div>
+        )}
+
+        <p className="text-slate-500 mt-3">
           {isGC
             ? "Select the trades involved and enter sub bids for each scope"
-            : "Fill in the details below to create a new bid"}
+            : isGCAccount
+              ? "Estimating one scope yourself — pick the trade and its takeoff quantities"
+              : "Fill in the details below to create a new bid"}
         </p>
       </div>
 
@@ -527,11 +574,17 @@ export default function NewBidPage() {
                       className="w-full rounded-xl border border-slate-200 focus:ring-2 focus:ring-orange-500 bg-white py-3 px-4"
                     >
                       <option value="">Select trade type...</option>
-                      {Object.values(TRADE_CONFIGS).map((config) => (
-                        <option key={config.id} value={config.id}>
-                          {config.icon} {config.label}
-                        </option>
-                      ))}
+                      {Object.values(TRADE_CONFIGS)
+                        // "General Contractor" isn't a self-performed scope,
+                        // and picking it here would make the server treat the
+                        // bid as a multi-trade GC project and look for sub
+                        // bids that don't exist.
+                        .filter((config) => config.id !== "general")
+                        .map((config) => (
+                          <option key={config.id} value={config.id}>
+                            {config.icon} {config.label}
+                          </option>
+                        ))}
                     </select>
                   </div>
                 )}
